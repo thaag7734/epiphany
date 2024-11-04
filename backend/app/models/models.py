@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint, Column, ForeignKey
+from sqlalchemy import CheckConstraint
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 
