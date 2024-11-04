@@ -9,3 +9,4 @@ class Note(db.Model):
       content = db.Column(db.String(2000))
       deadline = db.Column(db.Date)
       priority = db.Column(db.Integer, CheckConstraint('priority >= 0 AND priority <= 3'))
+      # add the relationships

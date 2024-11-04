@@ -1,4 +1,4 @@
-import os
+from os import environ
 from flask import Flask, render_template, request, session, redirect
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -42,7 +42,7 @@ CORS(app)
 # Well.........
 @app.before_request
 def https_redirect():
-    if os.environ.get('FLASK_ENV') == 'production':
+    if environ.get('FLASK_ENV') == 'production':
         if request.headers.get('X-Forwarded-Proto') == 'http':
             url = request.url.replace('http://', 'https://', 1)
             code = 301
@@ -54,8 +54,8 @@ def inject_csrf_token(response):
     response.set_cookie(
         'csrf_token',
         generate_csrf(),
-        secure=True if os.environ.get('FLASK_ENV') == 'production' else False,
-        samesite='Strict' if os.environ.get(
+        secure=True if environ.get('FLASK_ENV') == 'production' else False,
+        samesite='Strict' if environ.get(
             'FLASK_ENV') == 'production' else None,
         httponly=True)
     return response
