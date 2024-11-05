@@ -28,5 +28,4 @@ def user(id):
 @login_required
 def getUserBoards(id):
     user = User.query.get(id)
-
-    user_boards = Board.query()
+    return user.boards.to_dict()
