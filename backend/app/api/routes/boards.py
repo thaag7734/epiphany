@@ -13,8 +13,10 @@ def get_board(board_id):
       board = Board.query.get(board_id)
       if not board:
             return Response({"message": "Board does not exist Sorry"}, status=404)
+      
       if board.owner_id != current_user.id:
             return Response({"message": "This is not your board"}, status=403)
+      
       return board.to_dict()
 
 
