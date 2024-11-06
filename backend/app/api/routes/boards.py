@@ -1,4 +1,5 @@
 from flask import Blueprint, Response, request
+from sqlalchemy.exc import DatabaseError
 from app.models.models import Board
 from app.models.db import db
 from flask_login import login_required, current_user
@@ -27,12 +28,16 @@ def get_board(board_id):
 @boards.route("/new", methods=["POST"])
 @login_required
 def create_board():
-    form_data = request.json.to_dict()
+    form_data = request.json
+
+    if not form_data:
+        return {"message": "Missing form data from request"}, 400
+
     form_data["owner_id"] = current_user.id
     form = BoardForm(form_data)
 
     if not current_user:
-        return Response({"message": "Must be logged in to create a board"}, status=401)
+        return {"message": "Must be logged in to create a board"}, 401
 
     if form.validate():
         new_board = Board(
@@ -41,18 +46,18 @@ def create_board():
 
         try:
             db.session.add(new_board)
-        except:
+        except Exception:
             db.session.rollback()
-            return Response({"message": "Internal Server error"}, status=500)
+            return {"message": "Internal Server error"}, 500
         else:
             db.session.commit()
-            return Response(
-                {"message": "New Board succesfully created", "board": new_board},
-                status=201,
-            )
+            return {
+                "message": "New Board succesfully created",
+                "board": new_board.to_dict(),
+            }, 201
 
     else:
-        return Response({"message": "Failed to create new board"}, status=400)
+        return {"message": "Failed to create new board"}, 400
 
 
 @boards.route("/<int:board_id>", methods=["PUT"])

@@ -21,6 +21,14 @@ class Team(db.Model):
 
     owner = db.relationship("User", back_populates="owned_teams")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "owner_id": self.owner_id,
+            "users": [user.to_dict() for user in self.users],
+            "owner": self.owner.to_dict(),
+        }
+
 
 note_label = db.Table(
     "note_labels",
@@ -38,6 +46,14 @@ class Label(db.Model):
 
     board = db.relationship("Board", back_populates="labels")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "board_id": self.board_id,
+            "board": self.board.to_dict(),
+        }
+
 
 class Note(db.Model):
     __tablename__ = "notes"
@@ -51,6 +67,17 @@ class Note(db.Model):
 
     board = db.relationship("Board", back_populates="notes")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "content": self.content,
+            "deadline": self.deadline,
+            "priority": self.priority,
+            "board_id": self.board_id,
+            "board": self.board.to_dict(),
+        }
+
 
 class Board(db.Model):
     __tablename__ = "boards"
@@ -63,3 +90,14 @@ class Board(db.Model):
     labels = db.relationship("Label", back_populates="board")
     notes = db.relationship("Note", back_populates="board")
     owner = db.relationship("User", back_populates="owned_boards")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "team_id": self.team_id,
+            "owner_id": self.owner_id,
+            "name": self.name,
+            "notes": [note.to_dict() for note in self.notes],
+            "labels": [label.to_dict() for label in self.labels],
+            "owner": self.owner.to_dict(),
+        }

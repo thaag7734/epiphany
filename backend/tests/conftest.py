@@ -55,7 +55,7 @@ def user(client_db: tuple[FlaskClient, SQLAlchemy]) -> Generator[User, None, Non
     yield new_user
 
 
-def login_user(client: FlaskClient, user: User) -> Request:
+def login_user(client: FlaskClient, user: User) -> None:
     res: TestResponse = client.post(
         "/api/auth/login",
         data={
@@ -64,6 +64,3 @@ def login_user(client: FlaskClient, user: User) -> Request:
         },
         content_type="application/x-www-form-urlencoded",
     )
-
-    print("REQUEST ===>", res.request)
-    print("RES DATA ===>", res.data)
