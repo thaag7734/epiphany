@@ -104,8 +104,8 @@ def delete_board(board_id):
             db.session.delete(board)
 
       except:
-                  db.session.rollback()
-                  return Response({"message":"Internal Server error"}, status=500)
+            db.session.rollback()
+            return Response({"message":"Internal Server error"}, status=500)
       else:
             db.session.commit()
             return Response({"message":"New Board succesfully deleted"}, status=201)
