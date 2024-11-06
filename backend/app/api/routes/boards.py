@@ -1,5 +1,4 @@
-from flask import Blueprint, Response, request
-from sqlalchemy.exc import DatabaseError
+from flask import Blueprint, request
 from app.models.models import Board
 from app.models.db import db
 from flask_login import login_required, current_user
@@ -13,10 +12,10 @@ boards: Blueprint = Blueprint("boards", __name__, url_prefix="/boards")
 def get_board(board_id):
     board: Board = Board.query.get(board_id)
     if not board:
-        return Response({"message": "Board does not exist Sorry"}, status=404)
+        return {"message": "Board does not exist Sorry"}, 404
 
     if board.owner_id != current_user.id:
-        return Response({"message": "This is not your board"}, status=403)
+        return {"message": "This is not your board"}, 403
 
     return {
         "id": board.id,
@@ -64,17 +63,21 @@ def create_board():
 @login_required
 def update_board(board_id):
     if not current_user:
-        return Response({"message": "Must be logged in to update a board"}, status=401)
+        return {"message": "Must be logged in to update a board"}, 401
 
     board = Board.query.get(board_id)
 
     if not board:
-        return Response({"message": "Board does not exist Sorry"}, status=404)
+        return {"message": "Board does not exist Sorry"}, 404
 
     if board.owner_id != current_user.id:
-        return Response({"message": "This is not your board"}, status=403)
+        return {"message": "This is not your board"}, 403
 
-    form_data = request.json.to_dict()
+    form_data = request.json
+
+    if not form_data:
+        return {"message": "Missing form data from request"}, 400
+
     form_data["owner_id"] = current_user.id
     form = BoardForm(form_data)
 
@@ -86,39 +89,40 @@ def update_board(board_id):
 
             db.session.commit()
 
-        except:
+        except Exception:
             db.session.rollback()
-            return Response({"message": "Internal Server error"}, status=500)
+            return {"message": "Internal Server error"}, 500
 
         else:
-            return Response(
-                {"message": "New Board succesfully updated", "board": board}, status=200
-            )
+            return {
+                "message": "New Board succesfully updated",
+                "board": board.to_dict(),
+            }, 200
 
     else:
-        return Response({"message": "Failed to create new board"}, status=400)
+        return {"message": "Failed to create new board"}, 400
 
 
 @boards.route("/<int:board_id>", methods=["DELETE"])
 @login_required
 def delete_board(board_id):
     if not current_user:
-        return Response({"message": "Must be logged in to update a board"}, status=401)
+        return {"message": "Must be logged in to update a board"}, 401
 
     board = Board.query.get(board_id)
 
     if not board:
-        return Response({"message": "Board does not exist Sorry"}, status=404)
+        return {"message": "Board does not exist Sorry"}, 404
 
     if board.owner_id != current_user.id:
-        return Response({"message": "This is not your board"}, status=403)
+        return {"message": "This is not your board"}, 403
 
     try:
         db.session.delete(board)
 
-    except:
+    except Exception:
         db.session.rollback()
-        return Response({"message": "Internal Server error"}, status=500)
+        return {"message": "Internal Server error"}, 500
     else:
         db.session.commit()
-        return Response({"message": "New Board succesfully deleted"}, status=201)
+        return {"message": "New Board succesfully deleted"}, 201
