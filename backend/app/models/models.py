@@ -17,9 +17,10 @@ class Team(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
-    users = db.relationship("User", secondary=team_user, back_populates="teams")
 
+    users = db.relationship("User", secondary=team_user, back_populates="teams")
     owner = db.relationship("User", back_populates="owned_teams")
+    board = db.relationship("Board", back_populates="board")
 
     def to_dict(self):
         return {
@@ -93,10 +94,11 @@ class Board(db.Model):
     __tablename__ = "boards"
 
     id = db.Column(db.Integer, primary_key=True)
-    team_id = db.Column(db.Integer)
+    team_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("teams.id")))
     owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
     name = db.Column(db.String, nullable=False)
 
+    team = db.relationship("Team", back_populates="teams")
     labels = db.relationship("Label", back_populates="board")
     notes = db.relationship("Note", back_populates="board")
     owner = db.relationship("User", back_populates="owned_boards")
