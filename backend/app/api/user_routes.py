@@ -28,7 +28,6 @@ def user(id):
 
 @user_routes.route("/<int:id>/boards")
 @login_required
-def getUserBoards(id):
+def get_user_boards(id):
     user = User.query.get(id)
     return user.boards.to_dict()
-
