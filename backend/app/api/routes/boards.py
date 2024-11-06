@@ -17,7 +17,7 @@ def get_board(board_id):
     if board.owner_id != current_user.id:
         return Response({"message": "This is not your board"}, status=403)
 
-    return board.to_dict()
+    return Response(board.to_dict(), status=200)
 
 
 @boards.route("/new", methods=["POST"])
@@ -113,4 +113,3 @@ def delete_board(board_id):
     else:
         db.session.commit()
         return Response({"message": "New Board succesfully deleted"}, status=201)
-

@@ -1,44 +1,69 @@
 from collections.abc import Generator
+from flask import Request
 from flask.testing import FlaskClient
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash
-from app.config import Config
+from werkzeug.test import TestResponse
+from app.forms.login_form import LoginForm
 from app.models.user import User
 from app.models.models import Board
+from app import app, db
 import pytest
-from sqlite3 import Cursor, connect
+
+
+TEST_PASSWORD = "test_password"
 
 
 @pytest.fixture(scope="module")
-def client() -> Generator[FlaskClient, None, None]:
-    from app import app
-
+def client_db() -> Generator[tuple[FlaskClient, SQLAlchemy], None, None]:
     app.config["TESTING"] = True
     app.config["WTF_CSRF_ENABLED"] = False
     app.config["DEBUG"] = False
+    app.config["SQLALCHEMY_ECHO"] = False
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
     with app.test_client() as client:
         with app.app_context():
-            from app.models.db import db
+            db.engine.dispose()
+            db.init_app(app)
 
-            db.drop_all()
             db.create_all()
-        yield client
+            yield (client, db)
 
 
 @pytest.fixture(scope="module")
-def cursor() -> Generator[Cursor, None, None]:
-    with connect(Config.SQLALCHEMY_DATABASE_URI) as con:
-        yield con.cursor()
+def user(client_db: tuple[FlaskClient, SQLAlchemy]) -> Generator[User, None, None]:
+    db = client_db[1]
 
-
-@pytest.fixture(scope="module")
-def userInstance(client: FlaskClient, cur: Cursor) -> Generator[User, None, None]:
-    username = "test_user"
-    email = "test_email@test.test"
-    password = generate_password_hash("test_password")
-
-    cur.execute(
-        f"INSERT INTO users (username, email, hashed_password, root_board_id) VALUES ('{username}', '{email}', {password})"
+    new_user = User(
+        username="test_user",
+        email="test_email@test.test",
+        password=generate_password_hash(TEST_PASSWORD),
     )
 
-    # TODO finish this
+    db.session.add(new_user)
+    db.session.commit()
+
+    # TODO find an elegant way to make the properties of the board accessible
+    # to tests that use this fixture
+    new_board = Board(owner_id=new_user.id, name="test board")
+
+    db.session.add(new_board)
+    db.session.commit()
+
+    yield new_user
+
+
+def login_user(client: FlaskClient, user: User) -> Request:
+    res: TestResponse = client.post(
+        "/api/auth/login",
+        data={
+            "email": user.email,
+            "password": TEST_PASSWORD,
+        },
+        content_type="application/x-www-form-urlencoded",
+    )
+
+    print("REQUEST ===>", res.request)
+    print("RES DATA ===>", res.data)

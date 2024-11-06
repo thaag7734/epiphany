@@ -19,6 +19,8 @@ class Team(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     users = db.relationship("User", secondary=team_user, back_populates="teams")
 
+    owner = db.relationship("User", back_populates="owned_teams")
+
 
 note_label = db.Table(
     "note_labels",
@@ -34,6 +36,8 @@ class Label(db.Model):
     name = db.Column(db.String(24))
     board_id = db.Column(db.Integer, db.ForeignKey("boards.id"))
 
+    board = db.relationship("Board", back_populates="labels")
+
 
 class Note(db.Model):
     __tablename__ = "notes"
@@ -44,6 +48,8 @@ class Note(db.Model):
     deadline = db.Column(db.Date)
     priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"))
     board_id = db.Column(db.Integer, db.ForeignKey("boards.id"))
+
+    board = db.relationship("Board", back_populates="notes")
 
 
 class Board(db.Model):
@@ -56,3 +62,4 @@ class Board(db.Model):
 
     labels = db.relationship("Label", back_populates="board")
     notes = db.relationship("Note", back_populates="board")
+    owner = db.relationship("User", back_populates="owned_boards")
