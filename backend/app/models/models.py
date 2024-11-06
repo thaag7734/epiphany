@@ -16,7 +16,7 @@ class Team(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
     users = db.relationship("User", secondary=team_user, back_populates="teams")
 
     owner = db.relationship("User", back_populates="owned_teams")
@@ -32,8 +32,18 @@ class Team(db.Model):
 
 note_label = db.Table(
     "note_labels",
-    db.Column("note_id", db.Integer, db.ForeignKey("notes.id"), primary_key=True),
-    db.Column("label_id", db.Integer, db.ForeignKey("labels.id"), primary_key=True),
+    db.Column(
+        "note_id",
+        db.Integer,
+        db.ForeignKey(add_prefix_for_prod("notes.id")),
+        primary_key=True,
+    ),
+    db.Column(
+        "label_id",
+        db.Integer,
+        db.ForeignKey(add_prefix_for_prod("labels.id")),
+        primary_key=True,
+    ),
 )
 
 
@@ -42,7 +52,7 @@ class Label(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
-    board_id = db.Column(db.Integer, db.ForeignKey("boards.id"))
+    board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
 
     board = db.relationship("Board", back_populates="labels")
 
@@ -63,7 +73,7 @@ class Note(db.Model):
     content = db.Column(db.String(2000))
     deadline = db.Column(db.Date)
     priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"))
-    board_id = db.Column(db.Integer, db.ForeignKey("boards.id"))
+    board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
 
     board = db.relationship("Board", back_populates="notes")
 
@@ -84,7 +94,7 @@ class Board(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer)
-    owner_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
     name = db.Column(db.String, nullable=False)
 
     labels = db.relationship("Label", back_populates="board")

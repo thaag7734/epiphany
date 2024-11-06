@@ -14,7 +14,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
-    root_board_id = db.Column(db.Integer, nullable=True)
+    root_board_id = db.Column(
+        db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")), nullable=True
+    )
     teams = db.relationship("Team", secondary=team_user, back_populates="users")
     owned_boards = db.relationship("Board", back_populates="owner")
     owned_teams = db.relationship("Team", back_populates="owner")

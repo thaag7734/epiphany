@@ -1,5 +1,4 @@
 from flask.testing import FlaskClient
-import sqlite3
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -31,8 +30,6 @@ class TestBoardRoutes:
         login_user(client, user)
 
         res = client.get("/api/boards/1")
-
-        print("RES IN TEST ===>", res.data)
 
         json = res.json
 

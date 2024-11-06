@@ -29,7 +29,6 @@ wtforms = "==3.0.1"
 zipp = "==3.17.0"
 
 [dev-packages]
-requests = "==2.32.3"
 
 [requires]
 python_version = "3.9"
