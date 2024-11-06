@@ -10,14 +10,18 @@ boards: Blueprint = Blueprint("boards", __name__, url_prefix="/boards")
 @boards.route("/<int:board_id>")
 @login_required
 def get_board(board_id):
-    board = Board.query.get(board_id)
+    board: Board = Board.query.get(board_id)
     if not board:
         return Response({"message": "Board does not exist Sorry"}, status=404)
 
     if board.owner_id != current_user.id:
         return Response({"message": "This is not your board"}, status=403)
 
-    return Response(board.to_dict(), status=200)
+    return {
+        "id": board.id,
+        "name": board.name,
+        "owner_id": board.owner_id,
+    }, 200
 
 
 @boards.route("/new", methods=["POST"])

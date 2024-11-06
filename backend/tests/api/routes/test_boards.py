@@ -32,13 +32,13 @@ class TestBoardRoutes:
 
         res = client.get("/api/boards/1")
 
+        print("RES IN TEST ===>", res.data)
+
         json = res.json
 
         # technically we can replace this with `assert res.is_json`
         # but my linter doesn't like it
         assert json is not None
 
-        res_data = json.to_dict()
-
-        assert res_data["name"] == "test board"
-        assert res_data["owner_id"] == user.id
+        assert json["name"] == "test board"
+        assert json["owner_id"] == user.id

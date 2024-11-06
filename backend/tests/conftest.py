@@ -39,7 +39,7 @@ def user(client_db: tuple[FlaskClient, SQLAlchemy]) -> Generator[User, None, Non
     new_user = User(
         username="test_user",
         email="test_email@test.test",
-        password=generate_password_hash(TEST_PASSWORD),
+        password=TEST_PASSWORD,
     )
 
     db.session.add(new_user)

@@ -52,6 +52,7 @@ def https_redirect():
             return redirect(url, code=code)
 
 
+@app.before_request
 def check_csrf():
     if not app.config["TESTING"]:
         csrf_token = request.cookies.get("csrf_token")
