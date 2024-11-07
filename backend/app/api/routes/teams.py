@@ -10,7 +10,7 @@ teams: Blueprint = Blueprint("teams", __name__, url_prefix="/teams")
 
 @teams.route("/<int:team_id>/users", methods=["PUT"])
 @login_required
-def modify_team_users(team_id):
+def modify_team_users(team_id: int):
     team: Team = Team.query.get(team_id)
 
     if not team: 
@@ -49,3 +49,9 @@ def modify_team_users(team_id):
         "message": "Team updated successfully",
         "team": team.to_dict()
     }, 201
+
+
+@teams.route("/<int:team_id>", methods=["DELETE"])
+@login_required
+def delete_team(team_id: int):
+    
