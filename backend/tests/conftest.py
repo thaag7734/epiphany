@@ -1,4 +1,4 @@
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from flask.testing import FlaskClient
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.test import TestResponse
@@ -29,30 +29,38 @@ def client_db() -> Generator[tuple[FlaskClient, SQLAlchemy], None, None]:
 
 
 @pytest.fixture(scope="module")
-def user(client_db: tuple[FlaskClient, SQLAlchemy]) -> Generator[User, None, None]:
-    db = client_db[1]
+def user(
+    client_db: tuple[FlaskClient, SQLAlchemy],
+) -> Callable[[str], User]:
+    def create_user(username: str) -> User:
+        db = client_db[1]
 
-    new_user = User(
-        username="test_user",
-        email="test_email@test.test",
-        password=TEST_PASSWORD,
-    )
+        new_user = User(
+            username=username,
+            email=f"{username}@test.test",
+            password=TEST_PASSWORD,
+        )
 
-    db.session.add(new_user)
-    db.session.commit()
+        db.session.add(new_user)
+        db.session.commit()
 
-    # TODO find an elegant way to make the properties of the board accessible
-    # to tests that use this fixture
-    new_board = Board(owner_id=new_user.id, name="test board")
+        # TODO find an elegant way to make the properties of the board accessible
+        # to tests that use this fixture
+        new_board = Board(owner_id=new_user.id, name="test board")
 
-    db.session.add(new_board)
-    db.session.commit()
+        db.session.add(new_board)
+        db.session.commit()
 
-    yield new_user
+        new_user.root_board_id = new_board.id
+        db.session.commit()
+
+        return new_user
+
+    return create_user
 
 
-def login_user(client: FlaskClient, user: User) -> None:
-    res: TestResponse = client.post(
+def login_user(client: FlaskClient, user: User) -> TestResponse:
+    return client.post(
         "/api/auth/login",
         data={
             "email": user.email,
@@ -60,3 +68,20 @@ def login_user(client: FlaskClient, user: User) -> None:
         },
         content_type="application/x-www-form-urlencoded",
     )
+
+
+def create_board(db: SQLAlchemy, owner: User, name: str, depth: int = 0) -> Board:
+    if depth == 4:
+        raise Exception("Board creation failed too many times!")
+    elif depth > 0:
+        print(f"Board creation failed, retrying ({depth}/3)")
+
+    board = Board(name=name, owner_id=owner.id)
+
+    try:
+        db.session.add(board)
+    except Exception:
+        db.session.rollback()
+        create_board(db, owner, name, depth + 1)
+
+    return board

@@ -30,4 +30,4 @@ def user(id):
 @login_required
 def get_user_boards(id):
     user = User.query.get(id)
-    return user.boards.to_dict()
+    return {"boards": [board.to_dict() for board in user.boards]}, 200

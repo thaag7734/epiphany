@@ -1,7 +1,7 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from .models import team_user
+from .models import Board, team_user
 
 
 class User(db.Model, UserMixin):
@@ -18,8 +18,9 @@ class User(db.Model, UserMixin):
         db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")), nullable=True
     )
     teams = db.relationship("Team", secondary=team_user, back_populates="users")
-    owned_boards = db.relationship("Board", back_populates="owner")
-    owned_teams = db.relationship("Team", back_populates="owner")
+    boards = db.relationship(
+        "Board", back_populates="owner", foreign_keys=[Board.owner_id]
+    )
 
     @property
     def password(self):

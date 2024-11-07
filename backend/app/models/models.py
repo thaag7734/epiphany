@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint
+from sqlalchemy import CheckConstraint, ForeignKey, column
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 
@@ -19,8 +19,8 @@ class Team(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
-    owner = db.relationship("User", back_populates="owned_teams")
-    board = db.relationship("Board", back_populates="board")
+    owner = db.relationship("User")
+    board = db.relationship("Board", back_populates="team")
 
     def to_dict(self):
         return {
@@ -98,10 +98,10 @@ class Board(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
     name = db.Column(db.String, nullable=False)
 
-    team = db.relationship("Team", back_populates="teams")
+    team = db.relationship("Team", back_populates="board")
     labels = db.relationship("Label", back_populates="board")
     notes = db.relationship("Note", back_populates="board")
-    owner = db.relationship("User", back_populates="owned_boards")
+    owner = db.relationship("User", back_populates="boards", foreign_keys=[owner_id])
 
     def to_dict(self):
         return {
