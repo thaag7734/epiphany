@@ -5,7 +5,7 @@ from app.models.db import db, environment, SCHEMA
 
 
 def seed_teams():
-    shared_board = Board(name="shared board", owner_id=1)
+    shared_board = Board(name="shared board", owner_id=1, team_id=1)
 
     db.session.add(shared_board)
     db.session.commit()
