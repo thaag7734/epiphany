@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from app.models.models import Label, Team
 
@@ -7,6 +7,7 @@ labels: Blueprint = Blueprint("labels", __name__, url_prefix="/labels")
 
 
 @labels.route("/<int:id>", methods=["GET"])
+@login_required
 def get_label(id):
     label: Label = Label.query.get(id)
 

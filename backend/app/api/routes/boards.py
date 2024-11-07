@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from werkzeug.datastructures import ImmutableMultiDict
 from app.api.user_routes import user
 from app.forms.label_form import LabelForm
-from app.models.models import Board, Label, Team
+from app.forms.note_form import NoteForm
+from app.models.models import Board, Label, Team, Note
 from app.models.db import db
 from flask_login import login_required, current_user
 from app.forms.board_form import BoardForm
@@ -192,6 +193,72 @@ def create_label(board_id: int):
             return {
                 "message": "New label successfully created",
                 "label": new_label.to_dict(),
+            }, 201
+    else:
+        return {"message": "Invalid form data"}, 400
+
+
+@boards.route("/<int:board_id>/notes")
+@login_required
+def get_board_notes(board_id: int):
+    if not current_user:
+        return {"message": "Must be logged in to access notes for this board"}, 401
+
+    board: Board = Board.query.get(board_id)
+
+    if not board:
+        return {"message": "Board not found"}, 404
+
+    user_has_access = False
+
+    if board.owner_id == current_user.id:
+        user_has_access = True
+
+    if not user_has_access and board.team_id is not None:
+        team: Team = board.team
+
+        for member in team.users:
+            if member.id == current_user.id:
+                user_has_access = True
+                break
+
+    if not user_has_access:
+        return {
+            "message": "You do not have permission to access this board's notes"
+        }, 403
+
+    return {"notes": board.to_dict()["notes"]}, 200
+
+
+@boards.route("/<int:board_id>/new_note")
+@login_required
+def create_note(board_id: int):
+    form_data = request.json
+
+    if not form_data:
+        return {"message": "Missing form data from request"}, 400
+
+    form = NoteForm(ImmutableMultiDict(form_data))
+
+    if form.validate():
+        new_note = Note(
+            title=form.title.data, 
+            content=form.content.data,
+            deadline=form.content.data,
+            priority=form.priority.data,
+            board_id=board_id
+            )
+
+        try:
+            db.session.add(new_note)
+        except Exception:
+            db.session.rollback()
+            return {"message": "Internal Server error"}, 500
+        else:
+            db.session.commit()
+            return {
+                "message": "New label successfully created",
+                "label": new_note.to_dict(),
             }, 201
     else:
         return {"message": "Invalid form data"}, 400

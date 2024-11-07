@@ -74,7 +74,7 @@ class Note(db.Model):
     title = db.Column(db.String(32), nullable=False)
     content = db.Column(db.String(2000))
     deadline = db.Column(db.Date)
-    priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"))
+    priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"), default=0)
     board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
 
     board = db.relationship("Board", back_populates="notes")
