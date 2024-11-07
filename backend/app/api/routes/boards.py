@@ -311,6 +311,7 @@ def create_team(board_id: int):
     
     return {
         "message": "Team created successfully",
+        "team": team.to_dict()
     }, 201
     
         
