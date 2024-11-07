@@ -136,6 +136,85 @@ class TestBoardRoutes:
         assert json["board"]["name"] == board_data["name"]
         assert json["board"]["owner_id"] == board_data["owner_id"]
 
+    def test_update_board(
+        self, user: Callable[[str], User], client_db: tuple[FlaskClient, SQLAlchemy]
+    ) -> None:
+        """
+        Test the PUT /api/boards/:id route to ensure that it updates the data correctly
+        """
+        client, _ = client_db
+
+        user1 = user("test_user_1")
+        user("test_user_2")
+        login_user(client, user1)
+
+        board1: Board = Board.query.get(1)
+        board2: Board = Board.query.get(2)
+
+        # ensure user can't update other users' boards
+        res1 = client.put(
+            f"/api/boards/{board2.id}",
+            data=JSON.dumps({"owner_id": 1, "name": "hijacked"}),
+            content_type="application/json",
+        )
+
+        try:
+            assert res1.status_code == 403
+
+            new_board2 = Board.query.get(2)
+            assert new_board2.name == board2.name
+            assert new_board2.owner_id == 2
+        except AssertionError:
+            print("=== Response from server ===\n", res1.data)
+            raise
+
+        # ensure user can't transfer ownership of a board to an arbitrary user id
+        res2 = client.put(
+            f"/api/boards/{board1.id}",
+            data=JSON.dumps({"owner_id": 2, "name": "failed the reverse pickpocket"}),
+            content_type="application/json",
+        )
+
+        try:
+            assert res2.status_code == 200
+
+            new_board1 = Board.query.get(1)
+            assert new_board1.name == "failed the reverse pickpocket"
+            assert new_board1.owner_id == 1
+        except AssertionError:
+            print("=== Response from server ===\n", res2.data)
+            raise
+
+        # ensure user can update their own board
+        res3 = client.put(
+            f"/api/boards/{board1.id}",
+            data=JSON.dumps({"name": "alter ego"}),
+            content_type="application/json",
+        )
+
+        try:
+            assert res3.status_code == 200
+
+            new_board1 = Board.query.get(1)
+            assert new_board1.name == "alter ego"
+            assert new_board1.owner_id == 1
+
+            json = res3.json
+            assert json is not None
+            assert "message" in json
+            assert "board" in json
+
+            assert type(json["message"]) is str
+            assert type(json["board"]) is dict
+
+            assert "success" in json["message"].lower()
+
+            for key in ["id", "owner_id", "name", "team", "labels", "notes", "owner"]:
+                assert key in json["board"]
+        except AssertionError:
+            print("=== Response from server ===\n", res3.data)
+            raise
+
     def test_delete_board(
         self, user: Callable[[str], User], client_db: tuple[FlaskClient, SQLAlchemy]
     ) -> None:

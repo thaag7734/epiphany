@@ -86,12 +86,11 @@ def update_board(board_id):
         return {"message": "Missing form data from request"}, 400
 
     form_data["owner_id"] = current_user.id
-    form = BoardForm(form_data)
+    form = BoardForm(ImmutableMultiDict(form_data))
 
     if form.validate():
         try:
-            board.team_id = (form.team_id.data,)
-            board.owner_id = (form.owner_id.data,)
+            board.team_id = form.team_id.data
             board.name = form.name.data
 
             db.session.commit()
@@ -102,7 +101,7 @@ def update_board(board_id):
 
         else:
             return {
-                "message": "New Board succesfully updated",
+                "message": "Board successfully updated",
                 "board": board.to_dict(),
             }, 200
 
