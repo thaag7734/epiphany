@@ -54,4 +54,22 @@ def modify_team_users(team_id: int):
 @teams.route("/<int:team_id>", methods=["DELETE"])
 @login_required
 def delete_team(team_id: int):
+    team: Team = Team.query.get(team_id)
     
+    if not team:
+        return {"message": "Team not found"}, 404
+    
+    if team.owner_id != current_user.id:
+        return {"message": "This is not your Team"}, 403
+    
+    try:
+        db.session.delete(team)
+
+    except Exception:
+        db.session.rollback()
+        return {"message": "Internal server error"}, 500
+
+    else: 
+        db.session.commit()
+
+    return {"message": "Team deleted successfully"}, 200
