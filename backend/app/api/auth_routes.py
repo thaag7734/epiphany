@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from app.models.models import db
 from app.models.user import User
+from app.models.models import Board
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -58,6 +59,13 @@ def sign_up():
             password=form.data["password"],
         )
         db.session.add(user)
+        db.session.commit()
+        new_board = Board(
+            owner_id = user.id
+        )
+        db.session.add(new_board)
+        db.session.commit()
+        user.root_board_id = new_board.id
         db.session.commit()
         login_user(user)
         return user.to_dict()

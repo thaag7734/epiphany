@@ -1,4 +1,5 @@
 from sqlalchemy import CheckConstraint, ForeignKey, column
+from datetime import datetime
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 
@@ -16,7 +17,7 @@ class Team(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
+    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
     owner = db.relationship("User")
@@ -73,7 +74,7 @@ class Note(db.Model):
     title = db.Column(db.String(32), nullable=False)
     content = db.Column(db.String(2000))
     deadline = db.Column(db.Date)
-    priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"))
+    priority = db.Column(db.Integer, CheckConstraint("priority >= 0 AND priority <= 3"), default=0)
     board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
 
     board = db.relationship("Board", back_populates="notes")
@@ -96,11 +97,11 @@ class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("teams.id")))
     owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, default=datetime.now().strftime('%d-%m-%Y'))
 
-    team = db.relationship("Team", back_populates="board")
-    labels = db.relationship("Label", back_populates="board")
-    notes = db.relationship("Note", back_populates="board")
+    team = db.relationship("Team", back_populates="board", cascade="all, delete-orphan")
+    labels = db.relationship("Label", back_populates="board", cascade="all, delete-orphan")
+    notes = db.relationship("Note", back_populates="board", cascade="all, delete-orphan")
     owner = db.relationship("User", back_populates="boards", foreign_keys=[owner_id])
 
     def to_dict(self):
