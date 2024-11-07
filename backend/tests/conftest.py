@@ -28,7 +28,20 @@ def client_db() -> Generator[tuple[FlaskClient, SQLAlchemy], None, None]:
             yield (client, db)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(autouse=True)
+def clean_session(client_db: tuple[FlaskClient, SQLAlchemy]) -> None:
+    db = client_db[1]
+
+    db.session.rollback()
+    db.session.expunge_all()
+
+    db.drop_all()
+    db.create_all()
+
+    db.session.remove()
+
+
+@pytest.fixture()
 def user(
     client_db: tuple[FlaskClient, SQLAlchemy],
 ) -> Callable[[str], User]:

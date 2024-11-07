@@ -109,6 +109,7 @@ class Board(db.Model):
             "team_id": self.team_id,
             "owner_id": self.owner_id,
             "name": self.name,
+            "team": self.team.to_dict() if self.team is not None else None,
             "notes": [note.to_dict() for note in self.notes],
             "labels": [label.to_dict() for label in self.labels],
             "owner": self.owner.to_dict(),

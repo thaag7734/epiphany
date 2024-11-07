@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from werkzeug.datastructures import ImmutableMultiDict
 from app.api.user_routes import user
 from app.forms.label_form import LabelForm
 from app.models.models import Board, Label, Team
@@ -36,7 +37,10 @@ def create_board():
         return {"message": "Missing form data from request"}, 400
 
     form_data["owner_id"] = current_user.id
-    form = BoardForm(form_data)
+
+    # wrap data in an ImmutableMultiDict here to fix AttributeError
+    # when attempting to instantiate the form
+    form = BoardForm(ImmutableMultiDict(form_data))
 
     if not current_user:
         return {"message": "Must be logged in to create a board"}, 401
@@ -54,7 +58,7 @@ def create_board():
         else:
             db.session.commit()
             return {
-                "message": "New Board succesfully created",
+                "message": "New board successfully created",
                 "board": new_board.to_dict(),
             }, 201
 
