@@ -1,12 +1,9 @@
 from flask.testing import FlaskClient
-from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
 from app.config import Config
 from app.models.user import User
 from tests.conftest import login_user
-
-load_dotenv()
 
 
 class TestBoardRoutes:
@@ -30,6 +27,8 @@ class TestBoardRoutes:
         login_user(client, user)
 
         res = client.get("/api/boards/1")
+
+        assert res.status_code == 200
 
         json = res.json
 
