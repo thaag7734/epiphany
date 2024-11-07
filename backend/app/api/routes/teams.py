@@ -13,13 +13,13 @@ teams: Blueprint = Blueprint("teams", __name__, url_prefix="/teams")
 def modify_team_users(team_id: int):
     team: Team = Team.query.get(team_id)
 
-    if not team: 
+    if not team:
         return {"message": "Team not found"}, 404
-    
-    if team.owner_id != current_user.id: 
+
+    if team.owner_id != current_user.id:
         return {"message": "You are not authorized to modify this team"}, 403
-    
-    user_list: list[User] = []
+
+    user_list: list[User] = [User.query.get(current_user.id)]
 
     form_data = request.json
 
@@ -30,38 +30,35 @@ def modify_team_users(team_id: int):
 
     if type(users) is not list:
         return {"message": "Users must be a list of emails"}, 400
-    
+
     for email in users:
         user = User.query.filter(User.email == email).first()
 
         if user:
             user_list.append(user)
 
-            try: 
+            try:
                 team.users = user_list
                 db.session.commit()
 
             except Exception:
                 db.session.rollback()
                 return {"message": "Internal server error"}, 500
-            
-    return {
-        "message": "Team updated successfully",
-        "team": team.to_dict()
-    }, 201
+
+    return {"message": "Team updated successfully", "team": team.to_dict()}, 201
 
 
 @teams.route("/<int:team_id>", methods=["DELETE"])
 @login_required
 def delete_team(team_id: int):
     team: Team = Team.query.get(team_id)
-    
+
     if not team:
         return {"message": "Team not found"}, 404
-    
+
     if team.owner_id != current_user.id:
         return {"message": "This is not your Team"}, 403
-    
+
     try:
         db.session.delete(team)
 
@@ -69,7 +66,7 @@ def delete_team(team_id: int):
         db.session.rollback()
         return {"message": "Internal server error"}, 500
 
-    else: 
+    else:
         db.session.commit()
 
     return {"message": "Team deleted successfully"}, 200
