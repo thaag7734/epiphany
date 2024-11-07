@@ -3,7 +3,7 @@ from flask.testing import FlaskClient
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.test import TestResponse
 from app.models.user import User
-from app.models.models import Board
+from app.models.models import Board, Note
 from app import app, db
 import pytest
 
@@ -83,7 +83,7 @@ def login_user(client: FlaskClient, user: User) -> TestResponse:
     )
 
 
-def create_board(db: SQLAlchemy, owner: User, name: str, depth: int = 0) -> Board:
+def create_board(db: SQLAlchemy, owner: User, *, name: str, depth: int = 0) -> Board:
     if depth == 4:
         raise Exception("Board creation failed too many times!")
     elif depth > 0:
@@ -95,6 +95,6 @@ def create_board(db: SQLAlchemy, owner: User, name: str, depth: int = 0) -> Boar
         db.session.add(board)
     except Exception:
         db.session.rollback()
-        create_board(db, owner, name, depth + 1)
+        create_board(db, owner, name=name, depth=depth + 1)
 
     return board

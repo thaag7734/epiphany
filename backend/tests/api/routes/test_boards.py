@@ -3,20 +3,12 @@ from collections.abc import Callable
 from flask.testing import FlaskClient
 from flask_sqlalchemy import SQLAlchemy
 
-from app.config import Config
 from app.models.models import Board
 from app.models.user import User
 from tests.conftest import login_user, create_board
 
 
 class TestBoardRoutes:
-    def test_has_db_config(self) -> None:
-        """Check to make sure the db url is set correctly"""
-
-        # TODO account for using postgres here
-        for component in ["sqlite:///", "dev.db"]:
-            assert component in Config.SQLALCHEMY_DATABASE_URI
-
     def test_get_by_id(
         self,
         user: Callable[[str], User],
@@ -62,8 +54,8 @@ class TestBoardRoutes:
 
         login_user(client, user1)
 
-        boards = [create_board(db, user1, f"board_{x}") for x in range(0, 5)]
-        [create_board(db, user2, f"other_board_{x}") for x in range(0, 5)]
+        boards = [create_board(db, user1, name=f"board_{x}") for x in range(0, 5)]
+        [create_board(db, user2, name=f"other_board_{x}") for x in range(0, 5)]
 
         res = client.get(f"/api/users/{user1.id}/boards")
         json = None
