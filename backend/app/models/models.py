@@ -17,7 +17,7 @@ class Team(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")))
+    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
     owner = db.relationship("User")
