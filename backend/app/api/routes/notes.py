@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 
 notes: Blueprint = Blueprint("notes", __name__, url_prefix="/notes")
 
+
 @notes.route("/<int:note_id>/edit", methods=["PUT"])
 @login_required
 def update_note(note_id: int):
@@ -32,19 +33,19 @@ def update_note(note_id: int):
     form = NoteForm(ImmutableMultiDict(form_data))
 
     if form.validate():
-
         try:
             note.title = form.title.data
             note.content = form.content.data
             note.deadline = form.deadline.data
             note.priority = form.priority.data
-    
-            db.session.commit()        
+
+            db.session.commit()
         except Exception:
             db.session.rollback()
             return {"message": "Internal Server error"}, 500
         else:
             return {"message": "Note successfully updated", "note": note.to_dict()}, 200
+
 
 @notes.route("/<int:note_id>/delete", methods=["DELETE"])
 @login_required
@@ -61,7 +62,7 @@ def delete_note(note_id: int):
 
     if note_board.owner_id != current_user.id:
         return {"message": "This is not your Note"}, 403
-    
+
     try:
         db.session.delete(note)
     except Exception:
