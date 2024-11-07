@@ -9,6 +9,7 @@ from app.models.user import User
 from app.api.user_routes import user_routes
 from app.api.auth_routes import auth_routes
 from app.api.routes.boards import boards
+from app.api.routes.teams import teams
 from app.seeds import seed_commands
 from app.config import Config
 
@@ -31,6 +32,7 @@ app.config.from_object(Config)
 app.register_blueprint(user_routes, url_prefix="/api/users")
 app.register_blueprint(auth_routes, url_prefix="/api/auth")
 app.register_blueprint(boards, url_prefix="/api/boards")
+app.register_blueprint(teams, url_prefix="/api/teams")
 db.init_app(app)
 Migrate(app, db)
 

@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from werkzeug.datastructures import ImmutableMultiDict
-from app.api.user_routes import user
 from app.forms.label_form import LabelForm
 from app.forms.note_form import NoteForm
 from app.models.models import Board, Label, Team, Note
@@ -262,3 +261,57 @@ def create_note(board_id: int):
             }, 201
     else:
         return {"message": "Invalid form data"}, 400
+    
+
+@boards.route("/<int:board_id>/new_team", methods=["POST"])
+@login_required
+def create_team(board_id: int):
+    board: Board = Board.query.get(board_id)
+
+    if not board:
+        return {"message": "Board not found"}, 404
+    
+    if board.owner_id != current_user.id:
+        return {"message": "This is not your board"}, 403
+    
+    if board.team_id is not None:
+        return {"message": "This board is already shared with a team"}, 403
+    
+    team = Team(
+        owner_id = current_user.id
+    )
+
+    try: 
+        db.session.add(team)
+
+    except Exception:
+        db.session.rollback()
+        return {"message": "Internal server error"}, 500
+    
+    form_data = request.json
+
+    if form_data:
+        users = form_data["users"]
+
+        if type(users) is not list:
+            return {"message": "Users must be a list of emails"}, 400
+        
+        for email in users:
+            user = User.query.filter(User.email == email).first()
+
+            if user:
+                team.users.append(user)
+
+                try: 
+                    db.session.commit()
+
+                except Exception:
+                    db.session.rollback()
+                    return {"message": "Internal server error"}, 500
+    
+    return {
+        "message": "Team created successfully",
+        "team": team.to_dict()
+    }, 201
+    
+        
