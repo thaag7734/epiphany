@@ -3,7 +3,7 @@ from app.models.models import Label, Note
 from app.models.db import db, environment, SCHEMA
 
 
-def seed_labels():
+def seed_notes():
     notes = [
         [Note(title=f"note{x}", content="uwu", board_id=y) for x in range(3)]
         for y in range(3)
