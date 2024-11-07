@@ -124,6 +124,9 @@ def delete_board(board_id):
     if board.owner_id != current_user.id:
         return {"message": "This is not your board"}, 403
 
+    if board.id == current_user.root_board_id:
+        return {"message": "You cannot delete your home board"}, 403
+
     try:
         db.session.delete(board)
 
@@ -132,7 +135,7 @@ def delete_board(board_id):
         return {"message": "Internal Server error"}, 500
     else:
         db.session.commit()
-        return {"message": "New Board succesfully deleted"}, 201
+        return {"message": "Board succesfully deleted"}, 200
 
 
 @boards.route("/<int:board_id>/labels")

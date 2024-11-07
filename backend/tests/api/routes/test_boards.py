@@ -4,6 +4,7 @@ from flask.testing import FlaskClient
 from flask_sqlalchemy import SQLAlchemy
 
 from app.config import Config
+from app.models.models import Board
 from app.models.user import User
 from tests.conftest import login_user, create_board
 
@@ -134,3 +135,54 @@ class TestBoardRoutes:
 
         assert json["board"]["name"] == board_data["name"]
         assert json["board"]["owner_id"] == board_data["owner_id"]
+
+    def test_delete_board(
+        self, user: Callable[[str], User], client_db: tuple[FlaskClient, SQLAlchemy]
+    ) -> None:
+        """
+        Test the DELETE /api/boards/:id route to ensure that it behaves properly
+        """
+        client, db = client_db
+
+        user1 = user("test_user_1")
+        user2 = user("test_user_2")
+        login_user(client, user1)
+
+        # TODO replace this with something better in the user fixture
+        root_board: Board = Board.query.get(1)
+        board1: Board = Board(name="to_be_deleted", owner_id=user1.id)
+        board2: Board = Board(name="invinciboard", owner_id=user2.id)
+
+        db.session.add(board1)
+        db.session.add(board2)
+        db.session.commit()
+
+        # ensure user can't delete the root board
+        res1 = client.delete(f"/api/boards/{root_board.id}")
+
+        try:
+            assert res1.status_code == 403
+            assert Board.query.get(board1.id).name == board1.name
+        except Exception:
+            print("=== Response from server ===\n", res1.data)
+            raise
+
+        # ensure user can't delete other users' boards
+        res2 = client.delete(f"/api/boards/{board2.id}")
+
+        try:
+            assert res2.status_code == 403
+            assert Board.query.get(board2.id).name == board2.name
+        except:
+            print("=== Response from server ===\n", res2.data)
+            raise
+
+        # ensure user can delete their own boards if they aren't the root board
+        res3 = client.delete(f"/api/boards/{board1.id}")
+
+        try:
+            assert res3.status_code == 200
+            assert Board.query.get(board1.id) is None
+        except:
+            print("=== Response from server ===\n", res2.data)
+            raise
