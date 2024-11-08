@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.models.models import Note, Board
+from app.models.models import Note, Board, Team
 from app.forms.note_form import NoteForm
 from app.models.db import db
 from werkzeug.datastructures import ImmutableMultiDict
@@ -21,8 +21,21 @@ def update_note(note_id: int):
 
     note_board = Board.query.get(note.board_id)
 
-    if note_board.owner_id != current_user.id:
-        return {"message": "This is not your Note"}, 403
+    user_has_access = False
+
+    if note_board.owner_id == current_user.id:
+        user_has_access = True
+
+    if not user_has_access and note_board.team_id is not None:
+        team: Team = note_board.team
+
+        for member in team.users:
+            if member.id == current_user.id:
+                user_has_access = True
+                break
+
+    if not user_has_access:
+        return {"message": "You do not have permission to edit this note"}, 403
 
     form_data = request.json
 
@@ -43,8 +56,10 @@ def update_note(note_id: int):
         except Exception:
             db.session.rollback()
             return {"message": "Internal Server error"}, 500
-        else:
-            return {"message": "Note successfully updated", "note": note.to_dict()}, 200
+
+        return {"message": "Note successfully updated", "note": note.to_dict()}, 200
+    else:
+        return {"message": "Invalid form data"}, 400
 
 
 @notes.route("/<int:note_id>/delete", methods=["DELETE"])

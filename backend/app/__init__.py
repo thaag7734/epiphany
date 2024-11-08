@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import generate_csrf
 from flask_login import LoginManager
+from app.api.routes.notes import notes
 from app.models.db import db
 from app.models.user import User
 from app.api.user_routes import user_routes
@@ -33,6 +34,7 @@ app.register_blueprint(user_routes, url_prefix="/api/users")
 app.register_blueprint(auth_routes, url_prefix="/api/auth")
 app.register_blueprint(boards, url_prefix="/api/boards")
 app.register_blueprint(teams, url_prefix="/api/teams")
+app.register_blueprint(notes, url_prefix="/api/notes")
 db.init_app(app)
 Migrate(app, db)
 

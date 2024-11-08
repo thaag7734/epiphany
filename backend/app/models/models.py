@@ -93,7 +93,6 @@ class Note(db.Model):
             "deadline": self.deadline,
             "priority": self.priority,
             "board_id": self.board_id,
-            "board": self.board.to_dict(),
         }
 
 

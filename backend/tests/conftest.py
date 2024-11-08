@@ -9,9 +9,10 @@ import pytest
 
 
 TEST_PASSWORD = "test_password"
+MAX_CREATION_RETRIES = 3
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def client_db() -> Generator[tuple[FlaskClient, SQLAlchemy], None, None]:
     app.config["TESTING"] = True
     app.config["WTF_CSRF_ENABLED"] = False
@@ -84,10 +85,10 @@ def login_user(client: FlaskClient, user: User) -> TestResponse:
 
 
 def create_board(db: SQLAlchemy, owner: User, *, name: str, depth: int = 0) -> Board:
-    if depth == 4:
+    if depth == MAX_CREATION_RETRIES + 1:
         raise Exception("Board creation failed too many times!")
     elif depth > 0:
-        print(f"Board creation failed, retrying ({depth}/3)")
+        print(f"Board creation failed, retrying ({depth}/{MAX_CREATION_RETRIES})")
 
     board = Board(name=name, owner_id=owner.id)
 
@@ -96,5 +97,28 @@ def create_board(db: SQLAlchemy, owner: User, *, name: str, depth: int = 0) -> B
     except Exception:
         db.session.rollback()
         create_board(db, owner, name=name, depth=depth + 1)
+    else:
+        db.session.commit()
 
     return board
+
+
+def create_note(
+    db: SQLAlchemy, board: Board, *, title: str, content: str, depth: int = 0
+) -> Note:
+    if depth == MAX_CREATION_RETRIES + 1:
+        raise Exception("Note creation failed too many times!")
+    elif depth > 0:
+        print(f"Note creation failed, retrying ({depth}/{MAX_CREATION_RETRIES})")
+
+    note = Note(title=title, content=content, priority=1, board_id=board.id)
+
+    try:
+        db.session.add(note)
+    except Exception:
+        db.session.rollback()
+        create_note(db, board, title=title, content=content, depth=depth + 1)
+    else:
+        db.session.commit()
+
+    return note

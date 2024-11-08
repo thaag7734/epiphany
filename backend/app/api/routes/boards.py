@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_wtf import FlaskForm
 from werkzeug.datastructures import ImmutableMultiDict
 from app.forms.label_form import LabelForm
 from app.forms.note_form import NoteForm
@@ -229,7 +230,7 @@ def get_board_notes(board_id: int):
     return {"notes": board.to_dict()["notes"]}, 200
 
 
-@boards.route("/<int:board_id>/new_note")
+@boards.route("/<int:board_id>/new_note", methods=["POST"])
 @login_required
 def create_note(board_id: int):
     form_data = request.json
@@ -237,13 +238,37 @@ def create_note(board_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
+    board: Board = Board.query.get(board_id)
+
+    if not board:
+        return {"message": "Board not found"}, 404
+
+    user_has_access = False
+
+    if board.owner_id == current_user.id:
+        user_has_access = True
+
+    if not user_has_access and board.team_id is not None:
+        team: Team = board.team
+
+        for member in team.users:
+            if member.id == current_user.id:
+                user_has_access = True
+                break
+
+    if not user_has_access:
+        return {
+            "message": "You do not have permission to access this board's labels"
+        }, 403
+
+    form_data["board_id"] = board_id
     form = NoteForm(ImmutableMultiDict(form_data))
 
     if form.validate():
         new_note = Note(
             title=form.title.data,
             content=form.content.data,
-            deadline=form.content.data,
+            deadline=form.deadline.data,
             priority=form.priority.data,
             board_id=board_id,
         )
