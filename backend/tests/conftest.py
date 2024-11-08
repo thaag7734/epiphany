@@ -104,14 +104,20 @@ def create_board(db: SQLAlchemy, owner: User, *, name: str, depth: int = 0) -> B
 
 
 def create_note(
-    db: SQLAlchemy, board: Board, *, title: str, content: str, depth: int = 0
+    db: SQLAlchemy,
+    board: Board,
+    *,
+    title: str,
+    content: str = "note content",
+    priority: int = 0,
+    depth: int = 0,
 ) -> Note:
     if depth == MAX_CREATION_RETRIES + 1:
         raise Exception("Note creation failed too many times!")
     elif depth > 0:
         print(f"Note creation failed, retrying ({depth}/{MAX_CREATION_RETRIES})")
 
-    note = Note(title=title, content=content, priority=1, board_id=board.id)
+    note = Note(title=title, content=content, priority=priority, board_id=board.id)
 
     try:
         db.session.add(note)
