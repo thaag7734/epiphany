@@ -2,6 +2,7 @@ import json as JSON
 from collections.abc import Callable
 from flask_login.test_client import FlaskClient
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.engine import create
 from werkzeug.test import TestResponse
 
 from app.models.models import Board, Note, Team
@@ -141,7 +142,7 @@ class TestNoteRoutes:
             db,
             board2,
             title="untouchable",
-            content="the user will fail to update this board. rip",
+            content="the user will fail to update this note. rip",
         )
         note3 = create_note(
             db, shared_board, title="debate", content="i have an opinion"
@@ -268,6 +269,85 @@ class TestNoteRoutes:
 
             new_note1 = Note.query.get(note1.id)
             assert new_note1 is None
+        except AssertionError:
+            print("=== Response from server ===\n", res3.data)
+            raise
+
+    def test_get_board_notes(
+        self, client_db: tuple[FlaskClient, SQLAlchemy], user: Callable[[str], User]
+    ) -> None:
+        """
+        Test the GET /api/boards/:board_id/notes route to ensure that it behaves correctly
+        """
+        client, db = client_db
+
+        user1 = user("test_user_1")
+        user2 = user("test_user_2")
+        login_user(client, user1)
+
+        board1: Board = Board.query.get(1)
+        board2: Board = Board.query.get(2)
+
+        team = Team(owner_id=user2.id, users=[user1, user2])
+        db.session.add(team)
+        db.session.commit()
+
+        shared_board: Board = Board(
+            name="shared board", owner_id=team.owner_id, team_id=team.id
+        )
+        db.session.add(shared_board)
+        db.session.commit()
+
+        note1 = create_note(db, board1, title="my note")
+        note2 = create_note(db, board2, title="john cena")
+        note3 = create_note(db, shared_board, title="visibility")
+
+        # ensure user cannot see notes on boards they do not have access to
+        res1 = client.get(f"/api/boards/{board2.id}/notes")
+
+        try:
+            assert res1.status_code == 403
+
+            json = res1.json
+            assert json is not None
+            assert "notes" not in json
+        except AssertionError:
+            print("=== Response from server ===\n", res1.data)
+            raise
+
+        # ensure user can see notes on boards they have access to via a team
+        res2 = client.get(f"/api/boards/{shared_board.id}/notes")
+
+        try:
+            assert res2.status_code == 200
+
+            json = res2.json
+            assert json is not None
+            assert "notes" in json
+            assert type(json["notes"]) is list
+            assert len(json["notes"]) == 1
+
+            for key in note3.to_dict():
+                assert key in json["notes"][0]
+        except AssertionError:
+            print("=== Response from server ===\n", res1.data)
+            raise
+
+        # ensure user can see notes on boards they own
+        res3 = client.get(f"/api/boards/{board1.id}/notes")
+
+        try:
+            assert res3.status_code == 200
+
+            json = res3.json
+            assert json is not None
+            assert "notes" in json
+
+            assert type(json["notes"]) is list
+            assert len(json["notes"]) == 1
+
+            for key in note1.to_dict():
+                assert key in json["notes"][0]
         except AssertionError:
             print("=== Response from server ===\n", res3.data)
             raise
