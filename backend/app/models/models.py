@@ -67,7 +67,6 @@ class Label(db.Model):
             "id": self.id,
             "name": self.name,
             "board_id": self.board_id,
-            "board": self.board.to_dict(),
         }
 
 

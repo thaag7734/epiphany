@@ -170,15 +170,39 @@ def get_board_labels(board_id: int):
     return {"labels": board.to_dict()["labels"]}, 200
 
 
-@boards.route("/<int:board_id>/new_label")
+@boards.route("/<int:board_id>/new_label", methods=["POST"])
 @login_required
 def create_label(board_id: int):
+    board: Board = Board.query.get(board_id)
+
+    if not board:
+        return {"message": "Board not found"}, 404
+
+    user_has_access = False
+
+    if board.owner_id == current_user.id:
+        user_has_access = True
+
+    if not user_has_access and board.team_id is not None:
+        team: Team = board.team
+
+        for member in team.users:
+            if member.id == current_user.id:
+                user_has_access = True
+                break
+
+    if not user_has_access:
+        return {
+            "message": "You do not have permission to access this board's labels"
+        }, 403
+
     form_data = request.json
 
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form = LabelForm(form_data)
+    form_data["board_id"] = board_id
+    form = LabelForm(ImmutableMultiDict(form_data))
 
     if form.validate():
         new_label = Label(name=form.name.data, board_id=board_id)
