@@ -200,3 +200,74 @@ class TestNoteRoutes:
         except AssertionError:
             print("=== Response from server ===\n", res3.data)
             raise
+
+    def test_delete_note(
+        self, client_db: tuple[FlaskClient, SQLAlchemy], user: Callable[[str], User]
+    ) -> None:
+        """
+        Test the DELETE /api/notes/:note_id/delete route to ensure it behaves correctly
+        """
+        client, db = client_db
+
+        user1 = user("test_user_1")
+        user2 = user("test_user_2")
+        login_user(client, user1)
+
+        board1: Board = Board.query.get(1)
+        board2: Board = Board.query.get(2)
+
+        team = Team(owner_id=user2.id, users=[user1, user2])
+        db.session.add(team)
+        db.session.commit()
+
+        shared_board = Board(
+            name="shared_board", owner_id=team.owner_id, team_id=team.id
+        )
+        db.session.add(shared_board)
+        db.session.commit()
+
+        note1 = create_note(db, board1, title="to the shredder", priority=1)
+        note2 = create_note(db, board2, title="no access", priority=2)
+        note3 = create_note(db, shared_board, title="not the owner", priority=3)
+
+        # ensure that a user cannot delete notes they do not have access to
+        res1 = client.delete(f"/api/notes/{note2.id}/delete")
+
+        try:
+            assert res1.status_code == 403
+
+            new_note2 = Note.query.get(note2.id)
+            assert new_note2 is not None
+            assert new_note2.title == note2.title
+            assert new_note2.board_id == note2.board_id
+            assert new_note2.priority == note2.priority
+        except AssertionError:
+            print("=== Response from server ===\n", res1.data)
+            raise
+
+        # ensure that a user cannot delete notes that belong to a team they do not own
+        res2 = client.delete(f"/api/notes/{note3.id}/delete")
+
+        try:
+            assert res2.status_code == 403
+
+            new_note3 = Note.query.get(note3.id)
+            assert new_note3 is not None
+            assert new_note3.title == note3.title
+            assert new_note3.board_id == note3.board_id
+            assert new_note3.priority == note3.priority
+        except AssertionError:
+            print("=== Response from server ===\n", res2.data)
+            raise
+
+        # ensure that a user can delete notes they own
+        res3 = client.delete(f"/api/notes/{note1.id}/delete")
+
+        try:
+            assert res3.status_code == 200
+
+            new_note1 = Note.query.get(note1.id)
+            assert new_note1 is None
+        except AssertionError:
+            print("=== Response from server ===\n", res3.data)
+            raise
