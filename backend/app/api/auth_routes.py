@@ -33,7 +33,7 @@ def login():
         user = User.query.filter(User.email == form.data["email"]).first()
         login_user(user)
         return user.to_dict()
-    return form.errors, 401
+    return {"errors": form.errors}, 401
 
 
 @auth_routes.route("/logout")
@@ -60,16 +60,14 @@ def sign_up():
         )
         db.session.add(user)
         db.session.commit()
-        new_board = Board(
-            owner_id = user.id
-        )
+        new_board = Board(owner_id=user.id)
         db.session.add(new_board)
         db.session.commit()
         user.root_board_id = new_board.id
         db.session.commit()
         login_user(user)
         return user.to_dict()
-    return form.errors, 401
+    return {"errors": form.errors}, 401
 
 
 @auth_routes.route("/unauthorized")
