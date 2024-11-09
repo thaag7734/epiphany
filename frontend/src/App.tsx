@@ -1,10 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useAppDispatch, useAppSelector } from './redux/hooks'
+import { login } from './redux/reducers/session'
 
 function App() {
   const [count, setCount] = useState(0)
+  const dispatch = useAppDispatch();
+  const state = useAppSelector(state => state);
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+
+  useEffect(() => {
+    dispatch(login({ csrf_token: "ImI4MWM3N2IzMjM3Mjk3OTcwZGJlZGRmNTMxMTFlMzMwMWNkZmYwOGQi.Zy6rHA.1rvR77RA5x4DGpOzq1xfYPDZzPU", email: "demo@aa.io", password: "password" }));
+  }, [])
 
   return (
     <>
