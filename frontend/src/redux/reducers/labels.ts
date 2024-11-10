@@ -30,7 +30,7 @@ export const updateLabel = createAppAsyncThunk(
   UPDATE_LABEL,
   async (form: LabelFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch(`/api/labels/${form.id}/edit`, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
     });

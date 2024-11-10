@@ -27,3 +27,10 @@ export interface NoteFormData extends FormData {
   deadline: Date;
   priority: number;
 }
+
+export interface BoardFormData extends FormData {
+  id?: number;
+  team_id?: number;
+  owner_id: number;
+  name: string;
+}

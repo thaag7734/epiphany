@@ -1,6 +1,8 @@
 import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
+import { getBoardNotes, notesSlice } from "./notes";
+import { getBoardLabels, labelsSlice } from "./labels";
 
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";
@@ -55,9 +57,10 @@ export const signup = createAppAsyncThunk(
 
 interface SessionState {
   user: User | null;
+  currentBoardId?: number;
 }
 
-const initialState: SessionState = { user: null };
+const initialState: SessionState = { user: null};
 
 const setUser = (state: SessionState, user: User | null): void => {
   state.user = user;
@@ -66,7 +69,15 @@ const setUser = (state: SessionState, user: User | null): void => {
 export const sessionSlice = createSlice({
   name: "session",
   initialState,
-  reducers: {},
+  reducers: {
+    changeBoard: (state: SessionState, action: PayloadAction<number>) => {
+      state.currentBoardId = action.payload
+      notesSlice.actions.clearState();
+      labelsSlice.actions.clearState();
+      getBoardNotes(action.payload)
+      getBoardLabels(action.payload)
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(logout.fulfilled, (state: SessionState) => {

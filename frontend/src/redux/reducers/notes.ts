@@ -30,7 +30,7 @@ export const updateNote = createAppAsyncThunk(
   UPDATE_NOTE,
   async (form: NoteFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch(`/api/notes/${form.id}/edit`, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
     });
