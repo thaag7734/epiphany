@@ -1,22 +1,32 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
-import { login } from './redux/reducers/session'
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { login } from "./redux/reducers/session";
+import { createLabel } from "./redux/reducers/labels";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   const dispatch = useAppDispatch();
-  const state = useAppSelector(state => state);
+  const state = useAppSelector((state) => state);
 
   useEffect(() => {
     console.log(state);
   }, [state]);
 
   useEffect(() => {
-    dispatch(login({ csrf_token: "ImI4MWM3N2IzMjM3Mjk3OTcwZGJlZGRmNTMxMTFlMzMwMWNkZmYwOGQi.Zy6rHA.1rvR77RA5x4DGpOzq1xfYPDZzPU", email: "demo@aa.io", password: "password" }));
-  }, [])
+    window.dispatch = dispatch;
+    window.actions = { createLabel };
+    dispatch(
+      login({
+        csrf_token:
+          "IjAwNmRlODQ5NmQ3M2RkZWI0MTA2YWM5MmYwY2EwMjIwNmU5NWJmY2Ei.ZzAhsg.UzL1KJOav36D43rzIU8owscRf5Q",
+        email: "demo@aa.io",
+        password: "password",
+      }),
+    );
+  }, []);
 
   return (
     <>
@@ -41,7 +51,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

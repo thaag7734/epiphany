@@ -219,7 +219,7 @@ def create_label(board_id: int):
                 "label": new_label.to_dict(),
             }, 201
     else:
-        return {"message": "Invalid form data"}, 400
+        return {"errors": form.errors}, 400
 
 
 @boards.route("/<int:board_id>/notes")

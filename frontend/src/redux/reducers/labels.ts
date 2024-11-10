@@ -1,29 +1,125 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type APIResponse, createAppAsyncThunk } from "@/redux/store";
-import type { User, Label } from "@/types/Models";
+import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import { createAppAsyncThunk } from "../hooks";
+import type { LabelCollection } from "../../types/Api";
+import type { Label } from "../../types/Models";
+import type { LabelFormData } from "../../types/FormData";
+
+const PREFIX = "labels";
+
+const GET_BOARD_LABELS = `${PREFIX}/getBoardLabels`;
+const UPDATE_LABEL = `${PREFIX}/updateLabel`;
+const CREATE_LABEL = `${PREFIX}/createLabel`;
+const DELETE_LABEL = `${PREFIX}/deleteLabel`;
 
 export const getBoardLabels = createAppAsyncThunk(
-	"labels/getBoardLabels",
-	async (boardId: number, thunkAPI): Promise<APIResponse<Label>> => {
-		return {
-			id: 1,
-			board_id: 1,
-			name: "test",
-		} satisfies Label;
-	},
+  GET_BOARD_LABELS,
+  async (boardId: number, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch(`/api/boards/${boardId}/labels`);
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return rejectWithValue(data);
+    }
+
+    return fulfillWithValue(data);
+  },
+);
+
+export const updateLabel = createAppAsyncThunk(
+  UPDATE_LABEL,
+  async (form: LabelFormData, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch(`/api/boards/${form.id}/edit`, {
+      method: "POST",
+      body: JSON.stringify(form),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      rejectWithValue(data);
+    }
+
+    return fulfillWithValue(data);
+  },
+);
+
+export const createLabel = createAppAsyncThunk(
+  CREATE_LABEL,
+  async (form: LabelFormData, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch(`/api/boards/${form.board_id}/new_label`, {
+      method: "POST",
+      body: JSON.stringify(form),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      rejectWithValue(data);
+    }
+
+    return fulfillWithValue(data);
+  },
+);
+
+export const deleteLabel = createAppAsyncThunk(
+  DELETE_LABEL,
+  async (labelId: number, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch(`/api/labels/${labelId}/delete`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      rejectWithValue(data);
+    }
+
+    data.labelId = labelId;
+
+    return fulfillWithValue(data);
+  },
 );
 
 interface LabelsState {
-	labels: { [key: string]: Label };
+  [key: string]: Label;
 }
 
 const initialState: LabelsState = {};
 
+const setLabel = (
+  state: LabelsState,
+  action: PayloadAction<{ message: string; label: Label }>,
+): void => {
+  console.log("STATE ===>", state, "\nACTION ===>", action);
+  state[action.payload.label.id] = action.payload.label;
+};
+
 const labelsSlice = createSlice({
-	name: "labels",
-	initialState,
-	reducers: {},
-	extraReducers: (builder) => {},
+  name: "labels",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getBoardLabels.fulfilled, (state: LabelsState, action) => {
+        const labels: Label[] = (action.payload as LabelCollection).labels;
+
+        for (const label of labels) {
+          state[label.id] = label;
+        }
+      })
+      .addCase(deleteLabel.fulfilled, (state: LabelsState, action) => {
+        delete state[
+          (action.payload as { message: string; labelId: number }).labelId
+        ];
+      });
+    builder.addMatcher(
+      (action) => isAnyOf(createLabel.fulfilled, updateLabel.fulfilled)(action),
+      setLabel,
+    );
+  },
 });
 
 export default labelsSlice.reducer;
