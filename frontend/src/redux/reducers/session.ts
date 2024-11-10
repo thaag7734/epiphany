@@ -60,7 +60,7 @@ interface SessionState {
   currentBoardId?: number;
 }
 
-const initialState: SessionState = { user: null};
+const initialState: SessionState = { user: null };
 
 const setUser = (state: SessionState, user: User | null): void => {
   state.user = user;
@@ -71,12 +71,8 @@ export const sessionSlice = createSlice({
   initialState,
   reducers: {
     changeBoard: (state: SessionState, action: PayloadAction<number>) => {
-      state.currentBoardId = action.payload
-      notesSlice.actions.clearState();
-      labelsSlice.actions.clearState();
-      getBoardNotes(action.payload)
-      getBoardLabels(action.payload)
-    }
+      state.currentBoardId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder

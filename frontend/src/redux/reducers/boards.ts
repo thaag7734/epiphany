@@ -13,8 +13,8 @@ const DELETE_BOARD = `${PREFIX}/deleteBoard`;
 
 export const getBoards = createAppAsyncThunk(
   GET_BOARDS,
-  async (userId: number, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch(`/api/users/${userId}/boards`);
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch("/api/users/boards");
 
     const data = await res.json();
 
@@ -48,7 +48,7 @@ export const updateBoard = createAppAsyncThunk(
 export const createBoard = createAppAsyncThunk(
   CREATE_BOARD,
   async (form: BoardFormData, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch(`/api/boards/new`, {
+    const res = await fetch("/api/boards/new", {
       method: "POST",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ export const deleteBoard = createAppAsyncThunk(
       rejectWithValue(data);
     }
 
-    data.boardId = boardId
+    data.boardId = boardId;
 
     return fulfillWithValue(data);
   },
@@ -100,7 +100,7 @@ export const boardsSlice = createSlice({
   name: "boards",
   initialState,
   reducers: {
-    clearState: () => initialState,
+    clearState: (state) => (state = initialState),
   },
   extraReducers: (builder) => {
     builder

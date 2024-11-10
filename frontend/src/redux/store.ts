@@ -1,5 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { sessionReducer, labelsReducer, notesReducer } from "./reducers/index";
+import {
+  sessionReducer,
+  labelsReducer,
+  notesReducer,
+  boardsReducer,
+} from "./reducers/index";
 import { createLogger } from "redux-logger";
 
 const logger = createLogger();
@@ -11,7 +16,7 @@ export const store = configureStore({
     session: sessionReducer,
     notes: notesReducer,
     labels: labelsReducer,
-    //boards: boardsReducer,
+    boards: boardsReducer,
     //teams: teamsReducer,
   },
 });

@@ -100,7 +100,7 @@ export const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
-    clearState: () => initialState,
+    clearState: (state) => (state = initialState),
   },
   extraReducers: (builder) => {
     builder

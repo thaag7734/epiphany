@@ -18,11 +18,21 @@ import {
   notesSlice,
   updateNote,
 } from "./redux/reducers/notes";
+import {
+  boardsSlice,
+  createBoard,
+  deleteBoard,
+  getBoards,
+  updateBoard,
+} from "./redux/reducers/boards";
 
 function App() {
   const [count, setCount] = useState(0);
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state);
+  const currentBoardId: number | undefined = useAppSelector(
+    (state) => state.session.currentBoardId,
+  );
 
   useEffect(() => {
     console.log(state);
@@ -35,21 +45,41 @@ function App() {
         login,
         logout,
         signup,
+        changeBoard: sessionSlice.actions.changeBoard,
       },
       notes: {
         getBoardNotes,
         createNote,
         updateNote,
         deleteNote,
+        clearState: notesSlice.actions.clearState,
       },
       labels: {
         getBoardLabels,
         createLabel,
         updateLabel,
         deleteLabel,
+        clearState: labelsSlice.actions.clearState,
+      },
+      boards: {
+        getBoards,
+        createBoard,
+        updateBoard,
+        deleteBoard,
+        clearState: boardsSlice.actions.clearState,
       },
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentBoardId === undefined) return;
+
+    dispatch(notesSlice.actions.clearState());
+    dispatch(labelsSlice.actions.clearState());
+
+    dispatch(getBoardNotes(currentBoardId));
+    dispatch(getBoardLabels(currentBoardId));
+  }, [currentBoardId, dispatch]);
 
   return (
     <>
