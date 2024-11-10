@@ -63,7 +63,7 @@ const setUser = (state: SessionState, user: User | null): void => {
   state.user = user;
 };
 
-const sessionSlice = createSlice({
+export const sessionSlice = createSlice({
   name: "session",
   initialState,
   reducers: {},
@@ -75,11 +75,8 @@ const sessionSlice = createSlice({
       .addMatcher(
         (action) => isAnyOf(login.fulfilled, signup.fulfilled)(action),
         (state, action: PayloadAction<User>) => {
-          console.log("STATE AFTER LOGIN ACTION ===>", state);
           setUser(state, action.payload);
         },
       );
   },
 });
-
-export default sessionSlice.reducer;

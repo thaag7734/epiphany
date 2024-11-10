@@ -3,8 +3,21 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { login } from "./redux/reducers/session";
-import { createLabel } from "./redux/reducers/labels";
+import { login, logout, sessionSlice, signup } from "./redux/reducers/session";
+import {
+  createLabel,
+  deleteLabel,
+  getBoardLabels,
+  labelsSlice,
+  updateLabel,
+} from "./redux/reducers/labels";
+import {
+  createNote,
+  deleteNote,
+  getBoardNotes,
+  notesSlice,
+  updateNote,
+} from "./redux/reducers/notes";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,16 +30,26 @@ function App() {
 
   useEffect(() => {
     window.dispatch = dispatch;
-    window.actions = { createLabel };
-    dispatch(
-      login({
-        csrf_token:
-          "IjAwNmRlODQ5NmQ3M2RkZWI0MTA2YWM5MmYwY2EwMjIwNmU5NWJmY2Ei.ZzAhsg.UzL1KJOav36D43rzIU8owscRf5Q",
-        email: "demo@aa.io",
-        password: "password",
-      }),
-    );
-  }, []);
+    window.actions = {
+      session: {
+        login,
+        logout,
+        signup,
+      },
+      notes: {
+        getBoardNotes,
+        createNote,
+        updateNote,
+        deleteNote,
+      },
+      labels: {
+        getBoardLabels,
+        createLabel,
+        updateLabel,
+        deleteLabel,
+      },
+    };
+  }, [dispatch]);
 
   return (
     <>

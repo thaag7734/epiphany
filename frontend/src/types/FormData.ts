@@ -18,3 +18,12 @@ export interface LabelFormData extends FormData {
   board_id: number;
   name: string;
 }
+
+export interface NoteFormData extends FormData {
+  id?: number;
+  board_id: number;
+  title: string;
+  content: string;
+  deadline: Date;
+  priority: number;
+}

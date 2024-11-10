@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { sessionReducer, labelsReducer } from "./reducers/index";
+import { sessionReducer, labelsReducer, notesReducer } from "./reducers/index";
 import { createLogger } from "redux-logger";
 
 const logger = createLogger();
@@ -9,7 +9,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   reducer: {
     session: sessionReducer,
-    //notes: notesReducer,
+    notes: notesReducer,
     labels: labelsReducer,
     //boards: boardsReducer,
     //teams: teamsReducer,

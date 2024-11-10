@@ -29,7 +29,7 @@ export const getBoardLabels = createAppAsyncThunk(
 export const updateLabel = createAppAsyncThunk(
   UPDATE_LABEL,
   async (form: LabelFormData, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch(`/api/boards/${form.id}/edit`, {
+    const res = await fetch(`/api/labels/${form.id}/edit`, {
       method: "POST",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
@@ -93,14 +93,15 @@ const setLabel = (
   state: LabelsState,
   action: PayloadAction<{ message: string; label: Label }>,
 ): void => {
-  console.log("STATE ===>", state, "\nACTION ===>", action);
   state[action.payload.label.id] = action.payload.label;
 };
 
-const labelsSlice = createSlice({
+export const labelsSlice = createSlice({
   name: "labels",
   initialState,
-  reducers: {},
+  reducers: {
+    clearState: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getBoardLabels.fulfilled, (state: LabelsState, action) => {
@@ -121,5 +122,3 @@ const labelsSlice = createSlice({
     );
   },
 });
-
-export default labelsSlice.reducer;
