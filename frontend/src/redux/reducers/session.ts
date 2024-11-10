@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type APIResponse, createAppAsyncThunk } from "../store";
-import type { User } from "../../types/Models";
+import { type APIResponse, createAppAsyncThunk } from "@/redux/store";
+import type { User } from "@/types/Models";
 
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";
@@ -24,7 +24,7 @@ export const login = createAppAsyncThunk(
 			thunkAPI.rejectWithValue(data);
 		}
 
-		return new data();
+		return data;
 	},
 );
 
