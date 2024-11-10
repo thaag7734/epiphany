@@ -100,7 +100,9 @@ export const boardsSlice = createSlice({
   name: "boards",
   initialState,
   reducers: {
-    clearState: (state) => (state = initialState),
+    clearState: (state) => {
+      Object.assign(state, initialState);
+    },
   },
   extraReducers: (builder) => {
     builder

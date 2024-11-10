@@ -1,8 +1,6 @@
 import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
-import { getBoardNotes, notesSlice } from "./notes";
-import { getBoardLabels, labelsSlice } from "./labels";
 
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";
