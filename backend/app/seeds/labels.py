@@ -4,7 +4,9 @@ from app.models.db import db, environment, SCHEMA
 
 
 def seed_labels():
-    labels = [[Label(name=f"label{x}", board_id=y) for x in range(3)] for y in range(3)]
+    labels = [
+        [Label(name=f"label{x}", board_id=y) for x in range(1, 5)] for y in range(1, 5)
+    ]
 
     for board_labels in labels:
         for label in board_labels:
