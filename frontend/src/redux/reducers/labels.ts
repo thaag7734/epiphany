@@ -83,7 +83,7 @@ export const deleteLabel = createAppAsyncThunk(
   },
 );
 
-interface LabelsState {
+export interface LabelsState {
   [key: string]: Label;
 }
 

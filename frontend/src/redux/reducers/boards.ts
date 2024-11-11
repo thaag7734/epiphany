@@ -83,7 +83,7 @@ export const deleteBoard = createAppAsyncThunk(
   },
 );
 
-interface BoardsState {
+export interface BoardsState {
   [key: string]: Board;
 }
 

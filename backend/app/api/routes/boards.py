@@ -327,6 +327,7 @@ def create_team(board_id: int):
         return {"message": "This board is already shared with a team"}, 403
 
     team = Team(owner_id=current_user.id)
+    team.users = [User.query.get(current_user.id)]
 
     try:
         db.session.add(team)
@@ -338,12 +339,10 @@ def create_team(board_id: int):
     form_data = request.json
 
     if form_data:
-        users = [User.query.get(current_user.id), *form_data["users"]]
-
-        if type(users) is not list:
+        if type(form_data["users"]) is not list:
             return {"message": "Users must be a list of emails"}, 400
 
-        for email in users:
+        for email in form_data["users"]:
             user = User.query.filter(User.email == email).first()
 
             if user:
