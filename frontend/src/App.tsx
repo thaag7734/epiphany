@@ -101,7 +101,6 @@ function App() {
       element: (
         <>
           <Layout />
-          <LoginSignupModal />
         </>
       ),
       path: "/",
@@ -109,13 +108,7 @@ function App() {
         {
           index: true,
           element: (
-            <>
-              <SideBar board={1} />
-              <div className="dashboardNav">
-              <TopNav board={1} />
-              <Dashboard board={1} />
-              </div>
-            </>
+            <LoginSignupModal />
           ),
         },
         {
