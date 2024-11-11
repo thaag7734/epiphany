@@ -53,7 +53,7 @@ export const signup = createAppAsyncThunk(
   },
 );
 
-interface SessionState {
+export interface SessionState {
   user: User | null;
   currentBoardId?: number;
 }

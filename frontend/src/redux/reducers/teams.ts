@@ -68,7 +68,7 @@ export const deleteTeam = createAppAsyncThunk(
   },
 );
 
-type TeamState = Team | null;
+export type TeamState = Team | null;
 
 const initialState: TeamState = null;
 

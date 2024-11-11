@@ -83,7 +83,7 @@ export const deleteNote = createAppAsyncThunk(
   },
 );
 
-interface NotesState {
+export interface NotesState {
   [key: string]: Note;
 }
 
