@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import TopNav from "./components/top_nav";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { login, logout, sessionSlice, signup } from "./redux/reducers/session";
 import {
@@ -31,8 +32,6 @@ import {
   teamSlice,
   updateTeam,
 } from "./redux/reducers/teams";
-import { Board } from "./types/Models";
-import { current } from "@reduxjs/toolkit";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -103,8 +102,8 @@ function App() {
 
   function Layout() {
     return (
-      // <Outlet />
-      <h1>router implemented</h1>
+      <Outlet />
+      // <h1>router implemented</h1>
     );
   }
 
@@ -131,9 +130,9 @@ function App() {
         {
           element: (
             <>
-              <TopNav board={currentBoardId} />
-              <SideBar board={currentBoardId} />
-              <Dashboard board={currentBoardId} />
+              <TopNav boardId={currentBoardId} />
+              <SideBar boardId={currentBoardId} />
+              <Dashboard boardId={currentBoardId} />
             </>
           ),
           path: "boards/:boardId",
