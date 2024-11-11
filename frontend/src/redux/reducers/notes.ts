@@ -100,9 +100,7 @@ export const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
-    clearState: (state) => {
-      Object.assign(state, initialState);
-    },
+    clearState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
