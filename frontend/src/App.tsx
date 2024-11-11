@@ -89,7 +89,11 @@ function App() {
   }, [currentBoardId, dispatch]);
 
   function Layout() {
-    return <Outlet />;
+
+    return (
+      // <Outlet />
+      <h1>router implemented</h1>
+    );
   }
 
   const router = createBrowserRouter([
