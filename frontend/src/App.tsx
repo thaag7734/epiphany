@@ -24,50 +24,59 @@ import {
   updateBoard,
 } from "./redux/reducers/boards";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createTeam,
+  deleteTeam,
+  teamSlice,
+  updateTeam,
+} from "./redux/reducers/teams";
 
 function App() {
   const dispatch = useAppDispatch();
-  const state = useAppSelector((state) => state);
   const currentBoardId: number | undefined = useAppSelector(
     (state) => state.session.currentBoardId,
   );
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
-  useEffect(() => {
-    window.dispatch = dispatch;
-    window.actions = {
-      session: {
-        login,
-        logout,
-        signup,
-        changeBoard: sessionSlice.actions.changeBoard,
-      },
-      notes: {
-        getBoardNotes,
-        createNote,
-        updateNote,
-        deleteNote,
-        clearState: notesSlice.actions.clearState,
-      },
-      labels: {
-        getBoardLabels,
-        createLabel,
-        updateLabel,
-        deleteLabel,
-        clearState: labelsSlice.actions.clearState,
-      },
-      boards: {
-        getBoards,
-        createBoard,
-        updateBoard,
-        deleteBoard,
-        clearState: boardsSlice.actions.clearState,
-      },
-    };
-  }, [dispatch]);
+  if (import.meta.env.MODE !== "production") {
+    useEffect(() => {
+      window.dispatch = dispatch;
+      window.actions = {
+        session: {
+          login,
+          logout,
+          signup,
+          changeBoard: sessionSlice.actions.changeBoard,
+        },
+        notes: {
+          getBoardNotes,
+          createNote,
+          updateNote,
+          deleteNote,
+          clearState: notesSlice.actions.clearState,
+        },
+        labels: {
+          getBoardLabels,
+          createLabel,
+          updateLabel,
+          deleteLabel,
+          clearState: labelsSlice.actions.clearState,
+        },
+        boards: {
+          getBoards,
+          createBoard,
+          updateBoard,
+          deleteBoard,
+          clearState: boardsSlice.actions.clearState,
+        },
+        team: {
+          createTeam,
+          updateTeam,
+          deleteTeam,
+          clearState: teamSlice.actions.clearState,
+        },
+      };
+    }, [dispatch]);
+  }
 
   useEffect(() => {
     if (currentBoardId === undefined) return;
@@ -80,44 +89,48 @@ function App() {
   }, [currentBoardId, dispatch]);
 
   function Layout() {
-
-    return (
-      <Outlet />
-    );
+    return <Outlet />;
   }
 
   const router = createBrowserRouter([
     {
-      element: <><Layout /><LoginSignupModal /></>,
-      path: '/',
+      element: (
+        <>
+          <Layout />
+          <LoginSignupModal />
+        </>
+      ),
+      path: "/",
       children: [
         {
           index: true,
-          element: <>
-          <TopNav board={1}/>
-          <SideBar board={1}/>
-          <Dashboard board={1}/>
-          </>
+          element: (
+            <>
+              <TopNav board={1} />
+              <SideBar board={1} />
+              <Dashboard board={1} />
+            </>
+          ),
         },
         {
           element: <Boards />,
-          path: 'boards'
+          path: "boards",
         },
         {
-          element: <>
-          <TopNav board={currentBoardId}/>
-          <SideBar board={currentBoardId}/>
-          <Dashboard board={currentBoardId}/>
-          </>,
-          path:'boards/:boardId'
-        }
-      ]
-    }
-  ])
+          element: (
+            <>
+              <TopNav board={currentBoardId} />
+              <SideBar board={currentBoardId} />
+              <Dashboard board={currentBoardId} />
+            </>
+          ),
+          path: "boards/:boardId",
+        },
+      ],
+    },
+  ]);
 
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
