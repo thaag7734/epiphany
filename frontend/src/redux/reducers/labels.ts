@@ -100,9 +100,7 @@ export const labelsSlice = createSlice({
   name: "labels",
   initialState,
   reducers: {
-    clearState: (state) => {
-      Object.assign(state, initialState);
-    },
+    clearState: () => initialState,
   },
   extraReducers: (builder) => {
     builder

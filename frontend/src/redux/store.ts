@@ -18,7 +18,7 @@ export const store = configureStore({
     notes: notesReducer,
     labels: labelsReducer,
     boards: boardsReducer,
-    teams: teamReducer,
+    team: teamReducer,
   },
 });
 

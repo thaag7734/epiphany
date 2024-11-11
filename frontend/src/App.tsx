@@ -18,6 +18,7 @@ import {
 } from "./redux/reducers/notes";
 import {
   boardsSlice,
+  type BoardsState,
   createBoard,
   deleteBoard,
   getBoards,
@@ -30,12 +31,15 @@ import {
   teamSlice,
   updateTeam,
 } from "./redux/reducers/teams";
+import { Board } from "./types/Models";
+import { current } from "@reduxjs/toolkit";
 
 function App() {
   const dispatch = useAppDispatch();
   const currentBoardId: number | undefined = useAppSelector(
     (state) => state.session.currentBoardId,
   );
+  const boards: BoardsState = useAppSelector((state) => state.boards);
 
   if (import.meta.env.MODE !== "production") {
     useEffect(() => {
@@ -72,6 +76,7 @@ function App() {
           createTeam,
           updateTeam,
           deleteTeam,
+          setTeam: teamSlice.actions.setTeam,
           clearState: teamSlice.actions.clearState,
         },
       };
@@ -86,16 +91,24 @@ function App() {
 
     dispatch(getBoardNotes(currentBoardId));
     dispatch(getBoardLabels(currentBoardId));
-  }, [currentBoardId, dispatch]);
+
+    const currentBoard: Board = boards[currentBoardId];
+
+    if (currentBoard.team) {
+      dispatch(teamSlice.actions.setTeam(currentBoard.team));
+    } else {
+      dispatch(teamSlice.actions.clearState());
+    }
+  }, [currentBoardId]);
 
   function Layout() {
-
     return (
       // <Outlet />
       <h1>router implemented</h1>
     );
   }
 
+  /*
   const router = createBrowserRouter([
     {
       element: (
@@ -134,7 +147,7 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;*/
 }
 
 export default App;

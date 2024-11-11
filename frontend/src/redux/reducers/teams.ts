@@ -72,28 +72,20 @@ export type TeamState = Team | null;
 
 const initialState: TeamState = null;
 
-const setTeam = (
-  state: TeamState,
-  action: PayloadAction<{ message: string; team: Team }>,
-): void => {
-  state = action.payload.team;
-};
-
 export const teamSlice = createSlice({
   name: "teams",
   initialState,
   reducers: {
-    clearState: (state) => {
-      state = initialState;
-    },
+    clearState: () => initialState,
+    setTeam: (_, action) => action.payload,
   },
   extraReducers: (builder) => {
-    builder.addCase(deleteTeam.fulfilled, (state: TeamState, action) => {
-      state = action.payload.team;
+    builder.addCase(deleteTeam.fulfilled, (_, action) => {
+      return action.payload.team;
     });
     builder.addMatcher(
       (action) => isAnyOf(createTeam.fulfilled, updateTeam.fulfilled)(action),
-      setTeam,
+      (_, action) => action.payload,
     );
   },
 });
