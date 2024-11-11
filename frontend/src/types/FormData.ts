@@ -34,3 +34,11 @@ export interface BoardFormData extends FormData {
   owner_id: number;
   name: string;
 }
+
+export interface TeamFormData extends FormData {
+  id?: number;
+  team_id?: number;
+  board_id?: number;
+  owner_id?: number;
+  emails: string[];
+}

@@ -4,6 +4,7 @@ import {
   labelsReducer,
   notesReducer,
   boardsReducer,
+  teamReducer,
 } from "./reducers/index";
 import { createLogger } from "redux-logger";
 
@@ -17,7 +18,7 @@ export const store = configureStore({
     notes: notesReducer,
     labels: labelsReducer,
     boards: boardsReducer,
-    //teams: teamsReducer,
+    teams: teamReducer,
   },
 });
 
