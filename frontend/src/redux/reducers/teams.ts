@@ -1,7 +1,7 @@
 import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { TeamFormData } from "../../types/FormData";
-import { Team } from "../../types/Models";
+import type { Team } from "../../types/Models";
 
 const PREFIX = "teams";
 
