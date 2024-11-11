@@ -110,9 +110,11 @@ function App() {
           index: true,
           element: (
             <>
-              <TopNav board={1} />
               <SideBar board={1} />
+              <div className="dashboardNav">
+              <TopNav board={1} />
               <Dashboard board={1} />
+              </div>
             </>
           ),
         },
