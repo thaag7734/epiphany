@@ -1,22 +1,32 @@
 import { useState } from "react";
 import Labels from "./Labels";
-import { SlArrowLeft } from "react-icons/sl";
+import { SlArrowRight } from "react-icons/sl";
+import "./index.css";
 
 export default function SidePanel() {
    const [isVisible, setIsVisible] = useState(true);
+
+   const setSidePanel = () => setIsVisible(!isVisible);
+
    return (
-      <div id="side-panel" className={`${isVisible ? "show" : "hide"}`}>
-         <div onClick={() => setIsVisible(!isVisible)}>
-            <span>
-               <SlArrowLeft />
-            </span>
+      <>
+         <div
+            onMouseEnter={setSidePanel}
+            className={isVisible ? "arrow-box-hidden" : "arrow-box"}
+         >
+            <SlArrowRight />
          </div>
-         <img
-            id="logo"
-            src="/epiphany.svg"
-            alt="An image of the application logo which reads 'Epiphany: Whatever comes to mind'"
-         />
-         <Labels />
-      </div>
+         <div
+            id={isVisible ? "side-panel-show" : "side-panel"}
+            onMouseLeave={setSidePanel}
+         >
+            <img
+               id="logo"
+               src="/epiphany.svg"
+               alt="An image of the application logo which reads 'Epiphany: Whatever comes to mind'"
+            />
+            <Labels />
+         </div>
+      </>
    );
 }

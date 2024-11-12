@@ -39,44 +39,42 @@ function App() {
    );
 
    if (import.meta.env.MODE !== "production") {
-      useEffect(() => {
-         window.dispatch = dispatch;
-         window.actions = {
-            session: {
-               login,
-               logout,
-               signup,
-               changeBoard: sessionSlice.actions.changeBoard,
-            },
-            notes: {
-               getBoardNotes,
-               createNote,
-               updateNote,
-               deleteNote,
-               clearState: notesSlice.actions.clearState,
-            },
-            labels: {
-               getBoardLabels,
-               createLabel,
-               updateLabel,
-               deleteLabel,
-               clearState: labelsSlice.actions.clearState,
-            },
-            boards: {
-               getBoards,
-               createBoard,
-               updateBoard,
-               deleteBoard,
-               clearState: boardsSlice.actions.clearState,
-            },
-            team: {
-               createTeam,
-               updateTeam,
-               deleteTeam,
-               clearState: teamSlice.actions.clearState,
-            },
-         };
-      }, [dispatch]);
+      window.dispatch = dispatch;
+      window.actions = {
+         session: {
+            login,
+            logout,
+            signup,
+            changeBoard: sessionSlice.actions.changeBoard,
+         },
+         notes: {
+            getBoardNotes,
+            createNote,
+            updateNote,
+            deleteNote,
+            clearState: notesSlice.actions.clearState,
+         },
+         labels: {
+            getBoardLabels,
+            createLabel,
+            updateLabel,
+            deleteLabel,
+            clearState: labelsSlice.actions.clearState,
+         },
+         boards: {
+            getBoards,
+            createBoard,
+            updateBoard,
+            deleteBoard,
+            clearState: boardsSlice.actions.clearState,
+         },
+         team: {
+            createTeam,
+            updateTeam,
+            deleteTeam,
+            clearState: teamSlice.actions.clearState,
+         },
+      };
    }
 
    useEffect(() => {
@@ -91,8 +89,9 @@ function App() {
 
    function Layout() {
       return (
-         //  <Outlet />
-         <h1>router implemented</h1>
+         <>
+            <Outlet />
+         </>
       );
    }
 
@@ -110,7 +109,7 @@ function App() {
                index: true,
                element: (
                   <div style={{ display: "flex" }}>
-                     <SidePanel board={1} />
+                     <SidePanel />
                      <div style={{ display: "flex", flexDirection: "column" }}>
                         {/* <TopNav board={1} /> */}
                         {/* <Dashboard board={1} /> */}

@@ -7,21 +7,32 @@ export default function Labels() {
    const isOverflowing = useRef(false);
    const labelsArr = Object.values(labels);
 
-   if (!labelsArr.length) return <h3>Loading Labels...</h3>;
-
    if (labelsArr.length > 5) {
       isOverflowing.current = true;
    }
 
    return (
-      <div className={`labels-box ${isOverflowing ? "overflowing" : ""}`}>
-         {labelsArr.map(({ name, id }) => (
-            <div key={id}>{name}</div>
-         ))}
-         {/************************************/}
-         {/*  Placeholder for new label modal */}
-         {/************************************/}
-         <a>Hello from Labels</a>
+      <div>
+         {!labelsArr.length ? (
+            <h3>Loading Labels...</h3>
+         ) : (
+            <div
+               className={
+                  isOverflowing.current
+                     ? "labels-box overflowing"
+                     : "labels-box"
+               }
+            >
+               {labelsArr.map(({ name, id }) => (
+                  <div key={id} className="label">
+                     {name}
+                  </div>
+               ))}
+               {/*********************************/}
+               {/** Placeholder for label modal **/}
+               {/*********************************/}
+            </div>
+         )}
       </div>
    );
 }
