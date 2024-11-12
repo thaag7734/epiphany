@@ -1,9 +1,11 @@
 import { useRef } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import { LabelsState } from "../../../redux/reducers/labels";
+import { useParams } from "react-router";
 
 export default function Labels() {
    const labels: LabelsState = useAppSelector((state) => state.labels);
+   const { boardId } = useParams();
    const isOverflowing = useRef(false);
    const labelsArr = Object.values(labels);
 
@@ -12,7 +14,7 @@ export default function Labels() {
    }
 
    return (
-      <div>
+      <>
          {!labelsArr.length ? (
             <h3>Loading Labels...</h3>
          ) : (
@@ -33,6 +35,6 @@ export default function Labels() {
                {/*********************************/}
             </div>
          )}
-      </div>
+      </>
    );
 }

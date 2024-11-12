@@ -6,23 +6,17 @@ import "./index.css";
 export default function SidePanel() {
    const [isVisible, setIsVisible] = useState(false);
 
-   const setSidePanel = (e) => {
-      if (e.target.id !== "side-panel") {
-         setIsVisible(!isVisible);
-      }
-   };
-
    return (
       <>
          <div
-            onMouseEnter={setSidePanel}
+            onMouseEnter={() => setIsVisible(true)}
             className={isVisible ? "arrow-box-hidden" : "arrow-box"}
          >
             <SlArrowRight />
          </div>
          <div
             id={isVisible ? "side-panel-show" : "side-panel"}
-            onMouseLeave={setSidePanel}
+            onMouseLeave={() => setIsVisible(false)}
          >
             <img
                id="logo"
