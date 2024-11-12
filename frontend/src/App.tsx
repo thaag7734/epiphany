@@ -51,6 +51,7 @@ import { getCookie } from "./util/cookies";
 import LoginSignup from "./components/LoginSignup";
 import Dashboard from "./components/Dashboard/Dashboard";
 import { Board, User } from "./types/Models";
+import BoardsPage from "./components/BoardsPage/BoardsPage";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -162,10 +163,10 @@ function App() {
           index: true,
           element: <LoginSignup />,
         },
-        //{
-        //  element: <Boards />,
-        //  path: "boards",
-        //},
+        {
+         element: <BoardsPage />,
+         path: "boards",
+        },
         {
           element: (
             <>

@@ -2,11 +2,10 @@ import { useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import type { User, Label, Note, Board } from "../../types/Models";
 import BoardCard from "./BoardCard";
-import "./BoardPage.css";
-import { DiVim } from "react-icons/di";
+import "./BoardsPage.css";
 
 
-export default function BoardsPage({ board_id }: {board_id: number}) {
+export default function BoardsPage() {
     const personalBoards = useAppSelector((state) => Object.values(state.boards).filter((b) => b.team_id === null));
     const teamBoards = useAppSelector((state) => Object.values(state.boards).filter((b) => b.team_id !== null));
 
