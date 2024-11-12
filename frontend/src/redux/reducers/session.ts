@@ -6,6 +6,7 @@ import { LoginFormData, SignupFormData } from "../../types/FormData";
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";
 const SIGNUP = "session/signup";
+const RESTORE_USER = "session/restoreUser";
 
 export const login = createAppAsyncThunk(
   LOGIN,
@@ -54,6 +55,21 @@ export const signup = createAppAsyncThunk(
   },
 );
 
+export const restoreUser = createAppAsyncThunk(
+  RESTORE_USER,
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch("/api/auth");
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return rejectWithValue(data);
+    }
+
+    return fulfillWithValue(data);
+  },
+);
+
 export interface SessionState {
   user: User | null;
   currentBoardId?: number;
@@ -79,7 +95,7 @@ export const sessionSlice = createSlice({
         setUser(state, null);
       })
       .addMatcher(
-        (action) => isAnyOf(login.fulfilled, signup.fulfilled)(action),
+        (action) => isAnyOf(login.fulfilled, signup.fulfilled, restoreUser.fulfilled)(action),
         (state, action: PayloadAction<User>) => {
           setUser(state, action.payload);
         },

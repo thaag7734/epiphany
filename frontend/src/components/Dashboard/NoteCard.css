@@ -19,7 +19,7 @@
   
 .note-title {
     font-size: 18px;
-    font-family: "Playwrite US Modern", serif;
+    font-family: "Sour Gummy", sans-serif;
     font-weight: bold;
     margin-bottom: 4px;
     white-space: nowrap;
@@ -29,7 +29,7 @@
   
 .note-content {
     font-size: 14px;
-    font-family: "Playwrite US Modern", serif;
+    font-family: "Sour Gummy", sans-serif;
     line-height: 1.5;
     /* white-space: nowrap; */
     overflow: hidden;

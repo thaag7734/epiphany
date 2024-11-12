@@ -6,7 +6,7 @@ export interface User extends Model {
   username: string;
   email: string;
   password?: string;
-  root_board_id?: string;
+  root_board_id?: number;
 }
 
 export interface Label extends Model {
