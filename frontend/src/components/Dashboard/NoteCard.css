@@ -1,0 +1,70 @@
+.note-tile {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 16px;
+    max-height: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+  
+.note-tile:hover {
+    transform: scale(1.05); 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+  
+.note-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  
+.note-content {
+    font-size: 14px;
+    line-height: 1.5;
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  
+.note-priority-icon {
+    position: absolute;
+    /* margin: 0; */
+}
+  
+.note-labels-list {
+    display: flex;
+    /* flex-wrap: wrap;   -> scrollable across bottom instead? */
+    gap: 6px;
+    margin-top: 8px;
+    margin-bottom: 1px;
+    list-style: none;
+
+    /*//^ Scrollable Trials */
+
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: gray transparent;
+    /* scroll; */
+    padding: 4px 0;
+}
+  
+.note-label-pill {
+    font-size: 10px;
+    padding: 4px 8px;
+    border: 1px solid #555;
+    border-radius: 12px;
+    color: white;
+    background-color: transparent;
+    white-space: nowrap;
+}
+  
+  

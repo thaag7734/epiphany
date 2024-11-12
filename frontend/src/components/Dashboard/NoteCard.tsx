@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
+import { ImOpt } from "react-icons/im";
+import "./NoteCard.css";
 
 
 

@@ -4,6 +4,7 @@ import type { User, Label, Note, Board } from "../../types/Models";
 // import { Link, useNavigate } from "react-router-dom";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import NoteCard from "./NoteCard";
+import "./Dashboard.css";
 
 
 function Dashboard({ boardId }: {boardId: number}) {
@@ -31,7 +32,8 @@ function Dashboard({ boardId }: {boardId: number}) {
                 <NoteCard noteId={note.id}/>
             ))}
 
-            <div className="board-name">{board?.name}</div>
+            {/* <div className="board-name">{board?.name}</div> */}
+            {board && <div className="board-name">{board.name}</div>}
         </div>
     )
 }
