@@ -1,15 +1,17 @@
 import { useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import type { User, Label, Note, Board } from "../../types/Models"; 
+import type { User, Label, Note, Board } from "../../types/Models";
 // import { Link, useNavigate } from "react-router-dom";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
+import { sessionSlice } from "../../redux/reducers/session";
 
 
-function Dashboard({ boardId }: {boardId: number}) {
-    // const dispatch = useAppDispatch();
-    // const navigate = useNavigate();
+function Dashboard({ boardId }: { boardId: number | undefined }) {
+  const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
 
     const board = useAppSelector((state) => Object.values(state.boards).find((b) => b.id === boardId));
     const labels = useAppSelector((state) => Object.values(state.labels));
