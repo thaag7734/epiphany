@@ -30,7 +30,7 @@ export interface Team extends Model {
 }
 
 export interface Board extends Model {
-  team_id: number;
+  team_id: number | null;
   owner_id: number;
   name: string;
   team?: Team;

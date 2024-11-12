@@ -16,7 +16,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     const labels = useAppSelector((state) => Object.values(state.labels));
     const notes = useAppSelector((state) => Object.values(state.notes));
 
-    useEffect(() => {}, [notes])
+    useEffect(() => {}, [notes]);
 
     // const handleNoteClick = () => {
     //     //* Open delete/edit modal 
