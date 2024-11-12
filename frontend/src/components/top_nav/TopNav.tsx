@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import "./TopNav.css";
 import UserDropdown from "./user_dropdown/UserDropdown";
 
-export default function TopNav({boardId}:{boardId: number}) {
+export default function TopNav({ boardId }: { boardId: number | undefined }) {
   const navigate = useNavigate();
 
   return (

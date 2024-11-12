@@ -73,7 +73,7 @@ def inject_csrf_token(response):
         generate_csrf(),
         secure=True if environ.get("FLASK_ENV") == "production" else False,
         samesite="Strict" if environ.get("FLASK_ENV") == "production" else None,
-        httponly=True,
+        httponly=False,
     )
     return response
 
