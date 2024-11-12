@@ -1,22 +1,30 @@
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { User, Label, Note, Board } from "../../types/Models";
 // import { Link, useNavigate } from "react-router-dom";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
+import { sessionSlice } from "../../redux/reducers/session";
 
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   // const navigate = useNavigate();
 
   const board = useAppSelector((state) => Object.values(state.boards).find((b) => b.id === boardId));
   const labels = useAppSelector((state) => Object.values(state.labels));
+  const user = useAppSelector((state) => state.session.user);
 
   const handleNoteClick = () => {
     //* Open delete/edit modal 
     //*     - Import modal, set onClick to open
     // Link
   }
+
+  useEffect(() => {
+    if (user) {
+      dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
+    }
+  })
 
   // index for priority icon color
   const priorityColors = ["grey", "green", "yellow", "red"];

@@ -97,7 +97,7 @@ function App() {
 
     const currentBoard: Board = boards[currentBoardId];
 
-    if (currentBoard.team) {
+    if (currentBoard?.team) {
       dispatch(teamSlice.actions.setTeam(currentBoard.team));
     } else {
       dispatch(teamSlice.actions.clearState());

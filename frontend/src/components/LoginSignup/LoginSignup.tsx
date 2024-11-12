@@ -1,15 +1,17 @@
-import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { type FormEvent, type ReactElement, useState } from "react";
-import { login, signup } from "../../redux/reducers/session";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../redux/hooks";
+import { type FormEvent, type ReactElement, useEffect, useState } from "react";
+import { login, signup, sessionSlice } from "../../redux/reducers/session";
 import ErrorMessage from "../ErrorMessage";
 import type { User } from "../../types/Models";
 import { getCsrf } from "../../util/cookies";
 import { IoIosLogIn } from "react-icons/io";
+import { getBoards } from "../../redux/reducers/boards";
 
 export default function LoginSignup() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [rootBoardId, setRootBoardId] = useState<number | null>(null);
   const [formToggle, setFormToggle] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -27,18 +29,27 @@ export default function LoginSignup() {
       ? dispatch(login({ csrf_token, email, password }))
       : dispatch(signup({ csrf_token, username, email, password }));
 
-    promise.then(({ payload, type }) => {
+    promise.then(async ({ payload, type }) => {
       if (["session/signup/rejected", "session/login/rejected"].includes(type)) {
         for (const error in payload.errors) {
           errors[error] = <ErrorMessage msg={payload.errors[error]} />;
         }
         setErrors(errors);
       } else {
-        const rootBoardId: number = (payload as User).root_board_id!;
-        navigate(`/boards/${rootBoardId}`);
+        const root = (payload as User).root_board_id!
+        setRootBoardId(root);
+        await dispatch(getBoards());
+
+        dispatch(sessionSlice.actions.changeBoard(root));
       }
     });
   }
+
+  useEffect(() => {
+    if (!rootBoardId) return;
+
+    navigate(`/boards/${rootBoardId}`);
+  }, [rootBoardId])
 
   return (
     <div className="loginSignup">
