@@ -1,6 +1,7 @@
 import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
+import { LoginFormData, SignupFormData } from "../../types/FormData";
 
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";
@@ -9,7 +10,7 @@ const SIGNUP = "session/signup";
 export const login = createAppAsyncThunk(
   LOGIN,
   async (
-    credentials: { email: string; password: string },
+    credentials: LoginFormData,
     { fulfillWithValue, rejectWithValue },
   ) => {
     const res = await fetch("/api/auth/login", {
@@ -36,7 +37,7 @@ export const logout = createAppAsyncThunk(LOGOUT, async () => {
 
 export const signup = createAppAsyncThunk(
   SIGNUP,
-  async (user: User, { fulfillWithValue, rejectWithValue }) => {
+  async (user: SignupFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       body: JSON.stringify(user),
