@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import TopNav from "./components/top_nav";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { login, logout, restoreUser, sessionSlice, signup } from "./redux/reducers/session";
+import {
+  login,
+  logout,
+  restoreUser,
+  sessionSlice,
+  signup,
+} from "./redux/reducers/session";
 import {
   createLabel,
   deleteLabel,
@@ -25,7 +31,15 @@ import {
   getBoards,
   updateBoard,
 } from "./redux/reducers/boards";
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import {
   createTeam,
   deleteTeam,
@@ -39,14 +53,18 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import { Board, User } from "./types/Models";
 
 function App() {
-  const navigate = useNavigate(); 
   const dispatch = useAppDispatch();
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const currentBoardId: number | undefined = useAppSelector(
     (state) => state.session.currentBoardId,
   );
-  const boards: BoardsState = useAppSelector((state) => state.boards);
-  const user: User | null = useAppSelector((state) => state.session.user);
 
+  useEffect(() => {
+    dispatch(restoreUser()).then(() => {
+      setIsLoaded(true);
+    });
+  }, [dispatch]);
 
   if (import.meta.env.MODE !== "production") {
     window.dispatch = dispatch;
@@ -89,42 +107,46 @@ function App() {
     window.getCookie = getCookie;
   }
 
-  useEffect(() => {
-    dispatch(restoreUser())
-    .then(() => {
-      if (user) {
-        dispatch(getBoards())
-        .then(() => {
-          dispatch(sessionSlice.actions.changeBoard(user?.root_board_id!))
-        })
-      } else {
-        navigate("/");
-      }
-    })
-  }, [navigate, dispatch])
-
-  useEffect(() => {
-    if (currentBoardId === undefined) return;
-
-    dispatch(notesSlice.actions.clearState());
-    dispatch(labelsSlice.actions.clearState());
-
-    dispatch(getBoardNotes(currentBoardId));
-    dispatch(getBoardLabels(currentBoardId));
-
-    const currentBoard: Board = boards[currentBoardId];
-
-    if (currentBoard?.team) {
-      dispatch(teamSlice.actions.setTeam(currentBoard.team));
-    } else {
-      dispatch(teamSlice.actions.clearState());
-    }
-  }, [currentBoardId, dispatch]);
-
   function Layout() {
-    return (
-      <Outlet />
-    );
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { boardId } = useParams();
+
+    const boards: BoardsState = useAppSelector((state) => state.boards);
+    const user: User | null = useAppSelector((state) => state.session.user);
+
+    useEffect(() => {
+      if (currentBoardId === undefined) return;
+
+      dispatch(notesSlice.actions.clearState());
+      dispatch(labelsSlice.actions.clearState());
+
+      dispatch(getBoardNotes(currentBoardId));
+      dispatch(getBoardLabels(currentBoardId));
+
+      const currentBoard: Board = boards[currentBoardId];
+
+      if (currentBoard?.team) {
+        dispatch(teamSlice.actions.setTeam(currentBoard.team));
+      } else {
+        dispatch(teamSlice.actions.clearState());
+        navigate(`boards/${currentBoardId}`);
+      }
+    }, [currentBoardId, dispatch]);
+
+    useEffect(() => {
+      if (!isLoaded) return;
+      if (user) {
+        dispatch(getBoards()).then(() => {
+          if (boardId) {
+            dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
+          } else {
+            dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
+          }
+        });
+      }
+    }, [isLoaded]);
+    return isLoaded ? <Outlet /> : null;
   }
 
   const router = createBrowserRouter([
@@ -138,9 +160,7 @@ function App() {
       children: [
         {
           index: true,
-          element: (
-            <LoginSignup />
-          ),
+          element: <LoginSignup />,
         },
         //{
         //  element: <Boards />,
@@ -149,7 +169,7 @@ function App() {
         {
           element: (
             <>
-              <SidePanel boardId={currentBoardId} />
+              <SidePanel />
               <div>
                 <TopNav boardId={currentBoardId} />
                 <Dashboard boardId={currentBoardId} />
