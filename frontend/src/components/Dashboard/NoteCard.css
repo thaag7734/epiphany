@@ -19,6 +19,7 @@
   
 .note-title {
     font-size: 18px;
+    font-family: "Playwrite US Modern", serif;
     font-weight: bold;
     margin-bottom: 4px;
     white-space: nowrap;
@@ -28,6 +29,7 @@
   
 .note-content {
     font-size: 14px;
+    font-family: "Playwrite US Modern", serif;
     line-height: 1.5;
     /* white-space: nowrap; */
     overflow: hidden;
@@ -59,6 +61,7 @@
   
 .note-label-pill {
     font-size: 10px;
+    /* font-family: "Playwrite US Modern", serif; */
     padding: 4px 8px;
     border: 1px solid #555;
     border-radius: 12px;
