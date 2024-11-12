@@ -32,17 +32,11 @@ import {
   teamSlice,
   updateTeam,
 } from "./redux/reducers/teams";
-<<<<<<< HEAD
-import Dashboard from "./components/Dashboard/Dashboard";
-import type { User, Label, Note, Board } from "./types/Models"; 
-
-=======
 import SidePanel from "./components/SidePanel";
 import { getCookie } from "./util/cookies";
 import LoginSignup from "./components/LoginSignup";
 import Dashboard from "./components/Dashboard/Dashboard";
 import { Board } from "./types/Models";
->>>>>>> dev
 
 function App() {
   const dispatch = useAppDispatch();
@@ -51,49 +45,6 @@ function App() {
   );
   const boards: BoardsState = useAppSelector((state) => state.boards);
 
-<<<<<<< HEAD
-  // if (import.meta.env.MODE !== "production") {
-    useEffect(() => {
-      window.dispatch = dispatch;
-      window.actions = {
-        session: {
-          login,
-          logout,
-          signup,
-          changeBoard: sessionSlice.actions.changeBoard,
-        },
-        notes: {
-          getBoardNotes,
-          createNote,
-          updateNote,
-          deleteNote,
-          clearState: notesSlice.actions.clearState,
-        },
-        labels: {
-          getBoardLabels,
-          createLabel,
-          updateLabel,
-          deleteLabel,
-          clearState: labelsSlice.actions.clearState,
-        },
-        boards: {
-          getBoards,
-          createBoard,
-          updateBoard,
-          deleteBoard,
-          clearState: boardsSlice.actions.clearState,
-        },
-        team: {
-          createTeam,
-          updateTeam,
-          deleteTeam,
-          setTeam: teamSlice.actions.setTeam,
-          clearState: teamSlice.actions.clearState,
-        },
-      };
-    }, [dispatch]);
-  // }
-=======
   if (import.meta.env.MODE !== "production") {
     window.dispatch = dispatch;
     window.actions = {
@@ -134,7 +85,6 @@ function App() {
     };
     window.getCookie = getCookie;
   }
->>>>>>> dev
 
   useEffect(() => {
     if (currentBoardId === undefined) return;
@@ -156,17 +106,10 @@ function App() {
 
   function Layout() {
     return (
-      // <Outlet />
-      // <h1>router implemented</h1>
-      <Dashboard boardId={currentBoardId} />
-
+      <Outlet />
     );
   }
 
-<<<<<<< HEAD
-  
-=======
->>>>>>> dev
   const router = createBrowserRouter([
     {
       element: (
@@ -175,30 +118,6 @@ function App() {
         </>
       ),
       path: "/",
-<<<<<<< HEAD
-    //   children: [
-    //     {
-    //       index: true,
-    //       element: (
-    //         <LoginSignupModal />
-    //       ),
-    //     },
-    //     {
-    //       element: <Boards />,
-    //       path: "boards",
-    //     },
-    //     {
-    //       element: (
-    //         <>
-    //           <TopNav boardId={currentBoardId} />
-    //           <SideBar boardId={currentBoardId} />
-    //           <Dashboard boardId={currentBoardId} />
-    //         </>
-    //       ),
-    //       path: "boards/:boardId",
-    //     },
-    //   ],
-=======
       children: [
         {
           index: true,
@@ -223,7 +142,6 @@ function App() {
           path: "boards/:boardId",
         },
       ],
->>>>>>> dev
     },
   ]);
 
