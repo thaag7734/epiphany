@@ -22,7 +22,7 @@ class Team(db.Model):
     )
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
-    owner = db.relationship("User")
+    owner = db.relationship("User", foreign_keys=[owner_id])
     board = db.relationship(
         "Board", back_populates="team", cascade="all, delete-orphan"
     )
@@ -82,6 +82,7 @@ class Note(db.Model):
     )
     board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
 
+    labels = db.relationship("Label", secondary=note_label)
     board = db.relationship("Board", back_populates="notes")
 
     def to_dict(self):
@@ -92,6 +93,7 @@ class Note(db.Model):
             "deadline": self.deadline,
             "priority": self.priority,
             "board_id": self.board_id,
+            "labels": [lbl.id for lbl in self.labels],
         }
 
 

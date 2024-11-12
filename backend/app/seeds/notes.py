@@ -11,7 +11,7 @@ def seed_notes():
 
     for board_notes in notes:
         for note in board_notes:
-            labels = Label.query.filter(Label.board_id == note.board_id)
+            labels = Label.query.filter(Label.board_id == note.board_id).all()
             note.labels = labels
 
             db.session.add(note)
