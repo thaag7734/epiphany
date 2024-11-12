@@ -59,7 +59,7 @@ def update_note(note_id: int):
 
         return {"message": "Note successfully updated", "note": note.to_dict()}, 200
     else:
-        return {"message": "Invalid form data"}, 400
+        return {"message": "Invalid form data", "errors": form.errors}, 400
 
 
 @notes.route("/<int:note_id>/delete", methods=["DELETE"])

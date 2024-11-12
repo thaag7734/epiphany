@@ -32,6 +32,9 @@ import {
   teamSlice,
   updateTeam,
 } from "./redux/reducers/teams";
+import Dashboard from "./components/Dashboard/Dashboard";
+import type { User, Label, Note, Board } from "./types/Models"; 
+
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,7 +43,7 @@ function App() {
   );
   const boards: BoardsState = useAppSelector((state) => state.boards);
 
-  if (import.meta.env.MODE !== "production") {
+  // if (import.meta.env.MODE !== "production") {
     useEffect(() => {
       window.dispatch = dispatch;
       window.actions = {
@@ -80,7 +83,7 @@ function App() {
         },
       };
     }, [dispatch]);
-  }
+  // }
 
   useEffect(() => {
     if (currentBoardId === undefined) return;
@@ -93,7 +96,7 @@ function App() {
 
     const currentBoard: Board = boards[currentBoardId];
 
-    if (currentBoard.team) {
+    if (currentBoard?.team) {
       dispatch(teamSlice.actions.setTeam(currentBoard.team));
     } else {
       dispatch(teamSlice.actions.clearState());
@@ -102,12 +105,14 @@ function App() {
 
   function Layout() {
     return (
-      <Outlet />
+      // <Outlet />
       // <h1>router implemented</h1>
+      <Dashboard boardId={currentBoardId} />
+
     );
   }
 
-  /*
+  
   const router = createBrowserRouter([
     {
       element: (
@@ -116,32 +121,32 @@ function App() {
         </>
       ),
       path: "/",
-      children: [
-        {
-          index: true,
-          element: (
-            <LoginSignupModal />
-          ),
-        },
-        {
-          element: <Boards />,
-          path: "boards",
-        },
-        {
-          element: (
-            <>
-              <TopNav boardId={currentBoardId} />
-              <SideBar boardId={currentBoardId} />
-              <Dashboard boardId={currentBoardId} />
-            </>
-          ),
-          path: "boards/:boardId",
-        },
-      ],
+    //   children: [
+    //     {
+    //       index: true,
+    //       element: (
+    //         <LoginSignupModal />
+    //       ),
+    //     },
+    //     {
+    //       element: <Boards />,
+    //       path: "boards",
+    //     },
+    //     {
+    //       element: (
+    //         <>
+    //           <TopNav boardId={currentBoardId} />
+    //           <SideBar boardId={currentBoardId} />
+    //           <Dashboard boardId={currentBoardId} />
+    //         </>
+    //       ),
+    //       path: "boards/:boardId",
+    //     },
+    //   ],
     },
   ]);
 
-  return <RouterProvider router={router} />;*/
+  return <RouterProvider router={router} />;
 }
 
 export default App;
