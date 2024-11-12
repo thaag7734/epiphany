@@ -2,35 +2,48 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import TopNav from "./components/top_nav";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { login, logout, restoreUser, sessionSlice, signup } from "./redux/reducers/session";
 import {
-  createLabel,
-  deleteLabel,
-  getBoardLabels,
-  labelsSlice,
-  updateLabel,
+   login,
+   logout,
+   restoreUser,
+   sessionSlice,
+   signup,
+} from "./redux/reducers/session";
+import {
+   createLabel,
+   deleteLabel,
+   getBoardLabels,
+   labelsSlice,
+   updateLabel,
 } from "./redux/reducers/labels";
 import {
-  createNote,
-  deleteNote,
-  getBoardNotes,
-  notesSlice,
-  updateNote,
+   createNote,
+   deleteNote,
+   getBoardNotes,
+   notesSlice,
+   updateNote,
 } from "./redux/reducers/notes";
 import {
-  boardsSlice,
-  type BoardsState,
-  createBoard,
-  deleteBoard,
-  getBoards,
-  updateBoard,
+   boardsSlice,
+   type BoardsState,
+   createBoard,
+   deleteBoard,
+   getBoards,
+   updateBoard,
 } from "./redux/reducers/boards";
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigate } from "react-router-dom";
 import {
-  createTeam,
-  deleteTeam,
-  teamSlice,
-  updateTeam,
+   createBrowserRouter,
+   Navigate,
+   Outlet,
+   RouterProvider,
+   useLocation,
+   useNavigate,
+} from "react-router-dom";
+import {
+   createTeam,
+   deleteTeam,
+   teamSlice,
+   updateTeam,
 } from "./redux/reducers/teams";
 import SidePanel from "./components/SidePanel";
 import { getCookie } from "./util/cookies";
@@ -39,130 +52,131 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import { Board, User } from "./types/Models";
 
 function App() {
-  const navigate = useNavigate(); 
-  const dispatch = useAppDispatch();
-  const currentBoardId: number | undefined = useAppSelector(
-    (state) => state.session.currentBoardId,
-  );
-  const boards: BoardsState = useAppSelector((state) => state.boards);
-  const user: User | null = useAppSelector((state) => state.session.user);
+   const dispatch = useAppDispatch();
+   const [isLoaded, setIsLoaded] = useState(false);
 
+   const currentBoardId: number | undefined = useAppSelector(
+      (state) => state.session.currentBoardId
+   );
 
-  if (import.meta.env.MODE !== "production") {
-    window.dispatch = dispatch;
-    window.actions = {
-      session: {
-        login,
-        logout,
-        signup,
-        changeBoard: sessionSlice.actions.changeBoard,
-      },
-      notes: {
-        getBoardNotes,
-        createNote,
-        updateNote,
-        deleteNote,
-        clearState: notesSlice.actions.clearState,
-      },
-      labels: {
-        getBoardLabels,
-        createLabel,
-        updateLabel,
-        deleteLabel,
-        clearState: labelsSlice.actions.clearState,
-      },
-      boards: {
-        getBoards,
-        createBoard,
-        updateBoard,
-        deleteBoard,
-        clearState: boardsSlice.actions.clearState,
-      },
-      team: {
-        createTeam,
-        updateTeam,
-        deleteTeam,
-        setTeam: teamSlice.actions.setTeam,
-        clearState: teamSlice.actions.clearState,
-      },
-    };
-    window.getCookie = getCookie;
-  }
+   useEffect(() => {
+      dispatch(restoreUser()).then(() => {
+         setIsLoaded(true);
+      });
+   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(restoreUser())
-    .then(() => {
-      if (user) {
-        dispatch(getBoards())
-        .then(() => {
-          dispatch(sessionSlice.actions.changeBoard(user?.root_board_id!))
-        })
-      } else {
-        navigate("/");
-      }
-    })
-  }, [navigate, dispatch])
+   if (import.meta.env.MODE !== "production") {
+      window.dispatch = dispatch;
+      window.actions = {
+         session: {
+            login,
+            logout,
+            signup,
+            changeBoard: sessionSlice.actions.changeBoard,
+         },
+         notes: {
+            getBoardNotes,
+            createNote,
+            updateNote,
+            deleteNote,
+            clearState: notesSlice.actions.clearState,
+         },
+         labels: {
+            getBoardLabels,
+            createLabel,
+            updateLabel,
+            deleteLabel,
+            clearState: labelsSlice.actions.clearState,
+         },
+         boards: {
+            getBoards,
+            createBoard,
+            updateBoard,
+            deleteBoard,
+            clearState: boardsSlice.actions.clearState,
+         },
+         team: {
+            createTeam,
+            updateTeam,
+            deleteTeam,
+            setTeam: teamSlice.actions.setTeam,
+            clearState: teamSlice.actions.clearState,
+         },
+      };
+      window.getCookie = getCookie;
+   }
 
-  useEffect(() => {
-    if (currentBoardId === undefined) return;
+   function Layout() {
+      const navigate = useNavigate();
+      const location = useLocation();
 
-    dispatch(notesSlice.actions.clearState());
-    dispatch(labelsSlice.actions.clearState());
+      const boards: BoardsState = useAppSelector((state) => state.boards);
+      const user: User | null = useAppSelector((state) => state.session.user);
 
-    dispatch(getBoardNotes(currentBoardId));
-    dispatch(getBoardLabels(currentBoardId));
+      useEffect(() => {
+         if (currentBoardId === undefined) return;
 
-    const currentBoard: Board = boards[currentBoardId];
+         dispatch(notesSlice.actions.clearState());
+         dispatch(labelsSlice.actions.clearState());
 
-    if (currentBoard?.team) {
-      dispatch(teamSlice.actions.setTeam(currentBoard.team));
-    } else {
-      dispatch(teamSlice.actions.clearState());
-    }
-  }, [currentBoardId, dispatch]);
+         dispatch(getBoardNotes(currentBoardId));
+         dispatch(getBoardLabels(currentBoardId));
 
-  function Layout() {
-    return (
-      <Outlet />
-    );
-  }
+         const currentBoard: Board = boards[currentBoardId];
 
-  const router = createBrowserRouter([
-    {
-      element: (
-        <>
-          <Layout />
-        </>
-      ),
-      path: "/",
-      children: [
-        {
-          index: true,
-          element: (
-            <LoginSignup />
-          ),
-        },
-        //{
-        //  element: <Boards />,
-        //  path: "boards",
-        //},
-        {
-          element: (
+         if (currentBoard?.team) {
+            dispatch(teamSlice.actions.setTeam(currentBoard.team));
+         } else {
+            dispatch(teamSlice.actions.clearState());
+            navigate(`boards/${currentBoardId}`);
+         }
+      }, [currentBoardId, dispatch]);
+
+      useEffect(() => {
+         if (!isLoaded) return;
+         if (user) {
+            dispatch(getBoards()).then(() => {
+               dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
+            });
+         }
+      }, [isLoaded]);
+      return isLoaded ? <Outlet /> : null;
+   }
+
+   const router = createBrowserRouter([
+      {
+         element: (
             <>
-              <SidePanel boardId={currentBoardId} />
-              <div>
-                <TopNav boardId={currentBoardId} />
-                <Dashboard boardId={currentBoardId} />
-              </div>
+               <Layout />
             </>
-          ),
-          path: "boards/:boardId",
-        },
-      ],
-    },
-  ]);
+         ),
+         path: "/",
+         children: [
+            {
+               index: true,
+               element: <LoginSignup />,
+            },
+            //{
+            //  element: <Boards />,
+            //  path: "boards",
+            //},
+            {
+               element: (
+                  <>
+                     <SidePanel />
+                     <div>
+                        <TopNav boardId={currentBoardId} />
+                        <Dashboard boardId={currentBoardId} />
+                     </div>
+                  </>
+               ),
+               path: "boards/:boardId",
+            },
+         ],
+      },
+   ]);
 
-  return <RouterProvider router={router} />;
+   return <RouterProvider router={router} />;
 }
 
 export default App;
