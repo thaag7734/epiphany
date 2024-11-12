@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { User, Label, Note, Board } from "../../types/Models";
 // import { Link, useNavigate } from "react-router-dom";
