@@ -30,7 +30,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     return (
         <div className="dash-home">
             {notes.map((note: Note) => (
-                <NoteCard noteId={note.id}/>
+                <NoteCard noteId={note.id} key={note.id} />
             ))}
 
             {/* <div className="board-name">{board?.name}</div> */}
