@@ -10,10 +10,7 @@ const RESTORE_USER = "session/restoreUser";
 
 export const login = createAppAsyncThunk(
   LOGIN,
-  async (
-    credentials: LoginFormData,
-    { fulfillWithValue, rejectWithValue },
-  ) => {
+  async (credentials: LoginFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(credentials),
@@ -58,7 +55,7 @@ export const signup = createAppAsyncThunk(
 export const restoreUser = createAppAsyncThunk(
   RESTORE_USER,
   async (_, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch("/api/auth");
+    const res = await fetch("/api/auth", { credentials: "include" });
 
     const data = await res.json();
 
@@ -95,7 +92,12 @@ export const sessionSlice = createSlice({
         setUser(state, null);
       })
       .addMatcher(
-        (action) => isAnyOf(login.fulfilled, signup.fulfilled, restoreUser.fulfilled)(action),
+        (action) =>
+          isAnyOf(
+            login.fulfilled,
+            signup.fulfilled,
+            restoreUser.fulfilled,
+          )(action),
         (state, action: PayloadAction<User>) => {
           setUser(state, action.payload);
         },
