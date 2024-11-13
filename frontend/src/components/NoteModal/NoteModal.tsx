@@ -1,10 +1,4 @@
-import type {
-  ChangeEvent,
-  FC,
-  FormEvent,
-  MouseEvent,
-  ReactElement,
-} from "react";
+import type { ChangeEvent, FC, FormEvent, ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import type { Note } from "../../types/Models";

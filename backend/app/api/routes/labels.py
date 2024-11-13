@@ -78,7 +78,7 @@ def update_label(label_id: int):
 
 @labels.route("/<int:label_id>/delete", methods=["DELETE"])
 @login_required
-def delete_note(label_id: int):
+def delete_label(label_id: int):
     if not current_user:
         return {"message": "Must be logged in to delete a label"}, 401
 

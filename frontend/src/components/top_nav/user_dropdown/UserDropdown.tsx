@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { logout } from "../../../redux/reducers/session";
 import { FaUserCircle } from "react-icons/fa";
