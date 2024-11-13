@@ -142,7 +142,7 @@
 }
 
 .clicked {
-   box-shadow: inset 2px 2px 2px black;
+   box-shadow: inset 2px 2px 3px black;
 }
 
 .clicked:hover {

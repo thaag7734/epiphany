@@ -33,7 +33,7 @@ export default function Labels() {
    }
 
    return (
-      <div>
+      <>
          {!labelsArr.length ? (
             <h3>Loading Labels...</h3>
          ) : (
@@ -99,6 +99,6 @@ export default function Labels() {
                <NewLabel />
             </>
          )}
-      </div>
+      </>
    );
 }
