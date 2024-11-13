@@ -22,7 +22,6 @@ class Team(db.Model):
     )
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
-    owner = db.relationship("User", foreign_keys=[owner_id])
     board = db.relationship(
         "Board", back_populates="team", cascade="all, delete-orphan"
     )
@@ -31,8 +30,7 @@ class Team(db.Model):
         return {
             "id": self.id,
             "owner_id": self.owner_id,
-            "users": [user.to_dict() for user in self.users],
-            "owner": self.owner.to_dict(),
+            "emails": [user.email for user in self.users],
         }
 
 

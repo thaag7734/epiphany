@@ -336,23 +336,26 @@ def create_team(board_id: int):
         db.session.rollback()
         return {"message": "Internal server error"}, 500
 
+    db.session.commit()
+    board.team_id=team.id
+    db.session.commit()
     form_data = request.json
 
     if form_data:
-        if type(form_data["users"]) is not list:
-            return {"message": "Users must be a list of emails"}, 400
+        if type(form_data["emails"]) is not list:
+            return {"message": "Emails must be a list of emails"}, 400
 
-        for email in form_data["users"]:
+        for email in form_data["emails"]:
             user = User.query.filter(User.email == email).first()
 
             if user:
                 team.users.append(user)
 
-                try:
-                    db.session.commit()
+        try:
+            db.session.commit()
 
-                except Exception:
-                    db.session.rollback()
-                    return {"message": "Internal server error"}, 500
+        except Exception:
+            db.session.rollback()
+            return {"message": "Internal server error"}, 500
 
     return {"message": "Team created successfully", "team": team.to_dict()}, 201
