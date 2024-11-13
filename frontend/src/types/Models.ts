@@ -26,7 +26,7 @@ export interface Note extends Model {
 export interface Team extends Model {
   owner_id: number;
   owner?: User;
-  users: User[];
+  emails: string[];
 }
 
 export interface Board extends Model {

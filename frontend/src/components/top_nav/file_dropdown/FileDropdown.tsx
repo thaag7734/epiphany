@@ -1,19 +1,34 @@
-import { type MouseEvent, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import React from "react";
+import { NavLink, useParams } from "react-router-dom";
+import { ModalContextType, useModal } from "../../Modal/Modal";
+import TeamsModal from "../../TeamsModal/TeamsModal";
+import { useAppSelector } from "../../../redux/hooks";
+import { TeamState } from "../../../redux/reducers/teams";
+import { Team } from "../../../types/Models";
 
 export default function FileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const { setModalContent } = useModal() as ModalContextType;
+  const { boardId } = useParams();
+  const team:TeamState = useAppSelector((state)=> state.team)
+  const user = useAppSelector((state)=>state.session.user)
 
-  const toggleDropdown = (e: MouseEvent) => {
+  const toggleDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsOpen(!isOpen);
   };
 
   let thisRef: HTMLDivElement | null = null;
 
+  const launchTeamsModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setModalContent(<TeamsModal />);
+  };
+
   useEffect(() => {
-    const closeMenu = (e) => {
-      if (thisRef && !thisRef.contains(e.target)) {
+    const closeMenu = (e: MouseEvent) => {
+      if (thisRef && !thisRef.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -33,9 +48,15 @@ export default function FileDropdown() {
           <li>
             <NavLink to={"/boards"}>Manage Boards</NavLink>
           </li>
+          {(team && (team as Team).owner_id===user?.id)?
           <li>
-            <p>Manage Teams - todo Modal</p>
+            <p onClick={launchTeamsModal}>Manage Team</p>
           </li>
+          :
+          <li>
+            <p onClick={launchTeamsModal}>Create Team</p>
+          </li>
+      }
         </ul>
       )}
     </div>
