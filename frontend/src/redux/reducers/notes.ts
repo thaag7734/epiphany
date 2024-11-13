@@ -112,9 +112,9 @@ export const notesSlice = createSlice({
         }
       })
       .addCase(deleteNote.fulfilled, (state: NotesState, action) => {
-        delete state[
-          (action.payload as { message: string; labelId: number }).labelId
-        ];
+        return Object.fromEntries(
+          Object.entries(state).filter((([k, _]) => k != action.payload.noteId))
+        );
       });
     builder.addMatcher(
       (action) => isAnyOf(createNote.fulfilled, updateNote.fulfilled)(action),

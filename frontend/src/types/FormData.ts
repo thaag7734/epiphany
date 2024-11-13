@@ -24,7 +24,7 @@ export interface NoteFormData extends FormData {
   board_id: number;
   title: string;
   content: string;
-  deadline: Date;
+  deadline?: Date;
   priority: number;
 }
 

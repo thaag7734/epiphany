@@ -1,10 +1,11 @@
-.note-tile {
+.board-card {
     background-color: #222;
     color: #fff;
     border: 1px solid #333;
     border-radius: 12px;
     padding: 16px;
-    max-height: 300px;
+    height: 140px;
+    max-width: 300px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -12,12 +13,12 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
   
-.note-tile:hover {
+.board-card:hover {
     transform: scale(1.05); 
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
   
-.note-title {
+.board-name {
     font-size: 18px;
     font-family: "Sour Gummy", sans-serif;
     font-weight: bold;
@@ -28,21 +29,7 @@
     text-align: center;
 }
   
-.note-content {
-    font-size: 14px;
-    font-family: "Sour Gummy", sans-serif;
-    line-height: 1.5;
-    /* white-space: nowrap; */
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-  
-.note-priority-icon {
-    position: absolute;
-    /* margin: 0; */
-}
-  
-.note-labels-list {
+.board-labels-list {
     display: flex;
     /* flex-wrap: wrap;   -> scrollable across bottom instead? */
     gap: 6px;
@@ -60,7 +47,7 @@
     padding: 4px 0;
 }
   
-.note-label-pill {
+.board-label-pill {
     font-size: 10px;
     /* font-family: "Playwrite US Modern", serif; */
     padding: 4px 8px;
@@ -70,5 +57,3 @@
     background-color: transparent;
     white-space: nowrap;
 }
-  
-  

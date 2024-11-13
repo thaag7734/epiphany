@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { TeamFormData } from "../../types/FormData";
 import type { Team } from "../../types/Models";
@@ -14,9 +14,7 @@ export const updateTeam = createAppAsyncThunk(
   async (form: TeamFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch(`/api/teams/${form.team_id}/users`, {
       method: "PUT",
-      body: JSON.stringify({
-        users: form.emails,
-      }),
+      body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -35,9 +33,7 @@ export const createTeam = createAppAsyncThunk(
   async (form: TeamFormData, { fulfillWithValue, rejectWithValue }) => {
     const res = await fetch(`/api/boards/${form.board_id}/new_team`, {
       method: "POST",
-      body: JSON.stringify({
-        users: form.emails,
-      }),
+      body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -85,7 +81,7 @@ export const teamSlice = createSlice({
     });
     builder.addMatcher(
       (action) => isAnyOf(createTeam.fulfilled, updateTeam.fulfilled)(action),
-      (_, action) => action.payload,
+      (_, action) => action.payload.team,
     );
   },
 });

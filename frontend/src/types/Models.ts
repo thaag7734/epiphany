@@ -20,17 +20,17 @@ export interface Note extends Model {
   deadline?: Date;
   priority: number;
   board_id: number;
-  labels: Label[];
+  labels: number[];
 }
 
 export interface Team extends Model {
   owner_id: number;
   owner?: User;
-  users: User[];
+  emails: string[];
 }
 
 export interface Board extends Model {
-  team_id: number;
+  team_id: number | null;
   owner_id: number;
   name: string;
   team?: Team;

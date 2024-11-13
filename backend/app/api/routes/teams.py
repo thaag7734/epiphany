@@ -26,10 +26,10 @@ def modify_team_users(team_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    users = form_data["users"]
+    users = form_data["emails"]
 
     if type(users) is not list:
-        return {"message": "Users must be a list of emails"}, 400
+        return {"message": "Emails must be a list of emails"}, 400
 
     for email in users:
         user = User.query.filter(User.email == email).first()
@@ -37,13 +37,13 @@ def modify_team_users(team_id: int):
         if user:
             user_list.append(user)
 
-            try:
-                team.users = user_list
-                db.session.commit()
+    try:
+        team.users = user_list
+        db.session.commit()
 
-            except Exception:
-                db.session.rollback()
-                return {"message": "Internal server error"}, 500
+    except Exception:
+        db.session.rollback()
+        return {"message": "Internal server error"}, 500
 
     return {"message": "Team updated successfully", "team": team.to_dict()}, 201
 
