@@ -1,5 +1,6 @@
 #side-panel {
    display: flex;
+   align-items: center;
    position: fixed;
    top: 0;
    left: -14%;
@@ -10,23 +11,35 @@
    transition: 400ms;
    background-color: #faf1ea;
    box-shadow: 2px 0px 4px 2px #666;
+   z-index: 9001;
 }
 
 #side-panel-show {
    display: flex;
+   align-items: center;
    position: absolute;
+   left: 0;
    background-color: #faf1ea;
    flex-direction: column;
    height: 100vh;
    width: 15vw;
    box-shadow: 2px 0px 4px 2px #666;
    text-align: center;
-   left: 0;
    transition: 400ms;
+   z-index: 9001;
 }
 
 .overflowing {
    overflow-y: scroll;
+}
+
+.overflowing::-webkit-scrollbar {
+   width: 4px;
+}
+
+.overflowing::-webkit-scrollbar-thumb {
+   background-color: #bf7f79;
+   border-radius: 15px;
 }
 
 #logo {
@@ -38,17 +51,80 @@
 .labels-box {
    display: flex;
    flex-direction: column;
+   margin-top: 1rem;
+   align-items: stretch;
+   width: 87%;
+   align-self: center;
+   height: 40vh;
+   box-shadow: inset 1px 1px 7px black;
+   border-radius: 5px;
 }
 
-.rotate-right {
-   transition: 500ms;
-   transform: rotate(180deg);
-   animation-direction: alternate;
+.label {
+   font-family: "Sour Gummy", sans-serif;
+   border: 1px solid #efafa9;
+   width: 100%;
+   margin: 0.5rem 0rem;
+   background-color: #efafa9;
+   padding: 1vw 0;
+   font-size: 1.2rem;
+   border-radius: 4px;
+   color: #6a91a0;
 }
 
-.rotate-left {
-   transition: 500ms;
-   transform: rotate(-180deg);
+.label:hover {
+   cursor: grab;
+   box-shadow: 1px 1px 4px black;
+   background-color: #bf7f79;
+   color: #8ab1c0;
+}
+
+.label:active {
+   cursor: grabbing;
+}
+
+.new-label {
+   font-size: 1.5rem;
+   border: 1px solid gray;
+   margin: 0.5rem 0rem;
+   padding: 1vw 3vw;
+   line-height: 1rem;
+   background-color: rgba(50, 50, 50, 0.3);
+   box-shadow: 3px 3px 3px black;
+   border-radius: 4px;
+   width: 17%;
+}
+
+.new-label:hover {
+   box-shadow: none;
+   background-color: rgba(100, 100, 100, 0.3);
+   cursor: pointer;
+}
+
+.filter-btn {
+   background-color: #770000;
+   border-radius: 4px;
+   padding: 0.3vw;
+   box-shadow: 2px 2px 2px black;
+}
+
+.filter-btn:hover {
+   cursor: pointer;
+   background-color: red;
+   box-shadow: none;
+}
+
+.trash-btn {
+   background-color: #770000;
+   border-radius: 4px;
+   padding: 0.3vw;
+   box-shadow: 2px 2px 2px black;
+}
+
+.trash-btn:hover {
+   cursor: pointer;
+   background-color: red;
+   box-shadow: none;
 }
 
 .arrow-box {
@@ -63,4 +139,13 @@
 
 .arrow-box-hidden {
    display: none;
+}
+
+.clicked {
+   box-shadow: inset 2px 2px 2px black;
+}
+
+.clicked:hover {
+   background-color: #770000;
+   box-shadow: inset 2px 2px 2px black;
 }
