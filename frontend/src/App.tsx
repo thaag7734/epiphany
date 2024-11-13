@@ -33,7 +33,6 @@ import {
 } from "./redux/reducers/boards";
 import {
   createBrowserRouter,
-  Navigate,
   Outlet,
   RouterProvider,
   useLocation,
@@ -50,22 +49,16 @@ import SidePanel from "./components/SidePanel";
 import { getCookie } from "./util/cookies";
 import LoginSignup from "./components/LoginSignup";
 import Dashboard from "./components/Dashboard/Dashboard";
-import { Board, User } from "./types/Models";
+import type { Board, User } from "./types/Models";
 import BoardsPage from "./components/BoardsPage/BoardsPage";
 
 function App() {
   const dispatch = useAppDispatch();
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const currentBoardId: number | undefined = useAppSelector(
     (state) => state.session.currentBoardId,
   );
 
-  useEffect(() => {
-    dispatch(restoreUser()).then(() => {
-      setIsLoaded(true);
-    });
-  }, [dispatch]);
 
   if (import.meta.env.MODE !== "production") {
     window.dispatch = dispatch;
@@ -112,9 +105,16 @@ function App() {
     const navigate = useNavigate();
     const location = useLocation();
     const { boardId } = useParams();
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const boards: BoardsState = useAppSelector((state) => state.boards);
     const user: User | null = useAppSelector((state) => state.session.user);
+
+    useEffect(() => {
+      dispatch(restoreUser()).then(() => {
+        setIsLoaded(true);
+      });
+    }, [dispatch]);
 
     useEffect(() => {
       if (currentBoardId === undefined) return;
@@ -131,7 +131,11 @@ function App() {
         dispatch(teamSlice.actions.setTeam(currentBoard.team));
       } else {
         dispatch(teamSlice.actions.clearState());
+<<<<<<< Updated upstream
         // navigate(`boards/${currentBoardId}`);
+=======
+        //navigate(`boards/${currentBoardId}`);
+>>>>>>> Stashed changes
       }
     }, [currentBoardId, dispatch]);
 
@@ -139,14 +143,17 @@ function App() {
       if (!isLoaded) return;
       if (user) {
         dispatch(getBoards()).then(() => {
+          console.log("boardId ===>", boardId);
           if (boardId) {
+            console.log("to board", boardId)
             dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
           } else {
+            console.log("to root board")
             dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
           }
         });
       }
-    }, [isLoaded]);
+    }, [isLoaded, boardId]);
     return isLoaded ? <Outlet /> : null;
   }
 
@@ -164,8 +171,8 @@ function App() {
           element: <LoginSignup />,
         },
         {
-         element: <BoardsPage />,
-         path: "boards",
+          element: <BoardsPage />,
+          path: "boards",
         },
         {
           element: (

@@ -1,42 +1,45 @@
-import { useEffect } from "react";
+import { MouseEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import type { User, Label, Note, Board } from "../../types/Models";
-// import { Link, useNavigate } from "react-router-dom";
-import { BiSolidCalendarExclamation } from "react-icons/bi";
+import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
-import { sessionSlice } from "../../redux/reducers/session";
+import { BsFillPlusSquareFill } from "react-icons/bs";
+import NoteModal from "../NoteModal/NoteModal";
+import { ModalContextType, useModal } from "../Modal/Modal";
 
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
   const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
 
-    const board = useAppSelector((state) => Object.values(state.boards).find((b) => b.id === boardId));
-    const labels = useAppSelector((state) => Object.values(state.labels));
-    const notes = useAppSelector((state) => Object.values(state.notes));
+  const board = useAppSelector((state) => Object.values(state.boards).find((b) => b.id === boardId));
+  const labels = useAppSelector((state) => Object.values(state.labels));
+  const notes = useAppSelector((state) => Object.values(state.notes));
 
-    useEffect(() => {}, [notes]);
+  const { setModalContent } = useModal() as ModalContextType;
 
-    // const handleNoteClick = () => {
-    //     //* Open delete/edit modal 
-    //     //*     - Import modal, set onClick to open
-    //     // Link
-    // }
+  useEffect(() => { }, [notes]);
 
-    // index for priority icon color
-    // const priorityColors = ["grey", "green", "yellow", "red"];
+  const handleNewNoteClick = (e: MouseEvent) => {
+    e.stopPropagation();
 
-    return (
-        <div className="dash-home">
-            {notes.map((note: Note) => (
-                <NoteCard noteId={note.id} key={note.id} />
-            ))}
+    setModalContent(<NoteModal />);
+  }
 
-            {/* <div className="board-name">{board?.name}</div> */}
-            {board && <div className="board-name">{board.name}</div>}
-        </div>
-    )
+  return (
+    <div className="dash-home">
+      {notes.map((note: Note) => (
+        <NoteCard noteId={note.id} key={note.id} />
+      ))}
+
+      {/* TODO move styles into css file and add cursor: pointer on hover */}
+      <div
+        style={{ width: "35%", aspectRatio: "1 / 1", fontSize: "80px" }}
+        onClick={handleNewNoteClick}
+      ><BsFillPlusSquareFill /></div>
+
+      {board && <div className="board-name">{board.name}</div>}
+    </div>
+  )
 }
 
 export default Dashboard;

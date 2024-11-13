@@ -1,7 +1,7 @@
 import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
-import { LoginFormData, SignupFormData } from "../../types/FormData";
+import type { LoginFormData, SignupFormData } from "../../types/FormData";
 
 const LOGIN = "session/login";
 const LOGOUT = "session/logout";

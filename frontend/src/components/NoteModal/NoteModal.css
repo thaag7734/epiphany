@@ -1,0 +1,7 @@
+.note-modal {
+  >input {
+    background-color: inherit;
+    border: none;
+    /*outline: 1px #000;*/
+  }
+}

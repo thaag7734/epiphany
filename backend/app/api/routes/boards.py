@@ -306,7 +306,7 @@ def create_note(board_id: int):
             db.session.commit()
             return {
                 "message": "New label successfully created",
-                "label": new_note.to_dict(),
+                "note": new_note.to_dict(),
             }, 201
     else:
         return {"message": "Invalid form data"}, 400
