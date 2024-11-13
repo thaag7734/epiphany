@@ -30,7 +30,7 @@ export default function NoteCard({ noteId }: {noteId: number}) {
             key={note.id}
             className="note-tile"
             onClick={() => handleNoteClick()}
-            title={note.title} //^ (optional tooltip val)
+            title={note.title}
             >
                 <div className="note-title">{note.title}</div>
 
