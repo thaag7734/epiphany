@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { FocusEvent, ReactElement, useEffect, useState } from "react";
-import { Team, User } from "../../types/Models";
+import { type ReactElement, useEffect, useState } from "react";
+import type { Team, User } from "../../types/Models";
 import { createTeam, updateTeam } from "../../redux/reducers/teams";
 import { getCsrf } from "../../util/cookies";
 import ErrorMessage from "../ErrorMessage";
-import { ModalContextType, useModal } from "../Modal/Modal";
+import { type ModalContextType, useModal } from "../Modal/Modal";
 import { FaTrash } from "react-icons/fa";
 
 export default function TeamsModal() {
@@ -25,7 +25,7 @@ export default function TeamsModal() {
         owner_id: (user as User).id,
         board_id: Number(boardId),
         emails: [],
-      })
+      }),
     );
   };
 
@@ -37,7 +37,7 @@ export default function TeamsModal() {
     }
   }, []);
 
-  const addUser = async (e: FocusEvent) => {
+  const addUser = async () => {
     setTeamEmails(teamEmails.concat(email));
     const csrf_token = await getCsrf();
     dispatch(
@@ -46,25 +46,27 @@ export default function TeamsModal() {
         owner_id: (user as User).id,
         emails: teamEmails,
         team_id: (team! as Team).id,
-      })
+      }),
     ).then(() => {
       if (!(team! as Team).emails.includes(email))
         setError(
-          <ErrorMessage msg={"Email must be associated with existing user"} />
+          <ErrorMessage msg={"Email must be associated with existing user"} />,
         );
       setEmail("");
     });
   };
 
   const handleDelete = async () => {
-      const csrf_token = await getCsrf()
+    const csrf_token = await getCsrf();
     const timeout = setTimeout(() => {
-      dispatch(updateTeam({
-            csrf_token,
-            owner_id: (user as User).id,
-            emails: teamEmails.filter((el)=>el!==email),
-            team_id: (team! as Team).id,
-          })).then(() => closeModal());
+      dispatch(
+        updateTeam({
+          csrf_token,
+          owner_id: (user as User).id,
+          emails: teamEmails.filter((el) => el !== email),
+          team_id: (team! as Team).id,
+        }),
+      ).then(() => closeModal());
       // TODO error handling if deletion fails
     }, 1000);
 
@@ -73,7 +75,7 @@ export default function TeamsModal() {
       () => {
         clearTimeout(timeout);
       },
-      { once: true }
+      { once: true },
     );
   };
 

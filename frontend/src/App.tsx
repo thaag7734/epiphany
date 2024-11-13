@@ -35,8 +35,6 @@ import {
   createBrowserRouter,
   Outlet,
   RouterProvider,
-  useLocation,
-  useNavigate,
   useParams,
 } from "react-router-dom";
 import {
@@ -60,8 +58,8 @@ function App() {
   );
 
   if (import.meta.env.MODE !== "production") {
-    window.dispatch = dispatch;
-    window.actions = {
+    (window as any).dispatch = dispatch;
+    (window as any).actions = {
       session: {
         login,
         logout,
@@ -97,12 +95,10 @@ function App() {
         clearState: teamSlice.actions.clearState,
       },
     };
-    window.getCookie = getCookie;
+    (window as any).getCookie = getCookie;
   }
 
   function Layout() {
-    const navigate = useNavigate();
-    const location = useLocation();
     const { boardId } = useParams();
     const [isLoaded, setIsLoaded] = useState(false);
 

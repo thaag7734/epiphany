@@ -1,5 +1,5 @@
 import { type MouseEvent, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
@@ -8,12 +8,9 @@ import NoteModal from "../NoteModal/NoteModal";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
-  const dispatch = useAppDispatch();
-
   const board = useAppSelector((state) =>
     Object.values(state.boards).find((b) => b.id === boardId),
   );
-  const labels = useAppSelector((state) => Object.values(state.labels));
   const notes = useAppSelector((state) => Object.values(state.notes));
 
   const { setModalContent } = useModal() as ModalContextType;

@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { TeamFormData } from "../../types/FormData";
 import type { Team } from "../../types/Models";
