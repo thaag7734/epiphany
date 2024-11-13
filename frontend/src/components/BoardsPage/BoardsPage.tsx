@@ -12,6 +12,7 @@ export default function BoardsPage() {
     useEffect(() => {}, [personalBoards, teamBoards]);
 
     return (
+
         <div className="boards-page">
             <div className="your-boards">Your Boards</div>
             {personalBoards.map((board: Board) => (

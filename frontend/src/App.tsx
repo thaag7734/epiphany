@@ -131,7 +131,7 @@ function App() {
         dispatch(teamSlice.actions.setTeam(currentBoard.team));
       } else {
         dispatch(teamSlice.actions.clearState());
-        navigate(`boards/${currentBoardId}`);
+        // navigate(`boards/${currentBoardId}`);
       }
     }, [currentBoardId, dispatch]);
 
