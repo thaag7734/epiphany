@@ -1,17 +1,18 @@
-import { MouseEvent, useEffect } from "react";
+import { type MouseEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
 import { BsFillPlusSquareFill } from "react-icons/bs";
 import NoteModal from "../NoteModal/NoteModal";
-import { ModalContextType, useModal } from "../Modal/Modal";
-
+import { type ModalContextType, useModal } from "../Modal/Modal";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
   const dispatch = useAppDispatch();
 
-  const board = useAppSelector((state) => Object.values(state.boards).find((b) => b.id === boardId));
+  const board = useAppSelector((state) =>
+    Object.values(state.boards).find((b) => b.id === boardId),
+  );
   const labels = useAppSelector((state) => Object.values(state.labels));
   const notes = useAppSelector((state) => Object.values(state.notes));
 
@@ -23,7 +24,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     e.stopPropagation();
 
     setModalContent(<NoteModal />);
-  }
+  };
 
   return (
     <div className="dash-home">
@@ -35,11 +36,13 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
       <div
         style={{ width: "35%", aspectRatio: "1 / 1", fontSize: "80px" }}
         onClick={handleNewNoteClick}
-      ><BsFillPlusSquareFill /></div>
+      >
+        <BsFillPlusSquareFill />
+      </div>
 
       {board && <div className="board-name">{board.name}</div>}
     </div>
-  )
+  );
 }
 
 export default Dashboard;

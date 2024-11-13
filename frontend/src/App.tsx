@@ -59,7 +59,6 @@ function App() {
     (state) => state.session.currentBoardId,
   );
 
-
   if (import.meta.env.MODE !== "production") {
     window.dispatch = dispatch;
     window.actions = {
@@ -131,11 +130,7 @@ function App() {
         dispatch(teamSlice.actions.setTeam(currentBoard.team));
       } else {
         dispatch(teamSlice.actions.clearState());
-<<<<<<< Updated upstream
         // navigate(`boards/${currentBoardId}`);
-=======
-        //navigate(`boards/${currentBoardId}`);
->>>>>>> Stashed changes
       }
     }, [currentBoardId, dispatch]);
 
@@ -145,10 +140,10 @@ function App() {
         dispatch(getBoards()).then(() => {
           console.log("boardId ===>", boardId);
           if (boardId) {
-            console.log("to board", boardId)
+            console.log("to board", boardId);
             dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
           } else {
-            console.log("to root board")
+            console.log("to root board");
             dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
           }
         });
@@ -179,7 +174,7 @@ function App() {
             <>
               <SidePanel />
               <div>
-                <TopNav boardId={currentBoardId} />
+                <TopNav />
                 <Dashboard boardId={currentBoardId} />
               </div>
             </>

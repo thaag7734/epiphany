@@ -1,7 +1,5 @@
-import { MouseEvent, useEffect, useState } from 'react';
-import { useNavigate } from "react-router";
-import { NavLink, Link } from 'react-router-dom';
-
+import { type MouseEvent, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function FileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,30 +9,29 @@ export default function FileDropdown() {
     setIsOpen(!isOpen);
   };
 
-  let thisRef:HTMLDivElement | null = null 
+  let thisRef: HTMLDivElement | null = null;
 
-useEffect(() => {
-  const closeMenu = (e) => {
-    if (thisRef && !thisRef.contains(e.target)) {
-      setIsOpen(false)
-    }
-  };
+  useEffect(() => {
+    const closeMenu = (e) => {
+      if (thisRef && !thisRef.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
 
-  document.addEventListener("click", closeMenu);
- 
-  return () => document.removeEventListener("click", closeMenu);
-});
+    document.addEventListener("click", closeMenu);
 
+    return () => document.removeEventListener("click", closeMenu);
+  });
 
   return (
-    <div className="dropdown" ref={(node)=>thisRef=node}>
+    <div className="dropdown" ref={(node) => (thisRef = node)}>
       <button className="dropdown-button-file" onClick={toggleDropdown}>
         File
       </button>
       {isOpen && (
         <ul className="dropdown-menu-file">
           <li>
-            <NavLink to={'/boards'}>Manage Boards</NavLink>
+            <NavLink to={"/boards"}>Manage Boards</NavLink>
           </li>
           <li>
             <p>Manage Teams - todo Modal</p>
@@ -43,4 +40,4 @@ useEffect(() => {
       )}
     </div>
   );
-};
+}

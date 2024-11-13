@@ -1,17 +1,26 @@
-import { ChangeEvent, FC, FormEvent, MouseEvent, ReactElement, useEffect, useState } from "react";
+import type {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  MouseEvent,
+  ReactElement,
+} from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import { Note } from "../../types/Models";
+import type { Note } from "../../types/Models";
 import ErrorMessage from "../ErrorMessage";
 import { createNote, deleteNote, updateNote } from "../../redux/reducers/notes";
 import { getCsrf } from "../../util/cookies";
-import { ModalContextType, useModal } from "../Modal/Modal";
+import { type ModalContextType, useModal } from "../Modal/Modal";
 import { RiSaveFill } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
 
 function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const boardId = useAppSelector((state) => state.session.currentBoardId);
 
-  const note: Note | null = noteId ? useAppSelector((state) => state.notes[noteId]) : null;
+  const note: Note | null = noteId
+    ? useAppSelector((state) => state.notes[noteId])
+    : null;
   const { closeModal } = useModal() as ModalContextType;
 
   const [title, setTitle] = useState<string>("");
@@ -23,8 +32,8 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const dispatch = useAppDispatch();
 
   const error = (msg: string): ReactElement => {
-    return <ErrorMessage msg={msg} />
-  }
+    return <ErrorMessage msg={msg} />;
+  };
 
   const validate = () => {
     const errors: { [key: string]: ReactElement } = {};
@@ -34,11 +43,13 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     if (content.length > 2000)
       errors.title = error("Content must be less than 2000 characters long");
     if (priority < 0 || priority > 3)
-      errors.priority = error("Priority must be either None, Low, Medium, or High");
+      errors.priority = error(
+        "Priority must be either None, Low, Medium, or High",
+      );
 
     setErrors(errors);
     return Object.entries(errors).length === 0;
-  }
+  };
 
   useEffect(() => {
     if (!note) return;
@@ -54,23 +65,33 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     e.preventDefault();
     if (!validate()) return;
 
-    const promise = note ? dispatch(updateNote({
-      csrf_token: await getCsrf(),
-      board_id: Number(boardId),
-      title,
-      content,
-      priority,
-      id: noteId
-    })) : dispatch(createNote({
-      csrf_token: await getCsrf(),
-      board_id: Number(boardId),
-      title,
-      content,
-      priority,
-    }));
+    const promise = note
+      ? dispatch(
+        updateNote({
+          csrf_token: await getCsrf(),
+          board_id: Number(boardId),
+          title,
+          content,
+          priority,
+          id: noteId,
+        }),
+      )
+      : dispatch(
+        createNote({
+          csrf_token: await getCsrf(),
+          board_id: Number(boardId),
+          title,
+          content,
+          priority,
+        }),
+      );
 
     promise.then(({ payload, type }) => {
-      if (["notes/createNote/rejected", "notes/updateNote/rejected"].includes(type)) {
+      if (
+        ["notes/createNote/rejected", "notes/updateNote/rejected"].includes(
+          type,
+        )
+      ) {
         const errors: { [key: string]: ReactElement } = {};
 
         for (const err of Object.keys(payload.errors)) {
@@ -81,23 +102,27 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
       } else {
         closeModal();
       }
-    })
+    });
   };
 
-  const handleDelete = (e: MouseEvent) => {
+  const handleDelete = () => {
     const timeout = setTimeout(() => {
       dispatch(deleteNote(noteId!)).then(() => closeModal());
       // TODO error handling if deletion fails
-    }, 3000)
+    }, 3000);
 
-    addEventListener("mouseup", () => {
-      clearTimeout(timeout)
-    }, { once: true });
-  }
+    addEventListener(
+      "mouseup",
+      () => {
+        clearTimeout(timeout);
+      },
+      { once: true },
+    );
+  };
 
   const handlePriorityChange = (e: ChangeEvent) => {
-    setPriority(parseInt((e.target as HTMLInputElement).value));
-  }
+    setPriority(Number.parseInt((e.target as HTMLInputElement).value));
+  };
 
   return (
     <div className="note-modal">
@@ -161,12 +186,18 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
             />
           </label>
         </div>
-        <button type="submit"><RiSaveFill /></button>
-        {noteId && <div
-          className="delete-btn"
-          onMouseDown={handleDelete}
-          title="Hold 3s to delete"
-        ><FaTrash /></div>}
+        <button type="submit">
+          <RiSaveFill />
+        </button>
+        {noteId && (
+          <div
+            className="delete-btn"
+            onMouseDown={handleDelete}
+            title="Hold 3s to delete"
+          >
+            <FaTrash />
+          </div>
+        )}
       </form>
     </div>
   );

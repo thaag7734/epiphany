@@ -1,6 +1,6 @@
-import { MouseEvent, MouseEventHandler, ReactNode } from 'react';
-import { useModal } from './Modal';
-import { ModalContextType } from './Modal';
+import type { MouseEvent, MouseEventHandler, ReactNode } from "react";
+import { useModal } from "./Modal";
+import type { ModalContextType } from "./Modal";
 
 function OpenModalButton({
   modalComponent, // component to render inside the modal
@@ -9,11 +9,11 @@ function OpenModalButton({
   onModalClose, // optional: callback function that will be called once the modal is closed
   className,
 }: {
-  modalComponent: ReactNode,
-  buttonText: string,
-  onButtonClick: MouseEventHandler,
-  onModalClose: CallableFunction,
-  className: string,
+  modalComponent: ReactNode;
+  buttonText: string;
+  onButtonClick: MouseEventHandler;
+  onModalClose: CallableFunction;
+  className: string;
 }) {
   const { setModalContent, setOnModalClose } = useModal() as ModalContextType;
 
@@ -24,7 +24,11 @@ function OpenModalButton({
     if (typeof onButtonClick === "function") onButtonClick(e);
   };
 
-  return <button className={className} onClick={onClick}>{buttonText}</button>;
+  return (
+    <button className={className} onClick={onClick}>
+      {buttonText}
+    </button>
+  );
 }
 
 export default OpenModalButton;

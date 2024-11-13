@@ -20,7 +20,7 @@ export interface Note extends Model {
   deadline?: Date;
   priority: number;
   board_id: number;
-  labels: Label[];
+  labels: number[];
 }
 
 export interface Team extends Model {
