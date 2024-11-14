@@ -18,7 +18,13 @@ echo ''
 
 echo '===== Creating FOREIGN KEY relationships ====='
 echo ''
-{ flask db upgrade 040ad73cbf6c && echo '===== Relationships created successfully ====='; } || { echo ''; echo '!!!!! Failed to create relationships !!!!!'; exit 1; }
+{ flask db upgrade 040ad73cbf6c && echo '===== Relationships created successfully ====='; } || { echo ''; echo '!!!!! Failed to create relationships !!!!!'; }
+
+echo ''
+
+echo '===== Seeding ====='
+echo ''
+{ flask seed all && echo '===== Seeded successfully ====='; } || { echo ''; echo '!!!!! Failed to seed !!!!!'; exit 1; }
 
 echo ''
 echo 'Done!'
