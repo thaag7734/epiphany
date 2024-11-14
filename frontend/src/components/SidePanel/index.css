@@ -47,15 +47,6 @@
    border-radius: 15px;
 }
 
-.overflowing::-webkit-scrollbar {
-   width: 4px;
-}
-
-.overflowing::-webkit-scrollbar-thumb {
-   background-color: #bf7f79;
-   border-radius: 15px;
-}
-
 #logo {
    aspect-ratio: 19.5/14;
    width: 90%;

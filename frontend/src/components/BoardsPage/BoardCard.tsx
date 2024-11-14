@@ -29,6 +29,7 @@ export default function BoardCard({ board_id }: { board_id: number }) {
           title={board.name}
         >
           <div className="board-name">{board.name}</div>
+          
           <ul className="board-labels-list">
             {labels?.map((label) => (
               <li key={label.id} className="board-label-pill">

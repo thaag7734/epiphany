@@ -59,10 +59,19 @@
 
     flex-wrap: nowrap;
     overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: gray transparent;
+    /* scrollbar-width: thin;
+    scrollbar-color: gray transparent; */
     /* scroll; */
     padding: 4px 0;
+}
+
+.note-labels-list::-webkit-scrollbar {
+    height: 4px;
+}
+
+.note-labels-list::-webkit-scrollbar-thumb {
+    background-color: #adaaaa;
+    border-radius: 15px;
 }
   
 .note-label-pill {

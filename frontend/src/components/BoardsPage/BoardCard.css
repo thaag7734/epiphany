@@ -41,10 +41,19 @@
 
     flex-wrap: nowrap;
     overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: gray transparent;
+    /* scrollbar-width: thin;
+    scrollbar-color: gray transparent; */
     /* scroll; */
     padding: 4px 0;
+}
+
+.board-labels-list::-webkit-scrollbar {
+    height: 4px;
+}
+
+.board-labels-list::-webkit-scrollbar-thumb {
+    background-color: #adaaaa;
+    border-radius: 15px;
 }
   
 .board-label-pill {
