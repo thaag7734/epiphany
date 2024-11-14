@@ -21,8 +21,6 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   useEffect(() => {}, [notes]);
 
   useEffect(() => {
-    // console.log("RE-RENDER RUN?????\n");
-
     if (!board?.name) return
     setBoardName(board.name);
   }, [board])
