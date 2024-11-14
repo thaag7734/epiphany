@@ -16,9 +16,13 @@ echo ''
 
 echo ''
 
-echo '===== Creating FOREIGN KEY relationships ====='
-echo ''
-{ flask db upgrade 040ad73cbf6c && echo '===== Relationships created successfully ====='; } || { echo ''; echo '!!!!! Failed to create relationships !!!!!'; }
+if [[ $SQLALCHEMY_DATABASE_URI == sqlite* ]]; then
+  echo '----- Sqlite detected, skipping foreign keys -----'
+else
+  echo '===== Creating FOREIGN KEY relationships ====='
+  echo ''
+  { flask db upgrade 040ad73cbf6c && echo '===== Relationships created successfully ====='; } || { echo ''; echo '!!!!! Failed to create relationships !!!!!'; }
+fi
 
 echo ''
 

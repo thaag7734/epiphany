@@ -1,0 +1,10 @@
+[Unit]
+Description=Epiphany web server
+Documentation=https://github.com/thaag7734/epiphany
+Wants=network-online.target nginx.service
+After=network.target network-online.target nginx.service
+
+[Service]
+Type=simple
+RootDirectory=/home/epiphany/epiphany/backend/
+ExecStart=gunicorn app:app
