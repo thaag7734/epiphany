@@ -1,4 +1,4 @@
-import { type MouseEvent, useEffect } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
@@ -11,11 +11,21 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   const board = useAppSelector((state) =>
     Object.values(state.boards).find((b) => b.id === boardId),
   );
+
+  const [boardName, setBoardName] = useState("");
+
   const notes = useAppSelector((state) => Object.values(state.notes));
 
   const { setModalContent } = useModal() as ModalContextType;
 
-  useEffect(() => { }, [notes]);
+  useEffect(() => {}, [notes]);
+
+  useEffect(() => {
+    // console.log("RE-RENDER RUN?????\n");
+
+    if (!board?.name) return
+    setBoardName(board.name);
+  }, [board])
 
   const handleNewNoteClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -34,7 +44,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
           onClick={handleNewNoteClick}
         />
 
-      {board && <div className="board-name">{board.name}</div>}
+      {board && <input className="board-name" type="text" value={board.name} onChange={(e) => setBoardName(e.currentTarget.value)}></input>}
     </div>
   );
 }
