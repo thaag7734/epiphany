@@ -63,6 +63,7 @@ export default function UserDropdown() {
          </button>
          {isOpen && (
             <ul className="dropdown-menu-user">
+               <li>Welcome, {user?.username}</li>
                <li onClick={endSession}>Logout </li>
                <li>
                   <NavLink to={"/boards"}>Manage Boards</NavLink>

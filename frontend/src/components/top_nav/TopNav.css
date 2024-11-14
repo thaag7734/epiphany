@@ -36,6 +36,12 @@
       margin: 0;
       padding: 10px 5px;
    }
+
+   > li:first-child:hover {
+      background-color: inherit;
+      cursor: auto;
+   }
+
    > li:hover {
       background-color: #d2f1e4;
       cursor: pointer;
