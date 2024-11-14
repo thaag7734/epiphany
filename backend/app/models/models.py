@@ -54,6 +54,9 @@ note_label = db.Table(
 class Label(db.Model):
     __tablename__ = "labels"
 
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
     board_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("boards.id")))
@@ -70,6 +73,9 @@ class Label(db.Model):
 
 class Note(db.Model):
     __tablename__ = "notes"
+
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False)
@@ -97,6 +103,9 @@ class Note(db.Model):
 
 class Board(db.Model):
     __tablename__ = "boards"
+
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("teams.id")))
