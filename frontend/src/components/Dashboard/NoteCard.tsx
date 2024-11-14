@@ -1,79 +1,79 @@
 import React, { type MouseEvent, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { /* useAppDispatch ,*/ useAppSelector } from "../../redux/hooks";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NoteModal from "../NoteModal/NoteModal";
 
 export default function NoteCard({ noteId }: { noteId: number }) {
-    const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-	const note = useAppSelector((state) =>
-		Object.values(state.notes).find((n) => n.id === noteId),
-	);
-	const labels = useAppSelector((state) =>
-		Object.values(state.labels).filter((l) =>
-			note?.labels.find((lbl) => lbl === l.id),
-		),
-	);
+  const note = useAppSelector((state) =>
+    Object.values(state.notes).find((n) => n.id === noteId),
+  );
+  const labels = useAppSelector((state) =>
+    Object.values(state.labels).filter((l) =>
+      note?.labels.find((lbl) => lbl === l.id),
+    ),
+  );
 
-	const { setModalContent } = useModal() as ModalContextType;
+  const { setModalContent } = useModal() as ModalContextType;
 
-	useEffect(() => {}, [note]);
+  useEffect(() => { }, [note]);
 
-	const handleNoteClick = (e: MouseEvent) => {
-		e.stopPropagation();
+  const handleNoteClick = (e: MouseEvent) => {
+    e.stopPropagation();
 
-		setModalContent(<NoteModal noteId={noteId} />);
-	};
+    setModalContent(<NoteModal noteId={noteId} />);
+  };
 
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        
-        //* detect drop, do something. highlight card.
-    }
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
 
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
+    //* detect drop, do something. highlight card.
+  };
 
-        //* "grab" label data to pass to thunk?
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
 
-        // dispatch(thunkityThunkThunk()) 
-    }
+    //* "grab" label data to pass to thunk?
 
-	// index for priority icon color
-	const priorityColors = ["grey", "green", "yellow", "red"];
+    // dispatch(thunkityThunkThunk())
+  };
 
-	return (
-		<>
-			{note ? (
-				<div 
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-					key={note.id}
-					className="note-tile"
-					onClick={handleNoteClick}
-					title={note.title}
-				>
-					<div className="note-title">{note.title}</div>
+  // index for priority icon color
+  const priorityColors = ["grey", "green", "yellow", "red"];
 
-					<div className="note-content">{note.content}</div>
+  return (
+    <>
+      {note ? (
+        <div
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          key={note.id}
+          className="note-tile"
+          onClick={handleNoteClick}
+          title={note.title}
+        >
+          <div className="note-title">{note.title}</div>
 
-					<div className="note-priority-icon">
-						<BiSolidCalendarExclamation
-							style={{ color: priorityColors[note.priority] }}
-						/>
-					</div>
+          <div className="note-content">{note.content}</div>
 
-					<ul className="note-labels-list">
-						{labels?.map((label) => (
-							<li key={label.id} className="note-label-pill">
-								{label.name}
-							</li>
-						))}
-					</ul>
-				</div>
-			) : null}
-		</>
-	);
+          <div className="note-priority-icon">
+            <BiSolidCalendarExclamation
+              style={{ color: priorityColors[note.priority] }}
+            />
+          </div>
+
+          <ul className="note-labels-list">
+            {labels?.map((label) => (
+              <li key={label.id} className="note-label-pill">
+                {label.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </>
+  );
 }
