@@ -106,8 +106,8 @@ def react_root(path):
     or index.html requests
     """
     if path == "favicon.ico":
-        return app.send_from_directory("public", "favicon.ico")
-    return app.send_static_file("index.html")
+        return app.send_from_directory("../../frontend/public", "favicon.ico")
+    return app.send_static_file("../../frontend/dist/index.html")
 
 
 @app.errorhandler(404)
