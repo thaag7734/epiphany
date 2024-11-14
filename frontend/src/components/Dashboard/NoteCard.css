@@ -10,6 +10,9 @@
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    width: 90%;   /* ADDED =====*/
+    height: auto;   /* ADDED =====*/
 }
   
 .note-tile:hover {
@@ -35,6 +38,8 @@
     /* white-space: nowrap; */
     overflow: hidden;
     text-overflow: ellipsis;
+
+    word-break: break-word; /* ADDED =====*/
 }
   
 .note-priority-icon {

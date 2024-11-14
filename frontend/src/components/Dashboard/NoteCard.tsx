@@ -1,11 +1,13 @@
-import { type MouseEvent, useEffect } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import React, { type MouseEvent, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NoteModal from "../NoteModal/NoteModal";
 
 export default function NoteCard({ noteId }: { noteId: number }) {
+    const dispatch = useAppDispatch();
+
 	const note = useAppSelector((state) =>
 		Object.values(state.notes).find((n) => n.id === noteId),
 	);
@@ -25,13 +27,29 @@ export default function NoteCard({ noteId }: { noteId: number }) {
 		setModalContent(<NoteModal noteId={noteId} />);
 	};
 
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        
+        //* detect drop, do something. highlight card.
+    }
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+
+        //* "grab" label data to pass to thunk?
+
+        // dispatch(thunkityThunkThunk()) 
+    }
+
 	// index for priority icon color
 	const priorityColors = ["grey", "green", "yellow", "red"];
 
 	return (
 		<>
 			{note ? (
-				<div
+				<div 
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
 					key={note.id}
 					className="note-tile"
 					onClick={handleNoteClick}

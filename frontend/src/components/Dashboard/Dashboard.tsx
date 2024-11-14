@@ -29,13 +29,10 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
         <NoteCard noteId={note.id} key={note.id} />
       ))}
 
-      {/* TODO move styles into css file and add cursor: pointer on hover */}
-      <div
-        style={{ width: "35%", aspectRatio: "1 / 1", fontSize: "80px" }}
-        onClick={handleNewNoteClick}
-      >
-        <BsFillPlusSquareFill />
-      </div>
+        <BsFillPlusSquareFill 
+          className="new-note-button"
+          onClick={handleNewNoteClick}
+        />
 
       {board && <div className="board-name">{board.name}</div>}
     </div>
