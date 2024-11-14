@@ -13,6 +13,12 @@ if [[ $SQLALCHEMY_DATABASE_URI == postgres* ]]; then
   echo '===== Postgres detected, dropping schema ====='
   echo ''
   { psql "$SQLALCHEMY_DATABASE_URI" -c 'DROP SCHEMA epiphany CASCADE;' && echo '' && echo '===== Schema dropped successfully ====='; } || { echo '' && echo '!!!!! Failed to drop schema !!!!!' && exit 1; }
+else
+  echo '===== Sqlite detected, deleting instance folder ====='
+  echo ''
+  { rm -r ./instance 2>/dev/null; }
+  echo ''
+  echo '===== Instance folder deleted ====='
 fi
 
 # Create tables
