@@ -1,12 +1,14 @@
-.topNav {
+.top-nav {
+   top: 0;
    display: flex;
    position: sticky;
    justify-content: space-between;
    background-color: #d2f1e4;
    width: 100vw;
+   z-index: 9000;
 }
 
-.userButtons {
+.user-buttons {
    margin: 17px;
 }
 
@@ -18,6 +20,7 @@
    border-radius: 10px;
    background-color: white;
    font-size: 20px;
+   margin-right: 20px;
 }
 .dropdown-button-user:hover {
    box-shadow: none;
@@ -26,7 +29,7 @@
 
 .dropdown-menu-user {
    position: absolute;
-   right: 15px;
+   right: 25px;  
    list-style: none;
    background-color: white;
    border: 1px black solid;
