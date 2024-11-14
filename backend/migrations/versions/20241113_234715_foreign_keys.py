@@ -1,6 +1,6 @@
 """create foreign key relations
 
-Revision ID: e88bf513bb93
+Revision ID: 040ad73cbf6c
 Revises:
 Create Date: 2024-11-13 13:27:18.893922
 
@@ -8,6 +8,13 @@ Create Date: 2024-11-13 13:27:18.893922
 
 from alembic import op
 import sqlalchemy as sa
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+environment = os.environ.get("FLASK_ENV")
+schema = os.environ.get("SCHEMA") if environment == "production" else None
 
 
 # revision identifiers, used by Alembic.
@@ -24,8 +31,8 @@ def upgrade():
         "users",
         ["owner_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_boards_team_id",
@@ -33,8 +40,8 @@ def upgrade():
         "teams",
         ["team_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_teams_owner_id",
@@ -42,8 +49,8 @@ def upgrade():
         "users",
         ["owner_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_users_root_board_id",
@@ -51,8 +58,8 @@ def upgrade():
         "boards",
         ["root_board_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_labels_board_id",
@@ -60,8 +67,8 @@ def upgrade():
         "boards",
         ["board_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_notes_board_id",
@@ -69,8 +76,8 @@ def upgrade():
         "boards",
         ["board_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_team_users_team_id",
@@ -78,8 +85,8 @@ def upgrade():
         "teams",
         ["team_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_team_users_user_id",
@@ -87,8 +94,8 @@ def upgrade():
         "users",
         ["user_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_note_labels_note_id",
@@ -96,8 +103,8 @@ def upgrade():
         "notes",
         ["note_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
     op.create_foreign_key(
         "fk_note_labels_label_id",
@@ -105,6 +112,6 @@ def upgrade():
         "labels",
         ["label_id"],
         ["id"],
-        source_schema="epiphany",
-        referent_schema="epiphany",
+        source_schema=schema,
+        referent_schema=schema,
     )
