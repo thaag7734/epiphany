@@ -102,7 +102,7 @@ def upgrade():
     op.create_foreign_key(
         "fk_note_labels_label_id",
         "note_labels",
-        "notes",
+        "labels",
         ["label_id"],
         ["id"],
         source_schema="epiphany",
