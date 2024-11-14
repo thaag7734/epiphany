@@ -1,8 +1,9 @@
 .topNav {
    display: flex;
-   flex-direction: row-reverse;
+   position: sticky;
    justify-content: space-between;
    background-color: #d2f1e4;
+   width: 100vw;
 }
 
 .userButtons {

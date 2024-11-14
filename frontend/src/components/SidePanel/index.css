@@ -61,8 +61,16 @@
    width: 87%;
    align-self: center;
    height: 40vh;
+}
+
+.labels-box::after {
+   content: "";
    box-shadow: inset 1px 1px 7px black;
+   height: 40vh;
+   width: 87%;
+   position: absolute;
    border-radius: 5px;
+   pointer-events: none;
 }
 
 .label {
@@ -208,7 +216,7 @@
 
 .arrow-box {
    display: flex;
-   position: absolute;
+   position: sticky;
    flex-flow: row-reverse;
    padding: 0.5rem;
    top: 1rem;

@@ -1,23 +1,16 @@
-import { useState } from "react";
+import { MouseEvent } from "react";
 import Labels from "./Labels";
-import { SlArrowRight } from "react-icons/sl";
 import "./index.css";
 
 export default function SidePanel() {
-   const [isVisible, setIsVisible] = useState(false);
+   const setSidePanel = (e: MouseEvent): void => {
+      e.stopPropagation();
+      e.currentTarget.id = "side-panel";
+   };
 
    return (
       <>
-         <div
-            onMouseEnter={() => setIsVisible(true)}
-            className={isVisible ? "arrow-box-hidden" : "arrow-box"}
-         >
-            <SlArrowRight />
-         </div>
-         <div
-            id={isVisible ? "side-panel-show" : "side-panel"}
-            onMouseLeave={() => setIsVisible(false)}
-         >
+         <div id="side-panel" onMouseLeave={setSidePanel}>
             <img
                id="logo"
                src="/epiphany.svg"
