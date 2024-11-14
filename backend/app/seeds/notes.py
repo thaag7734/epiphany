@@ -5,16 +5,12 @@ from app.models.db import db, environment, SCHEMA
 
 def seed_notes():
     notes = [
-        [
-            Note(id=(y - 1) * 4 + x, title=f"note{x}", content="uwu", board_id=y)
-            for x in range(1, 5)
-        ]
+        [Note(title=f"note{x}", content="uwu", board_id=y) for x in range(1, 5)]
         for y in range(1, 5)
     ]
 
     notes[0].append(
         Note(
-            id=17,
             title="Welcome",
             content="Welcome to Epiphany! Feel free to epiphanize. This can be your destination for all your notes, reminders, tasks, and even just your random thoughts. Share a board, join a team, and brainstorm re-inventing the wheel with family and friends!",
             board_id=1,
@@ -22,7 +18,6 @@ def seed_notes():
     )
     notes[0].append(
         Note(
-            id=18,
             title="Demo",
             content="So what's on your mind today? Have you got any ideas on the quadratic equation that Einstein hadn't had a chance to complete. What color are your socks today? When was the last time you did laundry?",
             board_id=1,
@@ -30,7 +25,6 @@ def seed_notes():
     )
     notes[1].append(
         Note(
-            id=19,
             title="January",
             content="The bills are due on the 11th. Renew Netflix subscription before the 22nd. Go skydiving in a bathtub.",
             board_id=2,
@@ -38,7 +32,6 @@ def seed_notes():
     )
     notes[1].append(
         Note(
-            id=20,
             title="March",
             content="Plan big plans. Create huge agendas. Summon incredible aspirations. Stare at the wall.",
             board_id=2,
@@ -46,7 +39,6 @@ def seed_notes():
     )
     notes[2].append(
         Note(
-            id=21,
             title="Week Report",
             content="Crunch the numbers from the Arrow Firm deal. Speak to Dan about the offer he ran point on.",
             board_id=3,
@@ -54,7 +46,6 @@ def seed_notes():
     )
     notes[2].append(
         Note(
-            id=22,
             title="Retreat",
             content="Reservations at the Hillside Hotel. Lobby reception at 5:30pm. Arrange music and dessert",
             board_id=3,
