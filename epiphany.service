@@ -9,3 +9,6 @@ User=epiphany
 Type=simple
 RootDirectory=/home/epiphany/epiphany/backend/
 ExecStart=gunicorn app:app
+
+[Install]
+WantedBy=multi-user.target
