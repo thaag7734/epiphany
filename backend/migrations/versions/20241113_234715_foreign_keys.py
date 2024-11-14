@@ -16,7 +16,6 @@ load_dotenv()
 environment = os.environ.get("FLASK_ENV")
 schema = os.environ.get("SCHEMA") if environment == "production" else None
 
-
 # revision identifiers, used by Alembic.
 revision = "040ad73cbf6c"
 down_revision = None
