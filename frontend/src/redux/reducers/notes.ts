@@ -1,4 +1,9 @@
-import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  isAnyOf,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { NoteCollection } from "../../types/Api";
 import type { Note } from "../../types/Models";
@@ -83,6 +88,22 @@ export const deleteNote = createAppAsyncThunk(
   },
 );
 
+export const selectNoteById = createSelector(
+  [(state) => state.notes, (_state, noteId: number) => noteId],
+  (notes: NotesState, noteId: number) =>
+    Object.values(notes).find((n) => n.id === noteId),
+);
+
+export const selectNotesWithLabels = createSelector(
+  [(state) => state.notes, (_state, labelIds: number[]) => labelIds],
+  (notes: NotesState, labelIds: number[]) =>
+    Object.values(notes).filter(
+      (n) =>
+        new Set(n.labels).intersection(new Set(labelIds)).length ===
+        labelIds.length,
+    ),
+);
+
 export interface NotesState {
   [key: string]: Note;
 }
@@ -113,7 +134,7 @@ export const notesSlice = createSlice({
       })
       .addCase(deleteNote.fulfilled, (state: NotesState, action) => {
         return Object.fromEntries(
-          Object.entries(state).filter((([k, _]) => k != action.payload.noteId))
+          Object.entries(state).filter(([k, _]) => k != action.payload.noteId),
         );
       });
     builder.addMatcher(
