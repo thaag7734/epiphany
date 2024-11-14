@@ -7,6 +7,7 @@ team_user = db.Table(
     "team_users",
     db.Column("team_id", db.Integer, db.ForeignKey("teams.id"), primary_key=True),
     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    schema=SCHEMA if environment == "production" else None,
 )
 
 
@@ -48,6 +49,7 @@ note_label = db.Table(
         db.ForeignKey(add_prefix_for_prod("labels.id")),
         primary_key=True,
     ),
+    schema=SCHEMA if environment == "production" else None,
 )
 
 
