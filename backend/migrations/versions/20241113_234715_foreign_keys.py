@@ -19,13 +19,31 @@ depends_on = None
 
 def upgrade():
     op.create_foreign_key(
-        "fk_boards_owner_id", "boards", "users", ["owner_id"], ["id"], schema="epiphany"
+        "fk_boards_owner_id",
+        "boards",
+        "users",
+        ["owner_id"],
+        ["id"],
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
-        "fk_boards_team_id", "boards", "teams", ["team_id"], ["id"], schema="epiphany"
+        "fk_boards_team_id",
+        "boards",
+        "teams",
+        ["team_id"],
+        ["id"],
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
-        "fk_teams_owner_id", "teams", "users", ["owner_id"], ["id"], schema="epiphany"
+        "fk_teams_owner_id",
+        "teams",
+        "users",
+        ["owner_id"],
+        ["id"],
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_users_root_board_id",
@@ -33,7 +51,8 @@ def upgrade():
         "boards",
         ["root_board_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_labels_board_id",
@@ -41,10 +60,17 @@ def upgrade():
         "boards",
         ["board_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
-        "fk_notes_board_id", "notes", "boards", ["board_id"], ["id"], schema="epiphany"
+        "fk_notes_board_id",
+        "notes",
+        "boards",
+        ["board_id"],
+        ["id"],
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_team_users_team_id",
@@ -52,7 +78,8 @@ def upgrade():
         "teams",
         ["team_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_team_users_user_id",
@@ -60,7 +87,8 @@ def upgrade():
         "users",
         ["user_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_note_labels_note_id",
@@ -68,7 +96,8 @@ def upgrade():
         "notes",
         ["note_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
     op.create_foreign_key(
         "fk_note_labels_label_id",
@@ -76,5 +105,6 @@ def upgrade():
         "notes",
         ["label_id"],
         ["id"],
-        schema="epiphany",
+        source_schema="epiphany",
+        referent_schema="epiphany",
     )
