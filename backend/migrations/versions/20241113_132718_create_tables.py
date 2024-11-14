@@ -26,12 +26,14 @@ def upgrade():
         sa.Column("owner_id", sa.Integer(), nullable=True),
         sa.Column("name", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+        schema="epiphany",
     )
     op.create_table(
         "teams",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("owner_id", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+        schema="epiphany",
     )
     op.create_table(
         "users",
@@ -43,6 +45,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),
         sa.UniqueConstraint("username"),
+        schema="epiphany",
     )
     op.create_table(
         "labels",
@@ -50,6 +53,7 @@ def upgrade():
         sa.Column("name", sa.String(length=24), nullable=True),
         sa.Column("board_id", sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
+        schema="epiphany",
     )
     op.create_table(
         "notes",
@@ -60,18 +64,21 @@ def upgrade():
         sa.Column("priority", sa.Integer(), nullable=True),
         sa.Column("board_id", sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
+        schema="epiphany",
     )
     op.create_table(
         "team_users",
         sa.Column("team_id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("team_id", "user_id"),
+        schema="epiphany",
     )
     op.create_table(
         "note_labels",
         sa.Column("note_id", sa.Integer(), nullable=False),
         sa.Column("label_id", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("note_id", "label_id"),
+        schema="epiphany",
     )
     # ### end Alembic commands ###
 
