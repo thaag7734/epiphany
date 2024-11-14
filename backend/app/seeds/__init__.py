@@ -27,10 +27,10 @@ def seed():
         undo_boards()
         undo_users()
     seed_users()
+    seed_teams()
     seed_boards()
     seed_labels()
     seed_notes()
-    seed_teams()
     # Add other seed functions here
 
 
