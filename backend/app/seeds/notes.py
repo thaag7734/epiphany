@@ -5,10 +5,7 @@ from app.models.db import db, environment, SCHEMA
 
 def seed_notes():
     notes = [
-        [
-            Note(id=x * y, title=f"note{x}", content="uwu", board_id=y)
-            for x in range(1, 5)
-        ]
+        [Note(title=f"note{x}", content="uwu", board_id=y) for x in range(1, 5)]
         for y in range(1, 5)
     ]
 

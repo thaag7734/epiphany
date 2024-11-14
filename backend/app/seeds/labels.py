@@ -5,8 +5,7 @@ from app.models.db import db, environment, SCHEMA
 
 def seed_labels():
     labels = [
-        [Label(id=x * y, name=f"label{x}", board_id=y) for x in range(1, 5)]
-        for y in range(1, 5)
+        [Label(name=f"label{x}", board_id=y) for x in range(1, 5)] for y in range(1, 5)
     ]
     labels[0].append(Label(name="welcome", board_id=1))
     labels[0].append(Label(name="demo", board_id=1))

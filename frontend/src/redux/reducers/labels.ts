@@ -1,4 +1,9 @@
-import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  isAnyOf,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { LabelCollection } from "../../types/Api";
 import type { Label } from "../../types/Models";
@@ -81,6 +86,12 @@ export const deleteLabel = createAppAsyncThunk(
 
     return fulfillWithValue(data);
   },
+);
+
+export const selectLabelById = createSelector(
+  [(state) => state.labels, (_state, labelId: number) => labelId],
+  (labels: LabelsState, labelId: number) =>
+    Object.values(labels).find((l) => l.id === labelId),
 );
 
 export interface LabelsState {

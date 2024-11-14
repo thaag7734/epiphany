@@ -5,6 +5,10 @@ Wants=network-online.target nginx.service
 After=network.target network-online.target nginx.service
 
 [Service]
+User=epiphany
 Type=simple
 RootDirectory=/home/epiphany/epiphany/backend/
 ExecStart=gunicorn app:app
+
+[Install]
+WantedBy=multi-user.target
