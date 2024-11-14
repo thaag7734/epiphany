@@ -15,7 +15,7 @@ from app.api.routes.teams import teams
 from app.seeds import seed_commands
 from app.config import Config
 
-app = Flask(__name__, static_folder="../react-vite/dist", static_url_path="/")
+app = Flask(__name__, static_folder="../../frontend/dist", static_url_path="/")
 
 # Setup login manager
 login = LoginManager(app)
@@ -105,9 +105,10 @@ def react_root(path):
     react builds in the production environment for favicon
     or index.html requests
     """
+    print("root hit")
     if path == "favicon.ico":
-        return app.send_from_directory("../../frontend/public", "favicon.ico")
-    return app.send_static_file("../../frontend/dist/index.html")
+        return app.send_from_directory("./public", "favicon.ico")
+    return app.send_static_file("index.html")
 
 
 @app.errorhandler(404)
