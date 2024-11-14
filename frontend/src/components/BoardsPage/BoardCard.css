@@ -5,6 +5,7 @@
     border-radius: 12px;
     padding: 16px;
     height: 140px;
+    min-width: 300px; /*^ MEDIA QUERY NEEDED !!! */
     max-width: 300px;
     overflow: hidden;
     display: flex;
