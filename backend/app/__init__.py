@@ -74,7 +74,7 @@ def inject_csrf_token(response):
         "csrf_token",
         generate_csrf(),
         secure=True if environ.get("FLASK_ENV") == "production" else False,
-        samesite="Strict" if environ.get("FLASK_ENV") == "production" else None,
+        samesite="None" if environ.get("FLASK_ENV") == "production" else None,
         httponly=False,
     )
     return response
@@ -105,7 +105,6 @@ def react_root(path):
     react builds in the production environment for favicon
     or index.html requests
     """
-    print("root hit")
     if path == "favicon.ico":
         return app.send_from_directory("./public", "favicon.ico")
     return app.send_static_file("index.html")

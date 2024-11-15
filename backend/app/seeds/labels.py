@@ -14,8 +14,6 @@ def seed_labels():
     labels[2].append(Label(name="due", board_id=3))
     labels[2].append(Label(name="office", board_id=3))
 
-
-
     for board_labels in labels:
         for label in board_labels:
             db.session.add(label)

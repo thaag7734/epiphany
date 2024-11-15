@@ -5,6 +5,7 @@
     border-radius: 12px;
     padding: 16px;
     height: 140px;
+    min-width: 300px; /*^ MEDIA QUERY NEEDED !!! */
     max-width: 300px;
     overflow: hidden;
     display: flex;
@@ -31,19 +32,12 @@
   
 .board-labels-list {
     display: flex;
-    /* flex-wrap: wrap;   -> scrollable across bottom instead? */
     gap: 6px;
     margin-top: 8px;
     margin-bottom: 1px;
     list-style: none;
-
-    /*//^ Scrollable Trials */
-
     flex-wrap: nowrap;
     overflow-x: auto;
-    /* scrollbar-width: thin;
-    scrollbar-color: gray transparent; */
-    /* scroll; */
     padding: 4px 0;
 }
 
@@ -58,7 +52,6 @@
   
 .board-label-pill {
     font-size: 10px;
-    /* font-family: "Playwrite US Modern", serif; */
     padding: 4px 8px;
     border: 1px solid #555;
     border-radius: 12px;

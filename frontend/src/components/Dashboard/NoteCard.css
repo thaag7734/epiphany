@@ -10,7 +10,6 @@
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
     width: 90%;   /* ADDED =====*/
     height: auto;   /* ADDED =====*/
 }
@@ -35,33 +34,23 @@
     font-size: 14px;
     font-family: "Sour Gummy", sans-serif;
     line-height: 1.5;
-    /* white-space: nowrap; */
     overflow: hidden;
     text-overflow: ellipsis;
-
     word-break: break-word; /* ADDED =====*/
 }
   
 .note-priority-icon {
     position: absolute;
-    /* margin: 0; */
 }
   
 .note-labels-list {
     display: flex;
-    /* flex-wrap: wrap;   -> scrollable across bottom instead? */
     gap: 6px;
     margin-top: 8px;
     margin-bottom: 1px;
     list-style: none;
-
-    /*//^ Scrollable Trials */
-
     flex-wrap: nowrap;
     overflow-x: auto;
-    /* scrollbar-width: thin;
-    scrollbar-color: gray transparent; */
-    /* scroll; */
     padding: 4px 0;
 }
 
@@ -76,7 +65,6 @@
   
 .note-label-pill {
     font-size: 10px;
-    /* font-family: "Playwrite US Modern", serif; */
     padding: 4px 8px;
     border: 1px solid #555;
     border-radius: 12px;

@@ -1,7 +1,20 @@
+html,
+body {
+    overflow: auto;
+    height: 100%;
+}
+
 body {
     margin: 0px;
+    box-sizing: border-box;
     scrollbar-width: thin;
-    height: 100vh;
+    background-color: #bce7d7;
+    font-family: "Sour Gummy", sans-serif;
+}
+
+input,
+textarea {
+    font-family: "Sour Gummy", sans-serif;
 }
 
 * {

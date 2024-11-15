@@ -10,9 +10,9 @@ export default function TopNav() {
    }
 
    return (
-      <nav className="topNav">
+      <nav className="top-nav">
          <SlArrowRight onMouseEnter={showSidePanel} className="arrow-box" />
-         <div className="userButtons">
+         <div className="user-buttons">
             <UserDropdown />
          </div>
       </nav>

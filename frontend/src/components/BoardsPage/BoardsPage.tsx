@@ -17,11 +17,16 @@ export default function BoardsPage() {
   return (
     <div className="boards-page">
       <div className="your-boards">Your Boards</div>
+      
+      <div className="cards-container">
       {personalBoards.map((board: Board) => (
         <BoardCard board_id={board.id} key={board.id} />
       ))}
+      </div>
 
       <div className="shared-with-you">Shared with you</div>
+
+      <div className="cards-container">
       {teamBoards ? (
         teamBoards.map((board: Board) => (
           <BoardCard board_id={board.id} key={board.id} />
@@ -31,6 +36,8 @@ export default function BoardsPage() {
           no one has shared a board with you yet
         </div>
       )}
+      </div>
+
     </div>
   );
 }

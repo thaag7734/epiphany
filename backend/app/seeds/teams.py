@@ -9,12 +9,12 @@ def seed_teams():
     user2 = User.query.get(2)
     user3 = User.query.get(3)
 
-    team = Team(owner_id=1, users=[user1, user2, user3])
+    team = Team(id=1, owner_id=1, users=[user1, user2, user3])
 
     db.session.add(team)
     db.session.commit()
 
-    shared_board = Board(name="shared board", owner_id=1, team_id=1)
+    shared_board = Board(id=4, name="shared board", owner_id=1, team_id=1)
 
     db.session.add(shared_board)
     db.session.commit()

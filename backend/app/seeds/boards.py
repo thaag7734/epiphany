@@ -5,9 +5,9 @@ from app.models.user import User
 
 
 def seed_boards():
-    board1 = Board(name="Demo Board", owner_id=1)
-    board2 = Board(name="Planner", owner_id=2)
-    board3 = Board(name="Work", owner_id=3)
+    board1 = Board(id=1, name="Demo Board", owner_id=1)
+    board2 = Board(id=2, name="Planner", owner_id=2)
+    board3 = Board(id=3, name="Work", owner_id=3)
 
     db.session.add(board1)
     db.session.add(board2)

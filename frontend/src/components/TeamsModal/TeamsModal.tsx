@@ -6,6 +6,7 @@ import { getCsrf } from "../../util/cookies";
 import ErrorMessage from "../ErrorMessage";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import { FaTrash } from "react-icons/fa";
+import "./TeamsModal.css";
 
 export default function TeamsModal() {
   const [email, setEmail] = useState("");
@@ -92,7 +93,7 @@ export default function TeamsModal() {
           className="add-user"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Type user Email here to add!"
+          placeholder="Type a user's e-mail to add to your team!"
           onBlur={addUser}
         ></input>
         {error}
@@ -102,7 +103,7 @@ export default function TeamsModal() {
           (team! as Team).emails.map((teamMember, index) => (
             <li key={index}>
               <div
-                className="delete-eam-member"
+                className="delete-team-member"
                 title="Hold 1s to delete"
                 onMouseDown={handleDelete}
               >

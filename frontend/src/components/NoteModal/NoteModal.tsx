@@ -8,6 +8,7 @@ import { getCsrf } from "../../util/cookies";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import { RiSaveFill } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
+import "./NoteModal.css"
 
 function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const boardId = useAppSelector((state) => state.session.currentBoardId);
@@ -33,7 +34,7 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     const errors: { [key: string]: ReactElement } = {};
 
     if (!title || title.length > 32)
-      errors.title = error("Title must be less than 32 characters long");
+      errors.title = error("Title must be between 1 and 32 characters");
     if (content.length > 2000)
       errors.title = error("Content must be less than 2000 characters long");
     if (priority < 0 || priority > 3)
@@ -137,7 +138,7 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
         />
         {errors.content}
         <div className="priority-btns">
-          <p>Priority</p>
+          <p>Priority:</p>
           {errors.priority}
           <label>
             None

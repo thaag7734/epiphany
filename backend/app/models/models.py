@@ -5,8 +5,19 @@ from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 team_user = db.Table(
     "team_users",
-    db.Column("team_id", db.Integer, db.ForeignKey("teams.id"), primary_key=True),
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column(
+        "team_id",
+        db.Integer,
+        db.ForeignKey(add_prefix_for_prod("teams.id")),
+        primary_key=True,
+    ),
+    db.Column(
+        "user_id",
+        db.Integer,
+        db.ForeignKey(add_prefix_for_prod("users.id")),
+        primary_key=True,
+    ),
+    schema=SCHEMA if environment == "production" else None,
 )
 
 
@@ -48,11 +59,15 @@ note_label = db.Table(
         db.ForeignKey(add_prefix_for_prod("labels.id")),
         primary_key=True,
     ),
+    schema=SCHEMA if environment == "production" else None,
 )
 
 
 class Label(db.Model):
     __tablename__ = "labels"
+
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
@@ -70,6 +85,9 @@ class Label(db.Model):
 
 class Note(db.Model):
     __tablename__ = "notes"
+
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False)
@@ -97,6 +115,9 @@ class Note(db.Model):
 
 class Board(db.Model):
     __tablename__ = "boards"
+
+    if environment == "production":
+        __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("teams.id")))
