@@ -7,8 +7,11 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { type ModalContextType, useModal } from "../../Modal/Modal";
 import TeamsModal from "../../TeamsModal/TeamsModal";
 import { NavLink } from "react-router-dom";
-import type { TeamState } from "../../../redux/reducers/teams";
+import { teamSlice, type TeamState } from "../../../redux/reducers/teams";
 import type { Team } from "../../../types/Models";
+import { labelsSlice } from "../../../redux/reducers/labels";
+import { notesSlice } from "../../../redux/reducers/notes";
+import { boardsSlice } from "../../../redux/reducers/boards";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +48,10 @@ export default function UserDropdown() {
   const endSession = (e: React.MouseEvent) => {
     e.preventDefault();
     dispatch(logout());
+    dispatch(labelsSlice.actions.clearState());
+    dispatch(notesSlice.actions.clearState());
+    dispatch(boardsSlice.actions.clearState());
+    dispatch(teamSlice.actions.clearState());
     navigate("/");
   };
 
