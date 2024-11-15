@@ -7,6 +7,7 @@ import { TeamState, updateTeam } from "../../redux/reducers/teams";
 import { getCsrf } from "../../util/cookies";
 import { Team, User } from "../../types/Models";
 import { useNavigate } from "react-router";
+import { boardsSlice } from "../../redux/reducers/boards";
 
 export default function TopNav() {
   const [awaitingDelConf, setAwaitingDelConf] = useState<boolean>(false);
@@ -18,7 +19,7 @@ export default function TopNav() {
     (state) => state.session.currentBoardId
   );
   const user = useAppSelector((state) => state.session.user);
-  const board = useAppSelector((state) => state.boards[currentBoardId!]);
+//   const board = useAppSelector((state) => state.boards[currentBoardId!]);
   const team: TeamState = useAppSelector((state) => state.team);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -58,7 +59,10 @@ export default function TopNav() {
           ),
           team_id: (team as Team).id,
         })
-      ).then(() => navigate("/boards"));
+      ).then(() => 
+         {boardsSlice.actions.clearState();
+         navigate("/boards")}
+      );
     }
   };
 

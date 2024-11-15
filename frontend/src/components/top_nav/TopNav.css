@@ -11,6 +11,9 @@
 
 .user-buttons {
     margin: 17px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
 .dropdown-button-user {
@@ -60,4 +63,8 @@ a.active {
 
 .depressed:hover {
     box-shadow: inset 2px 2px 3px black;
+}
+
+.leave-team {
+    min-width: 200px;
 }
