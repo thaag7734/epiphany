@@ -1,0 +1,45 @@
+.teams-modal {
+
+
+    > h1 {
+        text-align: center;
+    }
+}
+
+.add-user-team {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.add-user {
+    width: 100%;
+}
+
+.teams-modal input[type="text"] {
+  width: 100%;
+  /* padding: 10px; */
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+
+
+
+.delete-team-member {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f37269;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.delete-team-member:hover {
+    background-color: #e53935;
+}

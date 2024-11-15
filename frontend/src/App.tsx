@@ -134,12 +134,9 @@ function App() {
          if (!isLoaded) return;
          if (user) {
             dispatch(getBoards()).then(() => {
-               console.log("boardId ===>", boardId);
                if (boardId) {
-                  console.log("to board", boardId);
                   dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
                } else {
-                  console.log("to root board");
                   dispatch(
                      sessionSlice.actions.changeBoard(user.root_board_id!)
                   );
@@ -164,7 +161,12 @@ function App() {
                element: <LoginSignup />,
             },
             {
-               element: <BoardsPage />,
+               element: (
+                     <>
+                     <TopNav />
+                     <BoardsPage />
+                     </>
+               ),
                path: "boards",
             },
             {

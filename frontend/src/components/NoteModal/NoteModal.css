@@ -15,15 +15,24 @@
 .note-modal input[type="text"],
 .note-modal textarea {
   width: 99%;
-  /* padding: 10px; */
   border: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
+
 }
 
 .note-modal textarea {
   resize: none;
   height: 90px;
+}
+
+.note-modal textarea::-webkit-scrollbar {
+  width: 4px;
+}
+
+.note-modal textarea::-webkit-scrollbar-thumb {
+  background-color: #79aaa4;
+  border-radius: 15px;
 }
 
 .priority-btns {

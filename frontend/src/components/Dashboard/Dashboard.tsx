@@ -22,16 +22,15 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   useEffect(() => {}, [notes]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
       const nav = document.querySelector(".top-nav") as HTMLElement;
+
       if (!nav || !dashHome.current) return
+
       const navHeight = nav.offsetHeight;
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      
       dashHome.current.style.height = (vh - navHeight).toString() + "px";
-
-      console.log("NAVHEIGHT\n", navHeight, "VH\n", vh, "DASHHOME\n",dashHome.current.style.height);
-    })
-  });
+  }, []);
 
   useEffect(() => {
     if (!board?.name) return
