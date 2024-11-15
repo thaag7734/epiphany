@@ -1,17 +1,27 @@
-import { useRef, useState } from "react";
+import { MouseEvent, ReactElement, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { deleteLabel, type LabelsState } from "../../../redux/reducers/labels";
+import {
+    deleteLabel,
+    updateLabel,
+    type LabelsState,
+} from "../../../redux/reducers/labels";
+import type { LabelFormData } from "../../../types/FormData";
+import { getCsrf } from "../../../util/cookies";
 import NewLabel from "../NewLabel/NewLabel";
 import { FaTrash } from "react-icons/fa";
-import { TbFilterPlus } from "react-icons/tb";
+import { FaFilter } from "react-icons/fa6";
+import { useParams } from "react-router";
+import ErrorMessage from "../../ErrorMessage";
 
 export default function Labels() {
+    const { boardId } = useParams();
     const labels: LabelsState = useAppSelector((state) => state.labels);
     const isOverflowing = useRef(false);
     const labelsArr = Object.values(labels);
-    const [isFilterClicked, setIsFilterClicked] = useState(false);
-    const [isTrashClicked, setIsTrashClicked] = useState(false);
+    const [isFilterClicked, setIsFilterClicked] = useState(0);
+    const [trashing, setTrashing] = useState(0);
     const dispatch = useAppDispatch();
+    const [error, setError] = useState<ReactElement | null>(null);
 
     const handleDelete = (labelId: number) => {
         const timeout = setTimeout(() => {
@@ -32,6 +42,48 @@ export default function Labels() {
         isOverflowing.current = true;
     }
 
+    const renderLabelEditInput = (e: MouseEvent): void => {
+        const target = (e.currentTarget as HTMLDivElement)
+            .children[0] as HTMLSpanElement;
+        const inputName = document.createElement("input");
+        inputName.value = target.title ? target.title : target.innerText;
+        const temp = inputName.value;
+        inputName.id = "edit-label";
+        target.innerText = "";
+        inputName.onblur = () => handleEdit(target, inputName, temp);
+        target.appendChild(inputName);
+        inputName.focus();
+    };
+
+    const handleEdit = async (
+        targ: HTMLSpanElement,
+        inputEle: HTMLInputElement,
+        oldName: string
+    ): Promise<void> => {
+        if (inputEle.value.length > 24) {
+            setError(
+                <ErrorMessage msg="Name cannot be more than 24 characters" />
+            );
+            return;
+        }
+        if (!inputEle.value.length) {
+            targ.innerText = oldName;
+            return;
+        }
+        targ.innerText = inputEle.value;
+        inputEle.remove();
+        if (targ.innerText === oldName) return;
+        setError(null);
+
+        const newLabel: LabelFormData = {
+            csrf_token: await getCsrf(),
+            id: Number((targ.parentElement as HTMLDivElement).dataset.id),
+            name: targ.dataset.name!,
+            board_id: Number(boardId),
+        };
+        await dispatch(updateLabel(newLabel));
+    };
+
     return (
         <>
             {!labelsArr.length ? (
@@ -46,61 +98,66 @@ export default function Labels() {
                         }
                     >
                         {labelsArr.map(({ name, id }) => (
-                            <div
-                                style={{
-                                    display: "flex",
-                                    columnGap: "0.2vw",
-                                    alignItems: "center",
-                                    marginInline: "0.5vw",
-                                }}
-                            >
+                            <>
                                 <div
                                     key={id}
                                     className="label"
                                     draggable
+                                    onDoubleClick={renderLabelEditInput}
                                     title={name.length > 6 ? name : undefined}
+                                    id={`label-${id}`}
+                                    data-id={`${id}`}
                                 >
-                                    {name.length > 6
-                                        ? name.slice(0, 6) + "..."
-                                        : name}
+                                    <span
+                                        id={`label-name-${id}`}
+                                        className="label-span"
+                                        data-name={name}
+                                    >
+                                        {name}
+                                    </span>
                                 </div>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        rowGap: "0.3vw",
-                                    }}
-                                >
-                                    <TbFilterPlus
-                                        className={`filter-btn${
-                                            isFilterClicked ? " clicked" : ""
-                                        }`}
-                                        id={`${id}`}
-                                        onClick={() =>
-                                            setIsFilterClicked(!isFilterClicked)
+                                <FaFilter
+                                    className={`filter-btn${
+                                        isFilterClicked === id ? " clicked" : ""
+                                    }`}
+                                    data-id={`${id}`}
+                                    onClick={(e) => {
+                                        if (
+                                            e.currentTarget.dataset.id ===
+                                            `${id}`
+                                        ) {
+                                            setIsFilterClicked(
+                                                isFilterClicked === id ? 0 : id
+                                            );
                                         }
-                                    />
-                                    <FaTrash
-                                        className={`trash-btn${
-                                            isTrashClicked ? " clicked" : ""
-                                        }`}
-                                        id={`${id}`}
-                                        onMouseDown={() => {
-                                            setIsTrashClicked(true);
-                                            handleDelete(id);
-                                        }}
-                                        onMouseUp={() => {
-                                            setIsTrashClicked(false);
-                                        }}
-                                        title="Hold 3s to delete"
-                                    />
-                                </div>
-                            </div>
+                                    }}
+                                />
+                                <FaTrash
+                                    className={`trash-btn${
+                                        trashing === id ? " clicked" : ""
+                                    }`}
+                                    data-id={`${id}`}
+                                    onMouseDown={(e) => {
+                                        if (
+                                            e.currentTarget.dataset.id ===
+                                            `${id}`
+                                        ) {
+                                            setTrashing(id);
+                                        }
+                                        handleDelete(id);
+                                    }}
+                                    onMouseUp={() => {
+                                        setTrashing(0);
+                                    }}
+                                    title="Hold 3s to delete"
+                                />
+                            </>
                         ))}
                     </div>
-                    <NewLabel />
+                    {error}
                 </>
             )}
+            <NewLabel />
         </>
     );
 }

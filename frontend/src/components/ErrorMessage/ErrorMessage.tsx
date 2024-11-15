@@ -1,7 +1,10 @@
 import type { ReactElement } from "react";
+import "./ErrorMessage.css";
 
-export default function ErrorSpan({
-  msg,
-}: { msg: string }): ReactElement | null {
-  return msg ? <span className="errorMessage">{msg}</span> : null;
+export default function ErrorMessage({
+    msg,
+}: {
+    msg: string;
+}): ReactElement | null {
+    return msg ? <span className="error-message">{msg}</span> : null;
 }

@@ -1,7 +1,13 @@
 body {
-   margin: 0px;
-   box-sizing: border-box;
-   scrollbar-width: thin;
+    margin: 0px;
+    scrollbar-width: thin;
+    height: 100vh;
 }
 
+* {
+    /* box-sizing: border-box; */
+}
 
+#root {
+    height: 100%;
+}
