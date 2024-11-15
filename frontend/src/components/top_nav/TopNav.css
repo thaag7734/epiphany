@@ -3,6 +3,7 @@
     display: flex;
     position: sticky;
     justify-content: space-between;
+    box-shadow: 2px 2px 3px 1px black;
     background-color: #79aaa4;
     width: 100vw;
     z-index: 9000;
