@@ -1,6 +1,5 @@
 .teams-modal {
 
-
     > h1 {
         text-align: center;
     }
@@ -17,14 +16,10 @@
 
 .teams-modal input[type="text"] {
   width: 100%;
-  /* padding: 10px; */
   border: none;
   border-radius: 4px;
   font-size: 1rem;
 }
-
-
-
 
 .delete-team-member {
     display: inline-flex;
