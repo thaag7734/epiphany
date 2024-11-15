@@ -42,9 +42,9 @@ def update_note(note_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
     form_data["board_id"] = note_board.id
     form = NoteForm(ImmutableMultiDict(form_data))
+    form["csrf_token"].data = request.cookies["csrf_token"]
 
     if form.validate():
         try:

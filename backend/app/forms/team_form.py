@@ -4,5 +4,4 @@ from wtforms.validators import DataRequired
 
 
 class TeamForm(FlaskForm):
-    team_id = IntegerField("team_id")
     emails = FieldList(StringField("emails", validators=[DataRequired()]))

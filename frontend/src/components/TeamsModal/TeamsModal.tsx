@@ -33,7 +33,7 @@ export default function TeamsModal() {
     } else {
       setTeamEmails((team as Team).emails);
     }
-  }, []);
+  }, [team]);
 
   const addUser = async () => {
     if (!team) return; // this will literally never be true
@@ -43,7 +43,7 @@ export default function TeamsModal() {
     dispatch(
       updateTeam({
         owner_id: (user as User).id,
-        emails: teamEmails,
+        emails: teamEmails.concat(email),
         team_id: (team as Team).id,
       }),
     ).then(() => {

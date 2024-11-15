@@ -28,17 +28,16 @@ def modify_team_users(team_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
-    form = TeamForm(ImmutableMultiDict(form_data))
+    processed_form_data = {
+        f"emails-{i}": email for i, email in enumerate(form_data["emails"])
+    }
+
+    form = TeamForm(ImmutableMultiDict(processed_form_data))
+    form["csrf_token"].data = request.cookies["csrf_token"]
 
     if form.validate():
-        users = form_data["emails"]
-
-        if type(users) is not list:
-            return {"message": "Emails must be a list of emails"}, 400
-
-        for email in users:
-            user = User.query.filter(User.email == email).first()
+        for entry in form.emails.entries:
+            user = User.query.filter(User.email == entry.data).first()
 
             if user:
                 user_list.append(user)
@@ -51,9 +50,9 @@ def modify_team_users(team_id: int):
             db.session.rollback()
             return {"message": "Internal server error"}, 500
         else:
-            return {"message": "Team updated successfully", "team": team.to_dict()}, 201
+            return {"message": "Team updated successfully", "team": team.to_dict()}, 200
     else:
-        return {"errors": form.errors}
+        return {"errors": form.errors}, 400
 
 
 @teams.route("/<int:team_id>", methods=["DELETE"])

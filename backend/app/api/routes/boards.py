@@ -38,7 +38,7 @@ def create_board():
         return {"message": "Missing form data from request"}, 400
 
     form_data["owner_id"] = current_user.id
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
+    form_data["csrf_token"] = request.cookies["csrf_token"]
 
     # wrap data in an ImmutableMultiDict here to fix AttributeError
     # when attempting to instantiate the form
@@ -87,7 +87,7 @@ def update_board(board_id):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
+    form_data["csrf_token"] = request.cookies["csrf_token"]
     form_data["owner_id"] = current_user.id
     form = BoardForm(ImmutableMultiDict(form_data))
 
@@ -203,7 +203,7 @@ def create_label(board_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
+    form_data["csrf_token"] = request.cookies["csrf_token"]
     form_data["board_id"] = board_id
     form = LabelForm(ImmutableMultiDict(form_data))
 
@@ -288,7 +288,7 @@ def create_note(board_id: int):
             "message": "You do not have permission to access this board's labels"
         }, 403
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
+    form_data["csrf_token"] = request.cookies["csrf_token"]
     form_data["board_id"] = board_id
     form = NoteForm(ImmutableMultiDict(form_data))
 
@@ -346,7 +346,7 @@ def create_team(board_id: int):
     form_data = request.json
 
     if form_data:
-        form_data["csrf_token"].data = request.cookies["csrf_token"]
+        form_data["csrf_token"] = request.cookies["csrf_token"]
 
         if type(form_data["emails"]) is not list:
             return {"message": "Emails must be a list of emails"}, 400
