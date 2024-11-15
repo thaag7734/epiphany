@@ -171,10 +171,8 @@ function App() {
                element: (
                   <>
                      <SidePanel />
-                     <div>
-                        <TopNav />
-                        <Dashboard boardId={currentBoardId} />
-                     </div>
+                     <TopNav />
+                     <Dashboard boardId={currentBoardId} />
                   </>
                ),
                path: "boards/:boardId",

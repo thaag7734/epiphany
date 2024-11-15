@@ -5,4 +5,10 @@ body {
    background-color: #bce7d7;
 }
 
+html, body {
+   overflow: auto;
+   height: 100%;
+
+}
+
 

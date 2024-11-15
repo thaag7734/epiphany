@@ -1,14 +1,19 @@
 .dash-home {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /*^ MEDIA QUERY */
     grid-auto-rows: min-content;
     gap: 16px;
     justify-content: center;
-    padding: 10px;
-    max-width: 1024px;
-    margin: 0 auto;
+    padding: 10px 40px;
+    width: 100vw;
+    max-width: 100vw;
+    /* margin: 10px auto; */
+    overflow-y: auto;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    box-sizing: border-box;
     
-
     >   .board-name {
         margin-top: 20px;
         font-size: 24px;
@@ -17,7 +22,7 @@
         text-align: center;
         color: white;
         position: fixed;
-        bottom: 30px;
+        bottom: 8px;
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
@@ -27,7 +32,6 @@
         /* box-shadow: 0px 2px 4px rgba(31, 30, 30, 0.5); */
         }
 }
-
 
 .new-note-button {
     width: fit-content;

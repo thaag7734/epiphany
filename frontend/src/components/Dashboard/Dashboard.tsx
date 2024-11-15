@@ -1,4 +1,4 @@
-import { type MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
@@ -11,6 +11,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   const board = useAppSelector((state) =>
     Object.values(state.boards).find((b) => b.id === boardId),
   );
+  const dashHome = useRef<HTMLDivElement | null>(null);
 
   const [boardName, setBoardName] = useState("");
 
@@ -19,6 +20,18 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   const { setModalContent } = useModal() as ModalContextType;
 
   useEffect(() => {}, [notes]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      const nav = document.querySelector(".top-nav") as HTMLElement;
+      if (!nav || !dashHome.current) return
+      const navHeight = nav.offsetHeight;
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      dashHome.current.style.height = (vh - navHeight).toString() + "px";
+
+      console.log("NAVHEIGHT\n", navHeight, "VH\n", vh, "DASHHOME\n",dashHome.current.style.height);
+    })
+  });
 
   useEffect(() => {
     if (!board?.name) return
@@ -32,7 +45,10 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   };
 
   return (
-    <div className="dash-home">
+    <div 
+      className="dash-home"
+      ref={dashHome}      
+      >
       {notes.map((note: Note) => (
         <NoteCard noteId={note.id} key={note.id} />
       ))}
