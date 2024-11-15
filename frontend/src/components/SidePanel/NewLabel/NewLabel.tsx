@@ -25,15 +25,18 @@ export default function NewLabel() {
     };
 
     return (
-        <div className="new-label">
-            <input
-                type="text"
-                name="name"
-                placeholder="Create a new label"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onBlur={handleCreate}
-            />
-        </div>
+        <>
+            <div className="new-label">
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Create a new label"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onBlur={handleCreate}
+                />
+            </div>
+            <input type="date" />
+        </>
     );
 }
