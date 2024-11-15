@@ -5,6 +5,7 @@ import "./index.css";
 import { store } from "./redux/store";
 import App from "./App.tsx";
 import { Modal, ModalProvider } from "./components/Modal/Modal";
+import "./util/polyfill.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,5 +15,5 @@ createRoot(document.getElementById("root")!).render(
         <Modal />
       </Provider>
     </ModalProvider>
-  </StrictMode>
+  </StrictMode>,
 );
