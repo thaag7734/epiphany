@@ -1,4 +1,9 @@
-import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  isAnyOf,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { BoardCollection } from "../../types/Api";
 import type { Board } from "../../types/Models";
@@ -67,7 +72,7 @@ export const createBoard = createAppAsyncThunk(
 export const deleteBoard = createAppAsyncThunk(
   DELETE_BOARD,
   async (boardId: number, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch(`/api/${boardId}`, {
+    const res = await fetch(`/api/boards/${boardId}`, {
       method: "DELETE",
     });
 
@@ -81,6 +86,17 @@ export const deleteBoard = createAppAsyncThunk(
 
     return fulfillWithValue(data);
   },
+);
+
+export const selectBoardById = createSelector(
+  [(state) => state.boards, (_state, boardId: number) => boardId],
+  (boards: BoardsState, boardId: number) =>
+    Object.values(boards).find((b) => b.id === boardId),
+);
+
+export const selectAllBoards = createSelector(
+  [(state) => state.boards],
+  (boards: BoardsState) => Object.values(boards),
 );
 
 export interface BoardsState {

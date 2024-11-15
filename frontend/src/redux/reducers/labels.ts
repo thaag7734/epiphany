@@ -94,6 +94,12 @@ export const selectLabelById = createSelector(
     Object.values(labels).find((l) => l.id === labelId),
 );
 
+export const selectLabelsByBoardId = createSelector(
+  [(state) => state.labels, (_state, boardId?: number) => boardId],
+  (labels: LabelsState, boardId: number) =>
+    Object.values(labels).filter((l) => l.board_id === boardId),
+);
+
 export interface LabelsState {
   [key: string]: Label;
 }

@@ -1,11 +1,11 @@
-import { type MouseEvent, useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef /*, useState */ } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
-import { BsFillPlusSquareFill } from "react-icons/bs";
 import NoteModal from "../NoteModal/NoteModal";
 import { type ModalContextType, useModal } from "../Modal/Modal";
+import NewCardButton from "../NewCardCard/NewCardButton";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
   const board = useAppSelector((state) =>
@@ -13,29 +13,32 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   );
   const dashHome = useRef<HTMLDivElement | null>(null);
 
-  const [boardName, setBoardName] = useState("");
+  //const [boardName, setBoardName] = useState("");
 
   const notes = useAppSelector((state) => Object.values(state.notes));
 
   const { setModalContent } = useModal() as ModalContextType;
 
-  useEffect(() => {}, [notes]);
+  useEffect(() => { }, [notes]);
 
   useEffect(() => {
-      const nav = document.querySelector(".top-nav") as HTMLElement;
+    const nav = document.querySelector(".top-nav") as HTMLElement;
 
-      if (!nav || !dashHome.current) return
+    if (!nav || !dashHome.current) return;
 
-      const navHeight = nav.offsetHeight;
-      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-      
-      dashHome.current.style.height = (vh - navHeight).toString() + "px";
+    const navHeight = nav.offsetHeight;
+    const vh = Math.max(
+      document.documentElement.clientHeight || 0,
+      window.innerHeight || 0,
+    );
+
+    dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
   }, []);
 
-  useEffect(() => {
-    if (!board?.name) return
-    setBoardName(board.name);
-  }, [board])
+  //useEffect(() => {
+  //  if (!board?.name) return;
+  //  setBoardName(board.name);
+  //}, [board]);
 
   const handleNewNoteClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -44,20 +47,21 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   };
 
   return (
-    <div 
-      className="dash-home"
-      ref={dashHome}      
-      >
+    <div className="dash-home" ref={dashHome}>
       {notes.map((note: Note) => (
         <NoteCard noteId={note.id} key={note.id} />
       ))}
 
-        <BsFillPlusSquareFill 
-          className="new-note-button"
-          onClick={handleNewNoteClick}
-        />
+      <NewCardButton onClick={handleNewNoteClick} />
 
-      {board && <input className="board-name" type="text" value={board.name} onChange={(e) => setBoardName(e.currentTarget.value)}></input>}
+      {board && (
+        <input
+          className="board-name"
+          type="text"
+          value={board.name}
+          onChange={(e) => setBoardName(e.currentTarget.value)}
+        ></input>
+      )}
     </div>
   );
 }
