@@ -99,7 +99,7 @@ export const selectNotesWithLabels = createSelector(
   (notes: NotesState, labelIds: number[]) =>
     Object.values(notes).filter(
       (n) =>
-        new Set(n.labels).intersection(new Set(labelIds)).length ===
+        new Set(n.labels).intersection(new Set(labelIds)).size ===
         labelIds.length,
     ),
 );
@@ -134,7 +134,7 @@ export const notesSlice = createSlice({
       })
       .addCase(deleteNote.fulfilled, (state: NotesState, action) => {
         return Object.fromEntries(
-          Object.entries(state).filter(([k, _]) => k != action.payload.noteId),
+          Object.entries(state).filter(([k, _]) => k !== action.payload.noteId),
         );
       });
     builder.addMatcher(

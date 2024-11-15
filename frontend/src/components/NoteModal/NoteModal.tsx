@@ -1,5 +1,5 @@
 import type { ChangeEvent, FC, FormEvent, ReactElement } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import ErrorMessage from "../ErrorMessage";
@@ -8,7 +8,7 @@ import { getCsrf } from "../../util/cookies";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import { RiSaveFill } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
-import "./NoteModal.css"
+import "./NoteModal.css";
 
 function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const boardId = useAppSelector((state) => state.session.currentBoardId);
@@ -16,12 +16,19 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const note: Note | null = noteId
     ? useAppSelector((state) => state.notes[noteId])
     : null;
+
   const { closeModal } = useModal() as ModalContextType;
+  const deleteBtn = useRef<HTMLDivElement | null>(null);
 
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [priority, setPriority] = useState<number>(0);
   //const [deadline, setDeadline] = useState<Date>(new Date());
+
+  const [awaitingDelConf, setAwaitingDelConf] = useState<boolean>(false);
+  const [deleteBtnContent, setDeleteBtnContent] = useState<
+    ReactElement | string
+  >(<FaTrash />);
 
   const [errors, setErrors] = useState<{ [key: string]: ReactElement }>({});
   const dispatch = useAppDispatch();
@@ -101,18 +108,43 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   };
 
   const handleDelete = () => {
-    const timeout = setTimeout(() => {
-      dispatch(deleteNote(noteId!)).then(() => closeModal());
-      // TODO error handling if deletion fails
-    }, 3000);
+    if (!noteId || !deleteBtn.current) return;
 
-    addEventListener(
-      "mouseup",
-      () => {
-        clearTimeout(timeout);
-      },
-      { once: true },
-    );
+    //const timeout = setTimeout(() => {
+    //  dispatch(deleteNote(noteId)).then(() => closeModal());
+    //}, 3000);
+    //addEventListener(
+    //  "mouseup",
+    //  () => {
+    //    clearTimeout(timeout);
+    //  },
+    //  { once: true },
+    //);
+
+    if (!awaitingDelConf) {
+      deleteBtn.current.addEventListener(
+        "mouseleave",
+        () => {
+          setDeleteBtnContent(<FaTrash />);
+          setAwaitingDelConf(false);
+        },
+        { once: true },
+      );
+
+      setAwaitingDelConf(true);
+
+      setDeleteBtnContent("Really delete this note?");
+    } else {
+      setAwaitingDelConf(false);
+
+      dispatch(deleteNote(noteId)).then(({ payload, type }) => {
+        if (type === "notes/deleteNote/rejected") {
+          setErrors({ message: payload.message });
+        } else {
+          closeModal();
+        }
+      });
+    }
   };
 
   const handlePriorityChange = (e: ChangeEvent) => {
@@ -188,9 +220,9 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
           <div
             className="delete-btn"
             onMouseDown={handleDelete}
-            title="Hold 3s to delete"
+            ref={deleteBtn}
           >
-            <FaTrash />
+            {deleteBtnContent}
           </div>
         )}
       </form>
