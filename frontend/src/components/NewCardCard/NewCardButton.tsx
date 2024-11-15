@@ -6,8 +6,13 @@ export default function NewCardButton({
   onClick,
 }: { onClick: MouseEventHandler }) {
   return (
-    <button type="button" className="new-card-button" tabIndex={0}>
-      <BsFillPlusSquareFill onClick={onClick} />
+    <button
+      type="button"
+      onClick={onClick}
+      className="new-card-button"
+      tabIndex={0}
+    >
+      <BsFillPlusSquareFill />
     </button>
   );
 }

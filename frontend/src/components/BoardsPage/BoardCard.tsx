@@ -64,7 +64,7 @@ export default function BoardCard({
               <div
                 className="board-delete-icon"
                 title="Hold 2s to delete board"
-                onClick={(e) => handleDeleteBoard(e, board.id)}
+                onMouseDown={(e) => handleDeleteBoard(e, board.id)}
               >
                 <FaTrash />
               </div>
