@@ -35,6 +35,7 @@ import {
   createBrowserRouter,
   Outlet,
   RouterProvider,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 import {
@@ -101,9 +102,14 @@ function App() {
   function Layout() {
     const { boardId } = useParams();
     const [isLoaded, setIsLoaded] = useState(false);
+    const navigate = useNavigate();
 
     const boards: BoardsState = useAppSelector((state) => state.boards);
     const user: User | null = useAppSelector((state) => state.session.user);
+
+    useEffect(() => {
+      if (!user) navigate("/");
+    }, [user]);
 
     useEffect(() => {
       dispatch(restoreUser()).then(() => {

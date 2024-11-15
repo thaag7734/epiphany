@@ -1,25 +1,21 @@
-export interface FormData {
-  csrf_token: string;
-}
-
-export interface LoginFormData extends FormData {
+export interface LoginFormData {
   email: string;
   password: string;
 }
 
-export interface SignupFormData extends FormData {
+export interface SignupFormData {
   username: string;
   email: string;
   password: string;
 }
 
-export interface LabelFormData extends FormData {
+export interface LabelFormData {
   id?: number;
   board_id: number;
   name: string;
 }
 
-export interface NoteFormData extends FormData {
+export interface NoteFormData {
   id?: number;
   board_id: number;
   title: string;
@@ -28,14 +24,14 @@ export interface NoteFormData extends FormData {
   priority: number;
 }
 
-export interface BoardFormData extends FormData {
+export interface BoardFormData {
   id?: number;
   team_id?: number;
   owner_id?: number;
   name: string;
 }
 
-export interface TeamFormData extends FormData {
+export interface TeamFormData {
   id?: number;
   team_id?: number;
   board_id?: number;

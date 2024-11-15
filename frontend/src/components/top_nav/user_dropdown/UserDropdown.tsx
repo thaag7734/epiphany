@@ -22,7 +22,7 @@ export default function UserDropdown() {
   const team: TeamState = useAppSelector((state) => state.team);
   const user = useAppSelector((state) => state.session.user);
   const currentBoardId = useAppSelector(
-    (state) => state.session.currentBoardId
+    (state) => state.session.currentBoardId,
   );
   const board = useAppSelector((state) => state.boards[currentBoardId!]);
 
@@ -51,12 +51,13 @@ export default function UserDropdown() {
 
   const endSession = (e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(logout());
-    dispatch(labelsSlice.actions.clearState());
-    dispatch(notesSlice.actions.clearState());
-    dispatch(boardsSlice.actions.clearState());
-    dispatch(teamSlice.actions.clearState());
-    navigate("/");
+    dispatch(logout()).then(() => {
+      dispatch(boardsSlice.actions.clearState());
+      dispatch(labelsSlice.actions.clearState());
+      dispatch(notesSlice.actions.clearState());
+      dispatch(teamSlice.actions.clearState());
+      navigate("/");
+    });
   };
 
   return (

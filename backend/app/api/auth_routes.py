@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, make_response, request, session
 from app.models.models import db
 from app.models.user import User
 from app.models.models import Board
@@ -25,7 +25,7 @@ def login():
     Logs a user in
     """
     form = LoginForm()
-    # form["csrf_token"].data = request.cookies["csrf_token"]
+    form["csrf_token"].data = request.cookies["csrf_token"]
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
     if form.validate_on_submit():
@@ -42,7 +42,12 @@ def logout():
     Logs a user out
     """
     logout_user()
-    return {"message": "User logged out"}
+    session.clear()
+    [session.pop(key) for key in list(session.keys())]
+    response = make_response()
+    # response.set_cookie("session", "", expires=0)
+    response.delete_cookie("session")
+    return response
 
 
 @auth_routes.route("/signup", methods=["POST"])

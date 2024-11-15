@@ -5,7 +5,6 @@ import BoardCard from "./BoardCard";
 import "./BoardsPage.css";
 import NewCardButton from "../NewCardCard/NewCardButton";
 import { createBoard, selectAllBoards } from "../../redux/reducers/boards";
-import { getCsrf } from "../../util/cookies";
 
 export default function BoardsPage() {
   const boards = useAppSelector((state) => selectAllBoards(state));
@@ -20,7 +19,6 @@ export default function BoardsPage() {
 
     dispatch(
       createBoard({
-        csrf_token: await getCsrf(),
         owner_id: user.id,
         name: `${user.username}'s Board`,
       }),

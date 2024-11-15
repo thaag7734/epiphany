@@ -8,7 +8,6 @@ import { type ModalContextType, useModal } from "../Modal/Modal";
 import NewCardButton from "../NewCardCard/NewCardButton";
 import { selectAllNotes } from "../../redux/reducers/notes";
 import { selectBoardById, updateBoard } from "../../redux/reducers/boards";
-import { getCsrf } from "../../util/cookies";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
   const board = useAppSelector((state) =>
@@ -54,7 +53,6 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
   const handleUpdateBoardName = async () => {
     dispatch(
       updateBoard({
-        csrf_token: await getCsrf(),
         id: boardId,
         name: boardName,
       }),

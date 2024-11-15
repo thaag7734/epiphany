@@ -16,10 +16,10 @@ export default function TopNav() {
   const deleteBtn = useRef<HTMLDivElement | null>(null);
 
   const currentBoardId = useAppSelector(
-    (state) => state.session.currentBoardId
+    (state) => state.session.currentBoardId,
   );
   const user = useAppSelector((state) => state.session.user);
-//   const board = useAppSelector((state) => state.boards[currentBoardId!]);
+  //   const board = useAppSelector((state) => state.boards[currentBoardId!]);
   const team: TeamState = useAppSelector((state) => state.team);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ export default function TopNav() {
           setDeleteBtnContent("Leave Team");
           setAwaitingDelConf(false);
         },
-        { once: true }
+        { once: true },
       );
 
       setAwaitingDelConf(true);
@@ -48,27 +48,25 @@ export default function TopNav() {
       setDeleteBtnContent("Click again to leave team");
     } else {
       setAwaitingDelConf(false);
-      const csrf_token = await getCsrf();
 
       dispatch(
         updateTeam({
-          csrf_token,
           owner_id: (user as User).id,
           emails: team.emails.filter(
-            (el: string) => el !== (user as User).email
+            (el: string) => el !== (user as User).email,
           ),
           team_id: (team as Team).id,
-        })
-      ).then(() => 
-         {boardsSlice.actions.clearState();
-         navigate("/boards")}
-      );
+        }),
+      ).then(() => {
+        boardsSlice.actions.clearState();
+        navigate("/boards");
+      });
     }
   };
 
-//   const setRootBoard = () => {
+  //   const setRootBoard = () => {
 
-//   };
+  //   };
 
   return (
     <nav className="top-nav">

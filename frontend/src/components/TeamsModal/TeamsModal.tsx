@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { type ReactElement, useEffect, useState } from "react";
 import type { Team, User } from "../../types/Models";
 import { createTeam, updateTeam } from "../../redux/reducers/teams";
-import { getCsrf } from "../../util/cookies";
 import ErrorMessage from "../ErrorMessage";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import { FaTrash } from "react-icons/fa";
@@ -19,10 +18,8 @@ export default function TeamsModal() {
   const user = useAppSelector((state) => state.session.user);
 
   const createNewTeam = async () => {
-    const csrf_token = await getCsrf();
     dispatch(
       createTeam({
-        csrf_token,
         owner_id: (user as User).id,
         board_id: Number(boardId),
         emails: [],
@@ -45,7 +42,6 @@ export default function TeamsModal() {
 
     dispatch(
       updateTeam({
-        csrf_token: await getCsrf(),
         owner_id: (user as User).id,
         emails: teamEmails,
         team_id: (team as Team).id,
