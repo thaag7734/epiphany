@@ -4,17 +4,15 @@ import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NoteModal from "../NoteModal/NoteModal";
+import { selectNoteById } from "../../redux/reducers/notes";
+import { selectLabelsByBoardId } from "../../redux/reducers/labels";
 
 export default function NoteCard({ noteId }: { noteId: number }) {
   // const dispatch = useAppDispatch();
 
-  const note = useAppSelector((state) =>
-    Object.values(state.notes).find((n) => n.id === noteId),
-  );
+  const note = useAppSelector((state) => selectNoteById(state, noteId));
   const labels = useAppSelector((state) =>
-    Object.values(state.labels).filter((l) =>
-      note?.labels.find((lbl) => lbl === l.id),
-    ),
+    note ? selectLabelsByBoardId(state, note.board_id) : null,
   );
 
   const { setModalContent } = useModal() as ModalContextType;
@@ -66,11 +64,13 @@ export default function NoteCard({ noteId }: { noteId: number }) {
           </div>
 
           <ul className="note-labels-list">
-            {labels?.map((label) => (
-              <li key={label.id} className="note-label-pill">
-                {label.name}
-              </li>
-            ))}
+            {labels
+              ?.filter((l) => note.labels.includes(l.id))
+              .map((label) => (
+                <li key={label.id} className="note-label-pill">
+                  {label.name}
+                </li>
+              ))}
           </ul>
         </div>
       ) : null}

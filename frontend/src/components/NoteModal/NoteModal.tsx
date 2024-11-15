@@ -1,7 +1,6 @@
 import type { ChangeEvent, FC, FormEvent, ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import type { Note } from "../../types/Models";
 import ErrorMessage from "../ErrorMessage";
 import { createNote, deleteNote, updateNote } from "../../redux/reducers/notes";
 import { getCsrf } from "../../util/cookies";
@@ -13,9 +12,7 @@ import "./NoteModal.css";
 function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
   const boardId = useAppSelector((state) => state.session.currentBoardId);
 
-  const note: Note | null = noteId
-    ? useAppSelector((state) => state.notes[noteId])
-    : null;
+  const note = noteId ? useAppSelector((state) => state.notes[noteId]) : null;
 
   const { closeModal } = useModal() as ModalContextType;
   const deleteBtn = useRef<HTMLDivElement | null>(null);

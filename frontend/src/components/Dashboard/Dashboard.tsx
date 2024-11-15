@@ -1,21 +1,26 @@
-import { type MouseEvent, useEffect, useRef /*, useState */ } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import type { Note } from "../../types/Models";
 import NoteCard from "./NoteCard";
 import "./Dashboard.css";
 import NoteModal from "../NoteModal/NoteModal";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NewCardButton from "../NewCardCard/NewCardButton";
+import { selectAllNotes } from "../../redux/reducers/notes";
+import { selectBoardById, updateBoard } from "../../redux/reducers/boards";
+import { getCsrf } from "../../util/cookies";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
   const board = useAppSelector((state) =>
-    Object.values(state.boards).find((b) => b.id === boardId),
+    boardId ? selectBoardById(state, boardId) : null,
   );
+  const notes = useAppSelector((state) => selectAllNotes(state));
+
+  const [boardName, setBoardName] = useState<string>("");
+
+  const dispatch = useAppDispatch();
+
   const dashHome = useRef<HTMLDivElement | null>(null);
-
-  //const [boardName, setBoardName] = useState("");
-
-  const notes = useAppSelector((state) => Object.values(state.notes));
 
   const { setModalContent } = useModal() as ModalContextType;
 
@@ -35,15 +40,25 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
   }, []);
 
-  //useEffect(() => {
-  //  if (!board?.name) return;
-  //  setBoardName(board.name);
-  //}, [board]);
+  useEffect(() => {
+    if (!board?.name) return;
+    setBoardName(board.name);
+  }, [board]);
 
   const handleNewNoteClick = (e: MouseEvent) => {
     e.stopPropagation();
 
     setModalContent(<NoteModal />);
+  };
+
+  const handleUpdateBoardName = async () => {
+    dispatch(
+      updateBoard({
+        csrf_token: await getCsrf(),
+        id: boardId,
+        name: boardName,
+      }),
+    ); //TODO error handling
   };
 
   return (
@@ -60,7 +75,8 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
           type="text"
           value={board.name}
           onChange={(e) => setBoardName(e.currentTarget.value)}
-        ></input>
+          onBlur={handleUpdateBoardName}
+        />
       )}
     </div>
   );

@@ -31,7 +31,7 @@ export interface NoteFormData extends FormData {
 export interface BoardFormData extends FormData {
   id?: number;
   team_id?: number;
-  owner_id: number;
+  owner_id?: number;
   name: string;
 }
 

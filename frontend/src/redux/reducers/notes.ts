@@ -104,6 +104,11 @@ export const selectNotesWithLabels = createSelector(
     ),
 );
 
+export const selectAllNotes = createSelector(
+  [(state) => state.notes],
+  (notes: NotesState) => Object.values(notes),
+);
+
 export interface NotesState {
   [key: string]: Note;
 }

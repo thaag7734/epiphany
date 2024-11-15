@@ -39,17 +39,19 @@ export default function TeamsModal() {
   }, []);
 
   const addUser = async () => {
+    if (!team) return; // this will literally never be true
+
     setTeamEmails(teamEmails.concat(email));
-    const csrf_token = await getCsrf();
+
     dispatch(
       updateTeam({
-        csrf_token,
+        csrf_token: await getCsrf(),
         owner_id: (user as User).id,
         emails: teamEmails,
-        team_id: (team! as Team).id,
+        team_id: (team as Team).id,
       }),
     ).then(() => {
-      if (!(team! as Team).emails.includes(email))
+      if (!(team as Team).emails.includes(email))
         setError(
           <ErrorMessage msg={"Email must be associated with existing user"} />,
         );
@@ -58,14 +60,17 @@ export default function TeamsModal() {
   };
 
   const handleDelete = async () => {
+    if (!team) return; // once again, this will never be true
+
     const csrf_token = await getCsrf();
+
     const timeout = setTimeout(() => {
       dispatch(
         updateTeam({
           csrf_token,
           owner_id: (user as User).id,
           emails: teamEmails.filter((el) => el !== email),
-          team_id: (team! as Team).id,
+          team_id: (team as Team).id,
         }),
       ).then(() => closeModal());
       // TODO error handling if deletion fails
@@ -100,7 +105,7 @@ export default function TeamsModal() {
       </div>
       <ul>
         {team ? (
-          (team! as Team).emails.map((teamMember, index) => (
+          (team as Team).emails.map((teamMember, index) => (
             <li key={index}>
               <div
                 className="delete-team-member"

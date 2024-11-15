@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect } from "react";
+import { type MouseEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import "./BoardCard.css";
 import { useNavigate } from "react-router";
@@ -15,7 +15,7 @@ export default function BoardCard({
 }: { board_id: number; owned?: boolean }) {
   const board = useAppSelector((state) => selectBoardById(state, board_id));
   const labels = useAppSelector((state) =>
-    selectLabelsByBoardId(state, board?.id),
+    board ? selectLabelsByBoardId(state, board.id) : null,
   );
 
   const navigate = useNavigate();
