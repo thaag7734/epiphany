@@ -11,75 +11,75 @@ import { selectBoardById, updateBoard } from "../../redux/reducers/boards";
 import { getCsrf } from "../../util/cookies";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
-  const board = useAppSelector((state) =>
-    boardId ? selectBoardById(state, boardId) : null,
-  );
-  const notes = useAppSelector((state) => selectAllNotes(state));
-
-  const [boardName, setBoardName] = useState<string>("");
-
-  const dispatch = useAppDispatch();
-
-  const dashHome = useRef<HTMLDivElement | null>(null);
-
-  const { setModalContent } = useModal() as ModalContextType;
-
-  useEffect(() => { }, [notes]);
-
-  useEffect(() => {
-    const nav = document.querySelector(".top-nav") as HTMLElement;
-
-    if (!nav || !dashHome.current) return;
-
-    const navHeight = nav.offsetHeight;
-    const vh = Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0,
+    const board = useAppSelector((state) =>
+        boardId ? selectBoardById(state, boardId) : null
     );
+    const notes = useAppSelector((state) => selectAllNotes(state));
 
-    dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
-  }, []);
+    const [boardName, setBoardName] = useState<string>("");
 
-  useEffect(() => {
-    if (!board?.name) return;
-    setBoardName(board.name);
-  }, [board]);
+    const dispatch = useAppDispatch();
 
-  const handleNewNoteClick = (e: MouseEvent) => {
-    e.stopPropagation();
+    const dashHome = useRef<HTMLDivElement | null>(null);
 
-    setModalContent(<NoteModal />);
-  };
+    const { setModalContent } = useModal() as ModalContextType;
 
-  const handleUpdateBoardName = async () => {
-    dispatch(
-      updateBoard({
-        csrf_token: await getCsrf(),
-        id: boardId,
-        name: boardName,
-      }),
-    ); //TODO error handling
-  };
+    useEffect(() => {}, [notes]);
 
-  return (
-    <div className="dash-home" ref={dashHome}>
-      {notes.map((note: Note) => (
-        <NoteCard noteId={note.id} key={note.id} />
-      ))}
+    useEffect(() => {
+        const nav = document.querySelector(".top-nav") as HTMLElement;
 
-      <NewCardButton onClick={handleNewNoteClick} />
+        if (!nav || !dashHome.current) return;
 
-      {board && (
-        <input
-          className="board-name"
-          type="text"
-          value={board.name}
-          onChange={(e) => setBoardName(e.currentTarget.value)}
-          onBlur={handleUpdateBoardName}
-        />
-      )}
-    </div>
-  );
+        const navHeight = nav.offsetHeight;
+        const vh = Math.max(
+            document.documentElement.clientHeight || 0,
+            window.innerHeight || 0
+        );
+
+        dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
+    }, []);
+
+    useEffect(() => {
+        if (!board?.name) return;
+        setBoardName(board.name);
+    }, [board]);
+
+    const handleNewNoteClick = (e: MouseEvent) => {
+        e.stopPropagation();
+
+        setModalContent(<NoteModal />);
+    };
+
+    const handleUpdateBoardName = async () => {
+        dispatch(
+            updateBoard({
+                csrf_token: await getCsrf(),
+                id: boardId,
+                name: boardName,
+            })
+        ); //TODO error handling
+    };
+
+    return (
+        <div className="dash-home" ref={dashHome}>
+            {notes.map((note: Note) => (
+                <NoteCard noteId={note.id} key={note.id} />
+            ))}
+
+            <NewCardButton onClick={handleNewNoteClick} />
+
+            {board && (
+                <input
+                    className="board-name"
+                    type="text"
+                    value={boardName}
+                    onChange={(e) => setBoardName(e.currentTarget.value)}
+                    onBlur={handleUpdateBoardName}
+                />
+            )}
+        </div>
+    );
 }
 
 export default Dashboard;

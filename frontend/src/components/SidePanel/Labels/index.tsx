@@ -1,4 +1,9 @@
-import { type MouseEvent, type ReactElement, useRef, useState } from "react";
+import React, {
+    type MouseEvent,
+    type ReactElement,
+    useRef,
+    useState,
+} from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
     deleteLabel,
@@ -84,9 +89,11 @@ export default function Labels() {
         await dispatch(updateLabel(newLabel));
     };
 
-    const closeSidePanel = () => {
+    const closeSidePanel = (e: React.DragEvent, id: number) => {
         const sidePanel = document.querySelector("#side-panel-show");
         if (!sidePanel) return;
+        e.dataTransfer.clearData();
+        e.dataTransfer.setData("text/plain", `#label-name-${id}`);
         sidePanel.id = "side-panel";
     };
 
@@ -108,10 +115,10 @@ export default function Labels() {
                                 <div
                                     key={id}
                                     className="label"
-                                    draggable
+                                    draggable="true"
                                     onDoubleClick={renderLabelEditInput}
                                     title={name.length > 6 ? name : undefined}
-                                    onDragStart={closeSidePanel}
+                                    onDragStart={(e) => closeSidePanel(e, id)}
                                     id={`label-${id}`}
                                     data-id={`${id}`}
                                 >
