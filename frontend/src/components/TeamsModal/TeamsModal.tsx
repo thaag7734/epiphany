@@ -58,12 +58,9 @@ export default function TeamsModal() {
   const handleDelete = async () => {
     if (!team) return; // once again, this will never be true
 
-    const csrf_token = await getCsrf();
-
     const timeout = setTimeout(() => {
       dispatch(
         updateTeam({
-          csrf_token,
           owner_id: (user as User).id,
           emails: teamEmails.filter((el) => el !== email),
           team_id: (team as Team).id,

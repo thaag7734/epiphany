@@ -1,4 +1,6 @@
 from flask import Blueprint, request
+from werkzeug.datastructures import ImmutableMultiDict
+from app.forms.team_form import TeamForm
 from app.models.models import Board, Team
 from app.models.db import db
 from flask_login import login_required, current_user
@@ -26,26 +28,32 @@ def modify_team_users(team_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    users = form_data["emails"]
+    form_data["csrf_token"].data = request.cookies["csrf_token"]
+    form = TeamForm(ImmutableMultiDict(form_data))
 
-    if type(users) is not list:
-        return {"message": "Emails must be a list of emails"}, 400
+    if form.validate():
+        users = form_data["emails"]
 
-    for email in users:
-        user = User.query.filter(User.email == email).first()
+        if type(users) is not list:
+            return {"message": "Emails must be a list of emails"}, 400
 
-        if user:
-            user_list.append(user)
+        for email in users:
+            user = User.query.filter(User.email == email).first()
 
-    try:
-        team.users = user_list
-        db.session.commit()
+            if user:
+                user_list.append(user)
 
-    except Exception:
-        db.session.rollback()
-        return {"message": "Internal server error"}, 500
+        try:
+            team.users = user_list
+            db.session.commit()
 
-    return {"message": "Team updated successfully", "team": team.to_dict()}, 201
+        except Exception:
+            db.session.rollback()
+            return {"message": "Internal server error"}, 500
+        else:
+            return {"message": "Team updated successfully", "team": team.to_dict()}, 201
+    else:
+        return {"errors": form.errors}
 
 
 @teams.route("/<int:team_id>", methods=["DELETE"])
