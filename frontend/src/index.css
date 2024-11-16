@@ -1,26 +1,51 @@
 html,
 body {
-    overflow: auto;
-    height: 100%;
+	overflow: auto;
+	height: 100%;
 }
 
 body {
-    margin: 0px;
-    box-sizing: border-box;
-    scrollbar-width: thin;
-    background-color: #bce7d7;
-    font-family: "Sour Gummy", sans-serif;
+	margin: 0px;
+	box-sizing: border-box;
+	scrollbar-width: thin;
+	background-color: #bce7d7;
+	font-family: "Sour Gummy", sans-serif;
 }
 
 input,
 textarea {
-    font-family: "Sour Gummy", sans-serif;
+	font-family: "Sour Gummy", sans-serif;
 }
 
+/*
 * {
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
 }
+*/
 
 #root {
-    height: 100%;
+	height: 100%;
+}
+
+.delete-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f37269;
+	color: #fff;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+	&:hover {
+		background-color: #e53935;
+	}
+
+	&:active {
+		background-color: #b61b17;
+		box-shadow: 0.5px 1px 1px 0.5px black inset;
+	}
 }
