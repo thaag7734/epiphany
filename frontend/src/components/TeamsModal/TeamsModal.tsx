@@ -16,6 +16,7 @@ export default function TeamsModal() {
   const user = useAppSelector((state) => state.session.user);
 
   const createNewTeam = async () => {
+    console.log("createNewTeam");
     dispatch(
       createTeam({
         owner_id: (user as User).id,
@@ -26,6 +27,7 @@ export default function TeamsModal() {
   };
 
   useEffect(() => {
+    console.log("effect");
     if (!team) {
       createNewTeam();
     } else {
@@ -34,6 +36,7 @@ export default function TeamsModal() {
   }, [team]);
 
   const addUser = async () => {
+    console.log("addUser");
     if (!email || !team) return;
 
     setTeamEmails(teamEmails.concat(email));
@@ -44,8 +47,8 @@ export default function TeamsModal() {
         emails: teamEmails.concat(email),
         team_id: team.id,
       }),
-    ).then(() => {
-      if (!team.emails.includes(email))
+    ).then(({ payload }) => {
+      if (!payload?.team?.emails.includes(email))
         setError(
           <ErrorMessage msg={"Email must be associated with existing user"} />,
         );
@@ -54,6 +57,7 @@ export default function TeamsModal() {
   };
 
   const handleDelete = async (index: number) => {
+    console.log("handleDelete");
     if (!team) return; // this will never be true
 
     const timeout = setTimeout(() => {
@@ -92,13 +96,13 @@ export default function TeamsModal() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Type a user's e-mail to add to your team!"
           onBlur={addUser}
-        ></input>
+        />
         {error}
       </div>
       <ul>
         {team ? (
           (team as Team).emails.map((teamMember, index) => (
-            <li key={email}>
+            <li key={teamMember}>
               <div
                 className="delete-team-member"
                 title="Hold 1s to delete"
