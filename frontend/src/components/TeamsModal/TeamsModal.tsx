@@ -3,7 +3,6 @@ import { type ReactElement, useEffect, useState } from "react";
 import type { Team, User } from "../../types/Models";
 import { createTeam, updateTeam } from "../../redux/reducers/teams";
 import ErrorMessage from "../ErrorMessage";
-import { type ModalContextType, useModal } from "../Modal/Modal";
 import { FaTrash } from "react-icons/fa";
 import "./TeamsModal.css";
 
@@ -12,9 +11,8 @@ export default function TeamsModal() {
   const [teamEmails, setTeamEmails] = useState<string[]>([]);
   const [error, setError] = useState<ReactElement | null>(null);
   const dispatch = useAppDispatch();
-  const { closeModal } = useModal() as ModalContextType;
   const boardId = useAppSelector((state) => state.session.currentBoardId);
-  const team = useAppSelector((state) => state.team);
+  const team = useAppSelector((state) => state.team?.team);
   const user = useAppSelector((state) => state.session.user);
 
   const createNewTeam = async () => {
@@ -31,12 +29,12 @@ export default function TeamsModal() {
     if (!team) {
       createNewTeam();
     } else {
-      setTeamEmails((team as Team).emails);
+      setTeamEmails(team.emails);
     }
   }, [team]);
 
   const addUser = async () => {
-    if (!team) return; // this will literally never be true
+    if (!email || !team) return;
 
     setTeamEmails(teamEmails.concat(email));
 
@@ -44,10 +42,10 @@ export default function TeamsModal() {
       updateTeam({
         owner_id: (user as User).id,
         emails: teamEmails.concat(email),
-        team_id: (team as Team).id,
+        team_id: team.id,
       }),
     ).then(() => {
-      if (!(team as Team).emails.includes(email))
+      if (!team.emails.includes(email))
         setError(
           <ErrorMessage msg={"Email must be associated with existing user"} />,
         );
@@ -55,17 +53,18 @@ export default function TeamsModal() {
     });
   };
 
-  const handleDelete = async () => {
-    if (!team) return; // once again, this will never be true
+  const handleDelete = async (index: number) => {
+    if (!team) return; // this will never be true
 
     const timeout = setTimeout(() => {
       dispatch(
         updateTeam({
-          owner_id: (user as User).id,
-          emails: teamEmails.filter((el) => el !== email),
+          emails: teamEmails
+            .slice(0, index)
+            .concat(teamEmails.slice(index + 1)),
           team_id: (team as Team).id,
         }),
-      ).then(() => closeModal());
+      );
       // TODO error handling if deletion fails
     }, 1000);
 
@@ -99,11 +98,13 @@ export default function TeamsModal() {
       <ul>
         {team ? (
           (team as Team).emails.map((teamMember, index) => (
-            <li key={index}>
+            <li key={email}>
               <div
                 className="delete-team-member"
                 title="Hold 1s to delete"
-                onMouseDown={handleDelete}
+                onMouseDown={() => {
+                  handleDelete(index);
+                }}
               >
                 <FaTrash />
               </div>

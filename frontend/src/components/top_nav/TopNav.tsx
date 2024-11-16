@@ -3,9 +3,8 @@ import UserDropdown from "./user_dropdown/UserDropdown";
 import { SlArrowRight } from "react-icons/sl";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useRef, useState } from "react";
-import { TeamState, updateTeam } from "../../redux/reducers/teams";
-import { getCsrf } from "../../util/cookies";
-import { Team, User } from "../../types/Models";
+import { updateTeam } from "../../redux/reducers/teams";
+import type { Team, User } from "../../types/Models";
 import { useNavigate } from "react-router";
 import { boardsSlice } from "../../redux/reducers/boards";
 
@@ -19,8 +18,9 @@ export default function TopNav() {
     (state) => state.session.currentBoardId,
   );
   const user = useAppSelector((state) => state.session.user);
-  //   const board = useAppSelector((state) => state.boards[currentBoardId!]);
-  const team: TeamState = useAppSelector((state) => state.team);
+  const team = useAppSelector((state) =>
+    state.team ? state.team.team : undefined,
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

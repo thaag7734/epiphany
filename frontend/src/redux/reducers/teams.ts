@@ -64,24 +64,24 @@ export const deleteTeam = createAppAsyncThunk(
   },
 );
 
-export type TeamState = Team | null;
+export type TeamState = { team: Team | undefined };
 
-const initialState: TeamState = null;
+const initialState: TeamState = { team: undefined };
 
 export const teamSlice = createSlice({
   name: "teams",
   initialState,
   reducers: {
     clearState: () => initialState,
-    setTeam: (_, action) => action.payload,
+    setTeam: (_, action) => ({ team: action.payload }),
   },
   extraReducers: (builder) => {
     builder.addCase(deleteTeam.fulfilled, (_, action) => {
-      return action.payload.team;
+      return { team: action.payload.team };
     });
     builder.addMatcher(
       (action) => isAnyOf(createTeam.fulfilled, updateTeam.fulfilled)(action),
-      (_, action) => action.payload.team,
+      (_, action) => ({ team: action.payload.team }),
     );
   },
 });

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { type ModalContextType, useModal } from "../../Modal/Modal";
 import TeamsModal from "../../TeamsModal/TeamsModal";
 import { NavLink } from "react-router-dom";
-import { teamSlice, type TeamState } from "../../../redux/reducers/teams";
+import { teamSlice } from "../../../redux/reducers/teams";
 import type { Board, Team } from "../../../types/Models";
 import { labelsSlice } from "../../../redux/reducers/labels";
 import { notesSlice } from "../../../redux/reducers/notes";
@@ -19,7 +19,7 @@ export default function UserDropdown() {
   const { setModalContent } = useModal() as ModalContextType;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const team: TeamState = useAppSelector((state) => state.team);
+  const team = useAppSelector((state) => state.team.team);
   const user = useAppSelector((state) => state.session.user);
   const currentBoardId = useAppSelector(
     (state) => state.session.currentBoardId,
