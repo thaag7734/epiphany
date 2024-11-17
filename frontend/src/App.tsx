@@ -118,10 +118,10 @@ function App() {
     }, []);
 
     useEffect(() => {
-      if (!user || currentBoardId === undefined) return;
+      if (!user || currentBoardId == undefined) return;
 
       dispatch(notesSlice.actions.clearState());
-      //dispatch(labelsSlice.actions.clearState());
+      dispatch(labelsSlice.actions.clearState());
 
       dispatch(getBoardNotes(currentBoardId));
       dispatch(getBoardLabels(currentBoardId));
