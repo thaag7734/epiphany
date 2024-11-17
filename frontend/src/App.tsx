@@ -108,7 +108,7 @@ function App() {
     const user: User | null = useAppSelector((state) => state.session.user);
 
     useEffect(() => {
-      if (!user) navigate("/");
+      if (isLoaded && !user) navigate("/");
     }, [user]);
 
     useEffect(() => {
