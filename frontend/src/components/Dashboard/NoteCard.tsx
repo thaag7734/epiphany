@@ -29,8 +29,8 @@ export default function NoteCard({ noteId }: { noteId: number }) {
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-
-    //* detect drop, do something. highlight card.
+    e.stopPropagation();
+    (e.currentTarget as HTMLDivElement).style.boxShadow = "3px 3px 5px purple";
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -40,6 +40,7 @@ export default function NoteCard({ noteId }: { noteId: number }) {
         label_id: Number(e.dataTransfer.getData("text/plain")),
       }),
     );
+    (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
   };
 
   const handleDragEnter = (e: React.DragEvent) => {
