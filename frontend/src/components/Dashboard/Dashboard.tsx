@@ -69,7 +69,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
       <NewCardButton onClick={handleNewNoteClick} />
 
       {board &&
-        (board.owner_id === user.id ? (
+        (board.owner_id === user?.id ? (
           <input
             className="board-name"
             type="text"

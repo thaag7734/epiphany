@@ -6,7 +6,8 @@ import { useRef, useState } from "react";
 import { updateTeam } from "../../redux/reducers/teams";
 import type { Team, User } from "../../types/Models";
 import { useNavigate, useParams } from "react-router";
-import { boardsSlice } from "../../redux/reducers/boards";
+import { boardsSlice, selectBoardById } from "../../redux/reducers/boards";
+import { setRootBoard } from "../../redux/reducers/session";
 
 export default function TopNav() {
   const { boardId } = useParams();
@@ -23,6 +24,9 @@ export default function TopNav() {
   const user = useAppSelector((state) => state.session.user);
   const team = useAppSelector((state) =>
     state.team ? state.team.team : undefined,
+  );
+  const board = useAppSelector((state) =>
+    boardId ? selectBoardById(state, Number(boardId)) : null,
   );
 
   const dispatch = useAppDispatch();
@@ -68,9 +72,11 @@ export default function TopNav() {
     }
   };
 
-  //   const setRootBoard = () => {
+  const setRoot = () => {
+    if (!board) return; // this will never be true
 
-  //   };
+    dispatch(setRootBoard(board.id));
+  };
 
   return (
     <nav className="top-nav">
@@ -79,12 +85,14 @@ export default function TopNav() {
         className={`arrow-box ${currentBoardId ? "" : "invisible"}`}
       />
       <div className="user-buttons">
-        {/* {user?.root_board_id !== currentBoardId &&
+        {board &&
+          user &&
+          user.root_board_id !== currentBoardId &&
           board.owner_id === user?.id && (
-            <div className="set-home" onMouseDown={setRootBoard}>
+            <div className="set-home" onClick={setRoot}>
               Set as home board
             </div>
-          )} */}
+          )}
         {boardId && team && team.owner_id !== user?.id && (
           <div
             className="leave-team"
