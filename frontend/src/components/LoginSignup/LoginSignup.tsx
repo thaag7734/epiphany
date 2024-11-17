@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { type FormEvent, type ReactElement, useEffect, useState } from "react";
-import { login, signup, sessionSlice } from "../../redux/reducers/session";
+import { login, signup } from "../../redux/reducers/session";
 import ErrorMessage from "../ErrorMessage";
-import type { User } from "../../types/Models";
 import { IoIosLogIn } from "react-icons/io";
-import { getBoards } from "../../redux/reducers/boards";
 import "./LoginSignup.css";
 
 export default function LoginSignup() {
@@ -13,7 +11,6 @@ export default function LoginSignup() {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [rootBoardId, setRootBoardId] = useState<number | null>(null);
   const [formToggle, setFormToggle] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -24,8 +21,6 @@ export default function LoginSignup() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    //const csrf_token = await getCsrf();
 
     const errors: { [key: string]: ReactElement } = {};
     const promise = formToggle
@@ -40,27 +35,15 @@ export default function LoginSignup() {
           errors[error] = <ErrorMessage msg={payload.errors[error]} />;
         }
         setErrors(errors);
-      } else {
-        const root = (payload as User).root_board_id!;
-        setRootBoardId(root);
-        await dispatch(getBoards());
-
-        dispatch(sessionSlice.actions.changeBoard(root));
       }
     });
   };
 
   useEffect(() => {
-    if (!rootBoardId) return;
-
-    navigate(`/boards/${rootBoardId}`);
-  }, [rootBoardId, navigate]);
-
-  useEffect(() => {
     if (!user) return;
 
     navigate(`/boards/${user.root_board_id}`);
-  });
+  }, [user, navigate]);
 
   useEffect(() => {
     if (!doDemoLogin) return;

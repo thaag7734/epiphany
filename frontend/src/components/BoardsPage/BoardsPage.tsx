@@ -4,7 +4,11 @@ import type { Board } from "../../types/Models";
 import BoardCard from "./BoardCard";
 import "./BoardsPage.css";
 import NewCardButton from "../NewCardCard/NewCardButton";
-import { createBoard, selectAllBoards } from "../../redux/reducers/boards";
+import {
+  createBoard,
+  getBoards,
+  selectAllBoards,
+} from "../../redux/reducers/boards";
 
 export default function BoardsPage() {
   const boards = useAppSelector((state) => selectAllBoards(state));
@@ -12,7 +16,9 @@ export default function BoardsPage() {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => { }, [boards]);
+  useEffect(() => {
+    dispatch(getBoards());
+  }, [dispatch]);
 
   const handleCreateBoard = async () => {
     if (!user) return;

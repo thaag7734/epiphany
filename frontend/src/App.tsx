@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import TopNav from "./components/top_nav";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import {
-  login,
-  logout,
-  restoreUser,
-  sessionSlice,
-  signup,
-} from "./redux/reducers/session";
+import { login, logout, restoreUser, signup } from "./redux/reducers/session";
 import {
   createLabel,
   deleteLabel,
@@ -25,7 +19,6 @@ import {
 } from "./redux/reducers/notes";
 import {
   boardsSlice,
-  type BoardsState,
   createBoard,
   deleteBoard,
   getBoards,
@@ -36,7 +29,6 @@ import {
   Outlet,
   RouterProvider,
   useNavigate,
-  useParams,
 } from "react-router-dom";
 import {
   createTeam,
@@ -48,15 +40,11 @@ import SidePanel from "./components/SidePanel";
 import { getCookie } from "./util/cookies";
 import LoginSignup from "./components/LoginSignup";
 import Dashboard from "./components/Dashboard/Dashboard";
-import type { Board, User } from "./types/Models";
+import type { User } from "./types/Models";
 import BoardsPage from "./components/BoardsPage/BoardsPage";
 
 function App() {
   const dispatch = useAppDispatch();
-
-  const currentBoardId: number | undefined = useAppSelector(
-    (state) => state.session.currentBoardId,
-  );
 
   if (import.meta.env.MODE !== "production") {
     (window as any).dispatch = dispatch;
@@ -65,7 +53,6 @@ function App() {
         login,
         logout,
         signup,
-        changeBoard: sessionSlice.actions.changeBoard,
       },
       notes: {
         getBoardNotes,
@@ -100,11 +87,9 @@ function App() {
   }
 
   function Layout() {
-    const { boardId } = useParams();
     const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
 
-    const boards: BoardsState = useAppSelector((state) => state.boards);
     const user: User | null = useAppSelector((state) => state.session.user);
 
     useEffect(() => {
@@ -116,32 +101,6 @@ function App() {
         setIsLoaded(true);
       });
     }, []);
-
-    useEffect(() => {
-      if (!isLoaded) return;
-
-      if (user) {
-        dispatch(notesSlice.actions.clearState());
-        dispatch(labelsSlice.actions.clearState());
-
-        dispatch(getBoards()).then(() => {
-          if (boardId) {
-            dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
-
-            dispatch(getBoardNotes(Number(boardId)));
-            dispatch(getBoardLabels(Number(boardId)));
-
-            const currentBoard: Board = boards[boardId];
-
-            if (currentBoard?.team) {
-              dispatch(teamSlice.actions.setTeam(currentBoard.team));
-            } else {
-              dispatch(teamSlice.actions.clearState());
-            }
-          }
-        });
-      }
-    }, [isLoaded, user, boardId]);
 
     return isLoaded ? <Outlet /> : null;
   }
@@ -173,7 +132,7 @@ function App() {
             <>
               <SidePanel />
               <TopNav />
-              <Dashboard boardId={currentBoardId} />
+              <Dashboard />
             </>
           ),
           path: "boards/:boardId",

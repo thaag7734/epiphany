@@ -104,11 +104,7 @@ const setUser = (state: SessionState, user: User | null): void => {
 export const sessionSlice = createSlice({
   name: "session",
   initialState,
-  reducers: {
-    changeBoard: (state: SessionState, action: PayloadAction<number>) => {
-      state.currentBoardId = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(logout.fulfilled, (state: SessionState) => {
