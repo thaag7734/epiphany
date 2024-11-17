@@ -26,9 +26,6 @@ export default function NoteCard({ noteId }: { noteId: number }) {
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
-        e.stopPropagation();
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-            "3px 3px 5px purple";
     };
 
     const handleDrop = (e: React.DragEvent) => {
@@ -42,7 +39,6 @@ export default function NoteCard({ noteId }: { noteId: number }) {
     };
 
     const handleDragEnter = (e: React.DragEvent) => {
-        e.stopPropagation();
         (e.currentTarget as HTMLDivElement).style.boxShadow =
             "3px 3px 5px purple";
     };
