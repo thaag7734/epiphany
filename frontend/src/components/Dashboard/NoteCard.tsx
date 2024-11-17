@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
@@ -18,8 +18,6 @@ export default function NoteCard({ noteId }: { noteId: number }) {
 
     const { setModalContent } = useModal() as ModalContextType;
 
-    useEffect(() => {}, [note]);
-
     const handleNoteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
 
@@ -28,8 +26,9 @@ export default function NoteCard({ noteId }: { noteId: number }) {
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
-
-        //* detect drop, do something. highlight card.
+        e.stopPropagation();
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+            "3px 3px 5px purple";
     };
 
     const handleDrop = (e: React.DragEvent) => {
