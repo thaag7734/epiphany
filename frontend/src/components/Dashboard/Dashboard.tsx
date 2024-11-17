@@ -71,7 +71,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
         <input
           className="board-name"
           type="text"
-          value={board.name}
+          value={boardName}
           onChange={(e) => setBoardName(e.currentTarget.value)}
           onBlur={handleUpdateBoardName}
         />
