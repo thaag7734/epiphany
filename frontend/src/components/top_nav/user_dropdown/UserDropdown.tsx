@@ -1,30 +1,33 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { logout } from "../../../redux/reducers/session";
 import { FaUserCircle } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { type ModalContextType, useModal } from "../../Modal/Modal";
 import TeamsModal from "../../TeamsModal/TeamsModal";
 import { NavLink } from "react-router-dom";
-import { teamSlice, type TeamState } from "../../../redux/reducers/teams";
+import { teamSlice } from "../../../redux/reducers/teams";
 import type { Board, Team } from "../../../types/Models";
 import { labelsSlice } from "../../../redux/reducers/labels";
 import { notesSlice } from "../../../redux/reducers/notes";
 import { boardsSlice } from "../../../redux/reducers/boards";
 
 export default function UserDropdown() {
+  const { boardId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const [isDepressed, setIsDepressed] = useState<boolean>(false);
-  const { setModalContent } = useModal() as ModalContextType;
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const team: TeamState = useAppSelector((state) => state.team);
+
+  const team = useAppSelector((state) => state.team.team);
   const user = useAppSelector((state) => state.session.user);
   const currentBoardId = useAppSelector(
     (state) => state.session.currentBoardId,
   );
   const board = useAppSelector((state) => state.boards[currentBoardId!]);
+
+  const { setModalContent } = useModal() as ModalContextType;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const toggleDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -80,9 +83,10 @@ export default function UserDropdown() {
           <li>
             <NavLink to={"/boards"}>Manage Boards</NavLink>
           </li>
-          {team && (team as Team).owner_id === user?.id ? (
+          {boardId && team && (team as Team).owner_id === user?.id ? (
             <li onClick={launchTeamsModal}>Manage Team</li>
           ) : (
+            boardId &&
             (board as Board)?.owner_id === user?.id! && (
               <li onClick={launchTeamsModal}>Create Team</li>
             )

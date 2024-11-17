@@ -4,13 +4,12 @@ import { NavLink } from "react-router-dom";
 import { type ModalContextType, useModal } from "../../Modal/Modal";
 import TeamsModal from "../../TeamsModal/TeamsModal";
 import { useAppSelector } from "../../../redux/hooks";
-import type { TeamState } from "../../../redux/reducers/teams";
 import type { Team } from "../../../types/Models";
 
 export default function FileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { setModalContent } = useModal() as ModalContextType;
-  const team: TeamState = useAppSelector((state) => state.team);
+  const team = useAppSelector((state) => state.team.team);
   const user = useAppSelector((state) => state.session.user);
 
   const toggleDropdown = (e: React.MouseEvent) => {

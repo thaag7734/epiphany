@@ -34,7 +34,7 @@ export const getBoards = createAppAsyncThunk(
 export const updateBoard = createAppAsyncThunk(
   UPDATE_BOARD,
   async (form: BoardFormData, { fulfillWithValue, rejectWithValue }) => {
-    const res = await fetch(`/api/board/${form.id}`, {
+    const res = await fetch(`/api/boards/${form.id}`, {
       method: "PUT",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },

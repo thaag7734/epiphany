@@ -33,9 +33,7 @@ class Team(db.Model):
     )
 
     users = db.relationship("User", secondary=team_user, back_populates="teams")
-    board = db.relationship(
-        "Board", back_populates="team", cascade="all, delete-orphan"
-    )
+    board = db.relationship("Board", back_populates="team", uselist=False)
 
     def to_dict(self):
         return {

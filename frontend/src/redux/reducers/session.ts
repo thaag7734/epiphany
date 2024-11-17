@@ -3,10 +3,13 @@ import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
 import type { LoginFormData, SignupFormData } from "../../types/FormData";
 
-const LOGIN = "session/login";
-const LOGOUT = "session/logout";
-const SIGNUP = "session/signup";
-const RESTORE_USER = "session/restoreUser";
+const PREFIX = "session";
+
+const LOGIN = `${PREFIX}/login`;
+const LOGOUT = `${PREFIX}/logout`;
+const SIGNUP = `${PREFIX}/signup`;
+const RESTORE_USER = `${PREFIX}/restoreUser`;
+const SET_ROOT_BOARD = `${PREFIX}/setRootBoard`;
 
 export const login = createAppAsyncThunk(
   LOGIN,
@@ -67,6 +70,26 @@ export const restoreUser = createAppAsyncThunk(
   },
 );
 
+export const setRootBoard = createAppAsyncThunk(
+  SET_ROOT_BOARD,
+  async (boardId: number, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch("/api/users/boards/set_root", {
+      method: "PUT",
+      body: JSON.stringify({ board_id: boardId }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return rejectWithValue(data);
+    }
+
+    data.boardId = boardId;
+    return fulfillWithValue(data);
+  },
+);
+
 export interface SessionState {
   user: User | null;
   currentBoardId?: number;
@@ -91,6 +114,11 @@ export const sessionSlice = createSlice({
       .addCase(logout.fulfilled, (state: SessionState) => {
         setUser(state, null);
         state.currentBoardId = undefined;
+      })
+      .addCase(setRootBoard.fulfilled, (state: SessionState, action) => {
+        if (!state.user) return state;
+
+        state.user.root_board_id = action.payload.boardId;
       })
       .addMatcher(
         (action) =>

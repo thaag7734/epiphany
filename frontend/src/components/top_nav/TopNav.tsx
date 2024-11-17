@@ -3,24 +3,32 @@ import UserDropdown from "./user_dropdown/UserDropdown";
 import { SlArrowRight } from "react-icons/sl";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useRef, useState } from "react";
-import { TeamState, updateTeam } from "../../redux/reducers/teams";
-import { getCsrf } from "../../util/cookies";
-import { Team, User } from "../../types/Models";
-import { useNavigate } from "react-router";
-import { boardsSlice } from "../../redux/reducers/boards";
+import { updateTeam } from "../../redux/reducers/teams";
+import type { Team, User } from "../../types/Models";
+import { useNavigate, useParams } from "react-router";
+import { boardsSlice, selectBoardById } from "../../redux/reducers/boards";
+import { setRootBoard } from "../../redux/reducers/session";
 
 export default function TopNav() {
+  const { boardId } = useParams();
+
   const [awaitingDelConf, setAwaitingDelConf] = useState<boolean>(false);
   const [deleteBtnContent, setDeleteBtnContent] =
     useState<string>("Leave Team");
+
   const deleteBtn = useRef<HTMLDivElement | null>(null);
 
   const currentBoardId = useAppSelector(
     (state) => state.session.currentBoardId,
   );
   const user = useAppSelector((state) => state.session.user);
-  //   const board = useAppSelector((state) => state.boards[currentBoardId!]);
-  const team: TeamState = useAppSelector((state) => state.team);
+  const team = useAppSelector((state) =>
+    state.team ? state.team.team : undefined,
+  );
+  const board = useAppSelector((state) =>
+    boardId ? selectBoardById(state, Number(boardId)) : null,
+  );
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -64,9 +72,11 @@ export default function TopNav() {
     }
   };
 
-  //   const setRootBoard = () => {
+  const setRoot = () => {
+    if (!board) return; // this will never be true
 
-  //   };
+    dispatch(setRootBoard(board.id));
+  };
 
   return (
     <nav className="top-nav">
@@ -75,13 +85,15 @@ export default function TopNav() {
         className={`arrow-box ${currentBoardId ? "" : "invisible"}`}
       />
       <div className="user-buttons">
-        {/* {user?.root_board_id !== currentBoardId &&
+        {board &&
+          user &&
+          user.root_board_id !== currentBoardId &&
           board.owner_id === user?.id && (
-            <div className="set-home" onMouseDown={setRootBoard}>
+            <div className="set-home" onClick={setRoot}>
               Set as home board
             </div>
-          )} */}
-        {team && team.owner_id !== user?.id && (
+          )}
+        {boardId && team && team.owner_id !== user?.id && (
           <div
             className="leave-team"
             onMouseDown={handleDelete}

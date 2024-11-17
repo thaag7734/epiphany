@@ -58,8 +58,8 @@ def update_label(label_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["csrf_token"].data = request.cookies["csrf_token"]
     form = LabelForm(ImmutableMultiDict(form_data))
+    form["csrf_token"].data = request.cookies["csrf_token"]
 
     if form.validate():
         try:
