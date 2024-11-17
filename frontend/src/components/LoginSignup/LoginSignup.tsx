@@ -18,6 +18,7 @@ export default function LoginSignup() {
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: ReactElement }>({});
+  const [doDemoLogin, setDoDemoLogin] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,7 +52,26 @@ export default function LoginSignup() {
     if (!rootBoardId) return;
 
     navigate(`/boards/${rootBoardId}`);
-  }, [rootBoardId]);
+  }, [rootBoardId, navigate]);
+
+  useEffect(() => {
+    if (!doDemoLogin) return;
+
+    (
+      document.querySelector("form.login-signup-form") as HTMLFormElement
+    ).requestSubmit(
+      document.querySelector(
+        "button.login-signup-form-btn",
+      ) as HTMLButtonElement,
+    );
+  }, [doDemoLogin]);
+
+  const demoLogin = () => {
+    setEmail("demo@aa.io");
+    setPassword("password");
+
+    setDoDemoLogin(true);
+  };
 
   return (
     <div className="login-signup-bg">
@@ -146,13 +166,20 @@ export default function LoginSignup() {
             </div>
           )}
           {errors.password}
-          <button
-            type="button"
-            className="toggle-login-signup-btn"
-            onClick={() => setFormToggle(!formToggle)}
-          >
-            {formToggle ? "Sign Up" : "Login"}
-          </button>
+          <div className="toggle-demo-group">
+            {formToggle && (
+              <a href="#" onClick={demoLogin}>
+                Login as Demo User
+              </a>
+            )}
+            <button
+              type="button"
+              className="toggle-login-signup-btn"
+              onClick={() => setFormToggle(!formToggle)}
+            >
+              {formToggle ? "Sign Up" : "Login"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

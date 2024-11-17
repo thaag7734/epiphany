@@ -91,29 +91,38 @@
 			}
 		}
 
-		.toggle-login-signup-btn {
-			background-color: #efc4dc;
-			margin-top: 24px;
+		.toggle-demo-group {
 			align-self: flex-end;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 10px;
-			font-family: inherit;
-			font-size: inherit;
-			font-weight: 500;
-			transition: background-color 0.1s ease, box-shadow 0.1s ease;
 
-			&:hover,
-			&:active {
-				cursor: pointer;
+			> a {
+				color: #0b584f;
+				margin-right: 20px;
 			}
 
-			&:hover {
-				background-color: #e49cc4;
-			}
+			> .toggle-login-signup-btn {
+				background-color: #efc4dc;
+				margin-top: 24px;
+				align-self: flex-end;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 10px;
+				font-family: inherit;
+				font-size: inherit;
+				font-weight: 500;
+				transition: background-color 0.1s ease, box-shadow 0.1s ease;
 
-			&:active {
-				background-color: #d974ac;
+				&:hover,
+				&:active {
+					cursor: pointer;
+				}
+
+				&:hover {
+					background-color: #e49cc4;
+				}
+
+				&:active {
+					background-color: #d974ac;
+				}
 			}
 		}
 	}
