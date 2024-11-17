@@ -1,44 +1,45 @@
-export interface FormData {
-  csrf_token: string;
+export interface LoginFormData {
+    email: string;
+    password: string;
 }
 
-export interface LoginFormData extends FormData {
-  email: string;
-  password: string;
+export interface SignupFormData {
+    username: string;
+    email: string;
+    password: string;
 }
 
-export interface SignupFormData extends FormData {
-  username: string;
-  email: string;
-  password: string;
+export interface LabelFormData {
+    id?: number;
+    board_id: number;
+    name: string;
 }
 
-export interface LabelFormData extends FormData {
-  id?: number;
-  board_id: number;
-  name: string;
+export interface NoteLabelFormData {
+    labelId: number;
+    noteId: number;
 }
 
-export interface NoteFormData extends FormData {
-  id?: number;
-  board_id: number;
-  title: string;
-  content: string;
-  deadline?: Date;
-  priority: number;
+export interface NoteFormData {
+    id?: number;
+    board_id: number;
+    title: string;
+    content: string;
+    deadline?: Date;
+    priority: number;
 }
 
-export interface BoardFormData extends FormData {
-  id?: number;
-  team_id?: number;
-  owner_id?: number;
-  name: string;
+export interface BoardFormData {
+    id?: number;
+    team_id?: number;
+    owner_id?: number;
+    name: string;
 }
 
-export interface TeamFormData extends FormData {
-  id?: number;
-  team_id?: number;
-  board_id?: number;
-  owner_id?: number;
-  emails: string[];
+export interface TeamFormData {
+    id?: number;
+    team_id?: number;
+    board_id?: number;
+    owner_id?: number;
+    emails: string[];
 }

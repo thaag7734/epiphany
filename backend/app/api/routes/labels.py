@@ -58,7 +58,7 @@ def update_label(label_id: int):
     if not form_data:
         return {"message": "Missing form data from request"}, 400
 
-    form_data["board_id"] = label_board.id
+    form_data["csrf_token"].data = request.cookies["csrf_token"]
     form = LabelForm(ImmutableMultiDict(form_data))
 
     if form.validate():
@@ -74,6 +74,8 @@ def update_label(label_id: int):
                 "message": "Label successfully updated",
                 "label": label.to_dict(),
             }, 200
+    else:
+        return {"errors": form.errors}
 
 
 @labels.route("/<int:label_id>/delete", methods=["DELETE"])

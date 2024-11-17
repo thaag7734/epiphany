@@ -11,7 +11,6 @@ import {
     type LabelsState,
 } from "../../../redux/reducers/labels";
 import type { LabelFormData } from "../../../types/FormData";
-import { getCsrf } from "../../../util/cookies";
 import NewLabel from "../NewLabel/NewLabel";
 import { FaTrash } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa6";
@@ -81,7 +80,6 @@ export default function Labels() {
         setError(null);
 
         const newLabel: LabelFormData = {
-            csrf_token: await getCsrf(),
             id: Number((targ.parentElement as HTMLDivElement).dataset.id),
             name: targ.dataset.name!,
             board_id: Number(boardId),
@@ -93,7 +91,7 @@ export default function Labels() {
         const sidePanel = document.querySelector("#side-panel-show");
         if (!sidePanel) return;
         e.dataTransfer.clearData();
-        e.dataTransfer.setData("text/plain", `#label-name-${id}`);
+        e.dataTransfer.setData("text/plain", `${id}`);
         sidePanel.id = "side-panel";
     };
 
@@ -115,7 +113,7 @@ export default function Labels() {
                                 <div
                                     key={id}
                                     className="label"
-                                    draggable="true"
+                                    draggable
                                     onDoubleClick={renderLabelEditInput}
                                     title={name.length > 6 ? name : undefined}
                                     onDragStart={(e) => closeSidePanel(e, id)}

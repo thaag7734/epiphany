@@ -4,7 +4,6 @@ import { type FormEvent, type ReactElement, useEffect, useState } from "react";
 import { login, signup, sessionSlice } from "../../redux/reducers/session";
 import ErrorMessage from "../ErrorMessage";
 import type { User } from "../../types/Models";
-import { getCsrf } from "../../util/cookies";
 import { IoIosLogIn } from "react-icons/io";
 import { getBoards } from "../../redux/reducers/boards";
 
@@ -22,34 +21,36 @@ export default function LoginSignup() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const csrf_token = await getCsrf();
+    //const csrf_token = await getCsrf();
 
     const errors: { [key: string]: ReactElement } = {};
     const promise = formToggle
-      ? dispatch(login({ csrf_token, email, password }))
-      : dispatch(signup({ csrf_token, username, email, password }));
+      ? dispatch(login({ email, password }))
+      : dispatch(signup({ username, email, password }));
 
     promise.then(async ({ payload, type }) => {
-      if (["session/signup/rejected", "session/login/rejected"].includes(type)) {
+      if (
+        ["session/signup/rejected", "session/login/rejected"].includes(type)
+      ) {
         for (const error in payload.errors) {
           errors[error] = <ErrorMessage msg={payload.errors[error]} />;
         }
         setErrors(errors);
       } else {
-        const root = (payload as User).root_board_id!
+        const root = (payload as User).root_board_id!;
         setRootBoardId(root);
         await dispatch(getBoards());
 
         dispatch(sessionSlice.actions.changeBoard(root));
       }
     });
-  }
+  };
 
   useEffect(() => {
     if (!rootBoardId) return;
 
     navigate(`/boards/${rootBoardId}`);
-  }, [rootBoardId])
+  }, [rootBoardId]);
 
   return (
     <div className="loginSignup">
@@ -122,4 +123,4 @@ export default function LoginSignup() {
       </button>
     </div>
   );
-};
+}

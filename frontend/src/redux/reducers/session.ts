@@ -90,6 +90,7 @@ export const sessionSlice = createSlice({
     builder
       .addCase(logout.fulfilled, (state: SessionState) => {
         setUser(state, null);
+        state.currentBoardId = undefined;
       })
       .addMatcher(
         (action) =>

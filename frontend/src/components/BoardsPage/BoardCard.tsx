@@ -8,6 +8,7 @@ import {
   getBoardLabels,
   selectLabelsByBoardId,
 } from "../../redux/reducers/labels";
+import { FaUserGroup } from "react-icons/fa6";
 
 export default function BoardCard({
   board_id,
@@ -57,6 +58,9 @@ export default function BoardCard({
           onClick={() => handleBoardClick()}
           title={board.name}
         >
+          <div className="board-share-icon">
+            <FaUserGroup />
+          </div>
           <div className="board-name">{board.name}</div>
 
           <div className="board-card-actions">

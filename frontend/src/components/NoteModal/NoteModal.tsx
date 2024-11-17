@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import ErrorMessage from "../ErrorMessage";
 import { createNote, deleteNote, updateNote } from "../../redux/reducers/notes";
-import { getCsrf } from "../../util/cookies";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import { RiSaveFill } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
@@ -67,7 +66,6 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     const promise = note
       ? dispatch(
         updateNote({
-          csrf_token: await getCsrf(),
           board_id: Number(boardId),
           title,
           content,
@@ -77,7 +75,6 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
       )
       : dispatch(
         createNote({
-          csrf_token: await getCsrf(),
           board_id: Number(boardId),
           title,
           content,
