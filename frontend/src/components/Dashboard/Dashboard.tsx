@@ -14,6 +14,7 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     boardId ? selectBoardById(state, boardId) : null,
   );
   const notes = useAppSelector((state) => selectAllNotes(state));
+  const user = useAppSelector((state) => state.session.user);
 
   const [boardName, setBoardName] = useState<string>("");
 
@@ -67,15 +68,18 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
 
       <NewCardButton onClick={handleNewNoteClick} />
 
-      {board && (
-        <input
-          className="board-name"
-          type="text"
-          value={boardName}
-          onChange={(e) => setBoardName(e.currentTarget.value)}
-          onBlur={handleUpdateBoardName}
-        />
-      )}
+      {board &&
+        (board.owner_id === user.id ? (
+          <input
+            className="board-name"
+            type="text"
+            value={boardName}
+            onChange={(e) => setBoardName(e.currentTarget.value)}
+            onBlur={handleUpdateBoardName}
+          />
+        ) : (
+          <h1 className="board-name">{board.name}</h1>
+        ))}
     </div>
   );
 }

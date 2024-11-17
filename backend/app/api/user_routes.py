@@ -31,4 +31,12 @@ def user(id):
 def get_user_boards():
     user = User.query.get(current_user.id)
 
-    return {"boards": [board.to_dict() for board in user.boards]}, 200
+    for team in user.teams:
+        print(team.board)
+
+    return {
+        "boards": [
+            *[board.to_dict() for board in user.boards],
+            *[board.to_dict() for board in (team.board for team in user.teams)],
+        ]
+    }, 200
