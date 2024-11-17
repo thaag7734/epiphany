@@ -38,7 +38,16 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     );
 
     dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
-  }, []);
+  });
+
+  const handleUpdateBoardName = async () => {
+    dispatch(
+      updateBoard({
+        id: boardId,
+        name: boardName,
+      }),
+    ); //TODO error handling
+  };
 
   useEffect(() => {
     if (!board?.name) return;
@@ -51,15 +60,6 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
     setModalContent(<NoteModal />);
   };
 
-  const handleUpdateBoardName = async () => {
-    dispatch(
-      updateBoard({
-        id: boardId,
-        name: boardName,
-      }),
-    ); //TODO error handling
-  };
-
   return (
     <div className="dash-home" ref={dashHome}>
       {notes.map((note: Note) => (
@@ -67,7 +67,6 @@ function Dashboard({ boardId }: { boardId: number | undefined }) {
       ))}
 
       <NewCardButton onClick={handleNewNoteClick} />
-
       {board &&
         (board.owner_id === user?.id ? (
           <input

@@ -1,4 +1,9 @@
-import { type MouseEvent, type ReactElement, useRef, useState } from "react";
+import React, {
+  type MouseEvent,
+  type ReactElement,
+  useRef,
+  useState,
+} from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   deleteLabel,
@@ -41,6 +46,14 @@ export default function Labels() {
     isOverflowing.current = true;
   }
 
+  const closeSidePanel = (e: React.DragEvent, id: number) => {
+    const sidePanel = document.querySelector("#side-panel-show");
+    if (!sidePanel) return;
+    e.dataTransfer.clearData();
+    e.dataTransfer.setData("text/plain", `${id}`);
+    sidePanel.id = "side-panel";
+  };
+
   const renderLabelEditInput = (e: MouseEvent): void => {
     const target = (e.currentTarget as HTMLDivElement)
       .children[0] as HTMLSpanElement;
@@ -80,12 +93,6 @@ export default function Labels() {
     await dispatch(updateLabel(newLabel));
   };
 
-  const closeSidePanel = () => {
-    const sidePanel = document.querySelector("#side-panel-show");
-    if (!sidePanel) return;
-    sidePanel.id = "side-panel";
-  };
-
   return (
     <>
       {!labelsArr.length ? (
@@ -105,7 +112,7 @@ export default function Labels() {
                   draggable
                   onDoubleClick={renderLabelEditInput}
                   title={name.length > 6 ? name : undefined}
-                  onDragStart={closeSidePanel}
+                  onDragStart={(e) => closeSidePanel(e, id)}
                   id={`label-${id}`}
                   data-id={`${id}`}
                 >

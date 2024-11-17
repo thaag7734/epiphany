@@ -1,25 +1,27 @@
-import React, { type MouseEvent, useEffect } from "react";
-import { /* useAppDispatch ,*/ useAppSelector } from "../../redux/hooks";
+import React, { useEffect } from "react";
+import {
+	/* useAppDispatch ,*/ useAppDispatch,
+  useAppSelector,
+} from "../../redux/hooks";
 import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NoteModal from "../NoteModal/NoteModal";
-import { selectNoteById } from "../../redux/reducers/notes";
+import { addLabelToNote, selectNoteById } from "../../redux/reducers/notes";
 import { selectLabelsByBoardId } from "../../redux/reducers/labels";
 
 export default function NoteCard({ noteId }: { noteId: number }) {
-  // const dispatch = useAppDispatch();
-
   const note = useAppSelector((state) => selectNoteById(state, noteId));
   const labels = useAppSelector((state) =>
     note ? selectLabelsByBoardId(state, note.board_id) : null,
   );
 
   const { setModalContent } = useModal() as ModalContextType;
+  const dispatch = useAppDispatch();
 
   useEffect(() => { }, [note]);
 
-  const handleNoteClick = (e: MouseEvent) => {
+  const handleNoteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     setModalContent(<NoteModal noteId={noteId} />);
@@ -32,11 +34,22 @@ export default function NoteCard({ noteId }: { noteId: number }) {
   };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
+    dispatch(
+      addLabelToNote({
+        note_id: noteId,
+        label_id: Number(e.dataTransfer.getData("text/plain")),
+      }),
+    );
+  };
 
-    //* "grab" label data to pass to thunk?
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.stopPropagation();
+    (e.currentTarget as HTMLDivElement).style.boxShadow = "3px 3px 5px purple";
+  };
 
-    // dispatch(thunkityThunkThunk())
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.stopPropagation();
+    (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
   };
 
   // index for priority icon color
@@ -48,8 +61,11 @@ export default function NoteCard({ noteId }: { noteId: number }) {
         <div
           onDragOver={handleDragOver}
           onDrop={handleDrop}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
           key={note.id}
           className="note-tile"
+          data-id={noteId}
           onClick={handleNoteClick}
           title={note.title}
         >

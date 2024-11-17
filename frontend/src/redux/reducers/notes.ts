@@ -7,7 +7,7 @@ import {
 import { createAppAsyncThunk } from "../hooks";
 import type { NoteCollection } from "../../types/Api";
 import type { Note } from "../../types/Models";
-import type { NoteFormData } from "../../types/FormData";
+import type { NoteFormData, NoteLabelFormData } from "../../types/FormData";
 
 const PREFIX = "notes";
 
@@ -15,6 +15,7 @@ const GET_BOARD_NOTES = `${PREFIX}/getBoardNotes`;
 const UPDATE_NOTE = `${PREFIX}/updateNote`;
 const CREATE_NOTE = `${PREFIX}/createNote`;
 const DELETE_NOTE = `${PREFIX}/deleteNote`;
+const ADD_LABEL_TO_NOTE = `${PREFIX}/addLabelToNote`;
 
 export const getBoardNotes = createAppAsyncThunk(
   GET_BOARD_NOTES,
@@ -88,6 +89,25 @@ export const deleteNote = createAppAsyncThunk(
   },
 );
 
+export const addLabelToNote = createAppAsyncThunk(
+  ADD_LABEL_TO_NOTE,
+  async (form: NoteLabelFormData, { fulfillWithValue, rejectWithValue }) => {
+    const res = await fetch(`/api/notes/${form.note_id}/labels`, {
+      method: "PUT",
+      body: JSON.stringify(form),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return rejectWithValue(data);
+    }
+
+    return fulfillWithValue(data);
+  },
+);
+
 export const selectNoteById = createSelector(
   [(state) => state.notes, (_state, noteId: number) => noteId],
   (notes: NotesState, noteId: number) =>
@@ -142,6 +162,9 @@ export const notesSlice = createSlice({
         return Object.fromEntries(
           Object.entries(state).filter(([k, _]) => k !== action.payload.noteId),
         );
+      })
+      .addCase(addLabelToNote.fulfilled, (state: NotesState, action) => {
+        state[action.payload.note.id] = action.payload.note;
       });
     builder.addMatcher(
       (action) => isAnyOf(createNote.fulfilled, updateNote.fulfilled)(action),

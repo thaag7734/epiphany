@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.models.models import Note, Board, Team
+from app.models.models import Label, Note, Board, Team
 from app.forms.note_form import NoteForm
 from app.models.db import db
 from werkzeug.datastructures import ImmutableMultiDict
@@ -87,3 +87,39 @@ def delete_note(note_id: int):
     else:
         db.session.commit()
         return {"message": "Note successfully deleted"}, 200
+
+
+@notes.route("/<int:note_id>/labels", methods=["PUT"])
+@login_required
+def add_note_label(note_id: int):
+    note = Note.query.get(note_id)
+
+    if not note:
+        return {"message": "Note not found"}, 404
+
+    if note.board.owner_id != current_user.id:
+        return {"message": "You are not the owner of this note"}, 403
+
+    data = request.json
+
+    if not (data and data["label_id"]):
+        return {"message": "You must provide a label ID"}, 400
+
+    label = Label.query.get(data["label_id"])
+
+    if not label:
+        return {"message": "Label not found"}, 404
+
+    if label.board_id != note.board_id:
+        return {
+            "message": "You cannot add a label to a note from a different board"
+        }, 403
+
+    try:
+        note.labels.append(label)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return {"message": "Internal server error"}, 500
+    else:
+        return {"message": "Label added successfully", "note": note.to_dict()}

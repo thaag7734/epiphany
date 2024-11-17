@@ -38,3 +38,8 @@ export interface TeamFormData {
   owner_id?: number;
   emails: string[];
 }
+
+export interface NoteLabelFormData {
+  note_id: number;
+  label_id: number;
+}
