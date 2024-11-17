@@ -118,36 +118,30 @@ function App() {
     }, []);
 
     useEffect(() => {
-      if (!user || currentBoardId == undefined) return;
-
-      dispatch(notesSlice.actions.clearState());
-      dispatch(labelsSlice.actions.clearState());
-
-      dispatch(getBoardNotes(currentBoardId));
-      dispatch(getBoardLabels(currentBoardId));
-
-      const currentBoard: Board = boards[currentBoardId];
-
-      if (currentBoard?.team) {
-        dispatch(teamSlice.actions.setTeam(currentBoard.team));
-      } else {
-        dispatch(teamSlice.actions.clearState());
-        // navigate(`boards/${currentBoardId}`);
-      }
-    }, [currentBoardId]);
-
-    useEffect(() => {
       if (!isLoaded) return;
       if (user) {
+        dispatch(notesSlice.actions.clearState());
+        dispatch(labelsSlice.actions.clearState());
+
         dispatch(getBoards()).then(() => {
           if (boardId) {
             dispatch(sessionSlice.actions.changeBoard(Number(boardId)));
-          } else {
-            dispatch(sessionSlice.actions.changeBoard(user.root_board_id!));
+
+            dispatch(getBoardNotes(Number(boardId)));
+            dispatch(getBoardLabels(Number(boardId)));
+
+            const currentBoard: Board = boards[boardId];
+
+            if (currentBoard?.team) {
+              dispatch(teamSlice.actions.setTeam(currentBoard.team));
+            } else {
+              dispatch(teamSlice.actions.clearState());
+            }
           }
         });
       }
     }, [isLoaded, boardId]);
+
     return isLoaded ? <Outlet /> : null;
   }
 

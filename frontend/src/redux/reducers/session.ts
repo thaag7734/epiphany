@@ -2,7 +2,6 @@ import { createSlice, isAnyOf, type PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../hooks";
 import type { User } from "../../types/Models";
 import type { LoginFormData, SignupFormData } from "../../types/FormData";
-import { Session } from "inspector/promises";
 
 const PREFIX = "session";
 
