@@ -19,10 +19,40 @@ export default function LoginSignup() {
   const [errors, setErrors] = useState<{ [key: string]: ReactElement }>({});
   const [doDemoLogin, setDoDemoLogin] = useState<boolean>(false);
 
+  const validate = (): boolean => {
+    const error = (m: string) => {
+      return <ErrorMessage msg={m} />;
+    };
+
+    const errors: { [key: string]: ReactElement } = {};
+
+    if (!formToggle) {
+      if (username.length < 4)
+        errors.username = error("Username must be at least 4 characters");
+      if (password !== verifyPassword)
+        errors.verifyPassword = error("Passwords do not match");
+    }
+
+    // TODO proper email validation
+    if (!email) errors.email = error("Please enter your email address");
+    if (password.length < 6)
+      errors.password = error("Password must be at least 6 characters");
+
+    if (Object.entries(errors).length) {
+      setErrors(errors);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!validate()) return;
+
     const errors: { [key: string]: ReactElement } = {};
+
     const promise = formToggle
       ? dispatch(login({ email, password }))
       : dispatch(signup({ username, email, password }));
@@ -44,6 +74,10 @@ export default function LoginSignup() {
 
     navigate(`/boards/${user.root_board_id}`);
   }, [user, navigate]);
+
+  useEffect(() => {
+    setErrors({});
+  }, [formToggle]);
 
   useEffect(() => {
     if (!doDemoLogin) return;
@@ -86,6 +120,7 @@ export default function LoginSignup() {
             id="email"
             type="email"
             placeholder="Email"
+            aaaaaaaa
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -104,20 +139,6 @@ export default function LoginSignup() {
                 className="login-signup-form-btn"
                 type="submit"
                 title="Login"
-                disabled={
-                  formToggle
-                    ? !email ||
-                    !password ||
-                    !email.includes("@") ||
-                    password.length < 6
-                    : !username ||
-                    username.length < 4 ||
-                    !email ||
-                    !password ||
-                    !email.includes("@") ||
-                    password.length < 6 ||
-                    password !== verifyPassword
-                }
               >
                 <IoIosLogIn />
               </button>
@@ -137,20 +158,6 @@ export default function LoginSignup() {
                 className="login-signup-form-btn"
                 type="submit"
                 title="Sign Up"
-                disabled={
-                  formToggle
-                    ? !email ||
-                    !password ||
-                    !email.includes("@") ||
-                    password.length < 6
-                    : !username ||
-                    username.length < 4 ||
-                    !email ||
-                    !password ||
-                    !email.includes("@") ||
-                    password.length < 6 ||
-                    password !== verifyPassword
-                }
               >
                 <IoIosLogIn />
               </button>
