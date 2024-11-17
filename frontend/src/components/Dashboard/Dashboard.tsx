@@ -10,77 +10,77 @@ import { selectAllNotes } from "../../redux/reducers/notes";
 import { selectBoardById, updateBoard } from "../../redux/reducers/boards";
 
 function Dashboard({ boardId }: { boardId: number | undefined }) {
-  const board = useAppSelector((state) =>
-    boardId ? selectBoardById(state, boardId) : null,
-  );
-  const notes = useAppSelector((state) => selectAllNotes(state));
-  const user = useAppSelector((state) => state.session.user);
-
-  const [boardName, setBoardName] = useState<string>("");
-
-  const dispatch = useAppDispatch();
-
-  const dashHome = useRef<HTMLDivElement | null>(null);
-
-  const { setModalContent } = useModal() as ModalContextType;
-
-  useEffect(() => { }, [notes]);
-
-  useEffect(() => {
-    const nav = document.querySelector(".top-nav") as HTMLElement;
-
-    if (!nav || !dashHome.current) return;
-
-    const navHeight = nav.offsetHeight;
-    const vh = Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0,
+    const board = useAppSelector((state) =>
+        boardId ? selectBoardById(state, boardId) : null
     );
+    const notes = useAppSelector((state) => selectAllNotes(state));
+    const user = useAppSelector((state) => state.session.user);
 
-    dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
-  });
+    const [boardName, setBoardName] = useState<string>("");
 
-  const handleUpdateBoardName = async () => {
-    dispatch(
-      updateBoard({
-        id: boardId,
-        name: boardName,
-      }),
-    ); //TODO error handling
-  };
+    const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!board?.name) return;
-    setBoardName(board.name);
-  }, [board]);
+    const dashHome = useRef<HTMLDivElement | null>(null);
 
-  const handleNewNoteClick = (e: MouseEvent) => {
-    e.stopPropagation();
+    const { setModalContent } = useModal() as ModalContextType;
 
-    setModalContent(<NoteModal />);
-  };
+    useEffect(() => {}, [notes]);
 
-  return (
-    <div className="dash-home" ref={dashHome}>
-      {notes.map((note: Note) => (
-        <NoteCard noteId={note.id} key={note.id} />
-      ))}
+    useEffect(() => {
+        const nav = document.querySelector(".top-nav") as HTMLElement;
 
-      <NewCardButton onClick={handleNewNoteClick} />
-      {board &&
-        (board.owner_id === user?.id ? (
-          <input
-            className="board-name"
-            type="text"
-            value={boardName}
-            onChange={(e) => setBoardName(e.currentTarget.value)}
-            onBlur={handleUpdateBoardName}
-          />
-        ) : (
-          <h1 className="board-name">{board.name}</h1>
-        ))}
-    </div>
-  );
+        if (!nav || !dashHome.current) return;
+
+        const navHeight = nav.offsetHeight;
+        const vh = Math.max(
+            document.documentElement.clientHeight || 0,
+            window.innerHeight || 0
+        );
+
+        dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
+    }, []);
+
+    useEffect(() => {
+        if (!board?.name) return;
+        setBoardName(board.name);
+    }, [board]);
+
+    const handleNewNoteClick = (e: MouseEvent) => {
+        e.stopPropagation();
+
+        setModalContent(<NoteModal />);
+    };
+
+    const handleUpdateBoardName = async () => {
+        dispatch(
+            updateBoard({
+                id: boardId,
+                name: boardName,
+            })
+        ); //TODO error handling
+    };
+
+    return (
+        <div className="dash-home" ref={dashHome}>
+            {notes.map((note: Note) => (
+                <NoteCard noteId={note.id} key={note.id} />
+            ))}
+
+            <NewCardButton onClick={handleNewNoteClick} />
+            {board &&
+                (board.owner_id === user?.id ? (
+                    <input
+                        className="board-name"
+                        type="text"
+                        value={boardName}
+                        onChange={(e) => setBoardName(e.currentTarget.value)}
+                        onBlur={handleUpdateBoardName}
+                    />
+                ) : (
+                    <h1 className="board-name">{board.name}</h1>
+                ))}
+        </div>
+    );
 }
 
 export default Dashboard;

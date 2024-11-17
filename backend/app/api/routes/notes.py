@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.models.models import Label, Note, Board, Team
+from app.models.models import Note, Board, Team, Label
 from app.forms.note_form import NoteForm
 from app.models.db import db
 from werkzeug.datastructures import ImmutableMultiDict
@@ -88,38 +88,42 @@ def delete_note(note_id: int):
         db.session.commit()
         return {"message": "Note successfully deleted"}, 200
 
-
-@notes.route("/<int:note_id>/labels", methods=["PUT"])
+@notes.route("/<int:note_id>/labels", methods=["POST"])
 @login_required
-def add_note_label(note_id: int):
+def add_label_to_note(note_id: int):
+
     note = Note.query.get(note_id)
 
     if not note:
-        return {"message": "Note not found"}, 404
-
+        return {"message": f"Note {note_id} does not exist Sorry"}, 404
+    
     if note.board.owner_id != current_user.id:
-        return {"message": "You are not the owner of this note"}, 403
+        return {"message": "You are not the owner of this note"}, 403 
+    
+    form_data = request.json
 
-    data = request.json
+    if not form_data:
+        return {"message": "Missing form data from request."}, 400
+    
+    label_id = form_data["labelId"]
 
-    if not (data and data["label_id"]):
-        return {"message": "You must provide a label ID"}, 400
-
-    label = Label.query.get(data["label_id"])
+    if label_id is None:
+        return {"message": "Label id is required"}, 400
+    
+    label = Label.query.get(label_id)
 
     if not label:
         return {"message": "Label not found"}, 404
-
+    
     if label.board_id != note.board_id:
-        return {
-            "message": "You cannot add a label to a note from a different board"
-        }, 403
+        return {"message": "You can't add a label to a note from a different board"}, 403
 
     try:
+
         note.labels.append(label)
         db.session.commit()
     except Exception:
         db.session.rollback()
-        return {"message": "Internal server error"}, 500
+        return {"message": "Internal Server error"}, 500
     else:
-        return {"message": "Label added successfully", "note": note.to_dict()}
+        return {"message": "Label added successfully", "note": note.to_dict()}, 200
