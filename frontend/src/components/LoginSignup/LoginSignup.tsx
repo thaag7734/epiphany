@@ -6,6 +6,7 @@ import ErrorMessage from "../ErrorMessage";
 import type { User } from "../../types/Models";
 import { IoIosLogIn } from "react-icons/io";
 import { getBoards } from "../../redux/reducers/boards";
+import "./LoginSignup.css";
 
 export default function LoginSignup() {
   const navigate = useNavigate();
@@ -53,74 +54,107 @@ export default function LoginSignup() {
   }, [rootBoardId]);
 
   return (
-    <div className="loginSignup">
-      <h1>{formToggle ? "Login:" : "Sign Up:"}</h1>
-      <form className="loginSignupForm" onSubmit={handleSubmit}>
-        {!formToggle && (
-          <>
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            {errors.username}
-          </>
-        )}
-        <input
-          id="email"
-          type="email"
-          placeholder="Please enter your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        {errors.email}
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {!formToggle && (
+    <div className="login-signup-bg">
+      <div className="login-signup">
+        <img src="epiphany.svg" alt="Epiphany: Whatever Comes to Mind" />
+        <h1>{formToggle ? "Login" : "Sign Up"}</h1>
+        <form className="login-signup-form" onSubmit={handleSubmit}>
+          {!formToggle && (
+            <>
+              <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              {errors.username}
+            </>
+          )}
           <input
-            id="verifyPassword"
-            type="password"
-            placeholder="Please verify password"
-            value={verifyPassword}
-            onChange={(e) => setVerifyPassword(e.target.value)}
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-        )}
-        <button
-          className="loginSignupFormButton"
-          type="submit"
-          disabled={
-            formToggle
-              ? !email ||
-              !password ||
-              !email.includes("@") ||
-              password.length < 6
-              : !username ||
-              username.length < 4 ||
-              !email ||
-              !password ||
-              !email.includes("@") ||
-              password.length < 6 ||
-              password !== verifyPassword
-          }
-        >
-          <IoIosLogIn />
-        </button>
-        {errors.password}
-      </form>
-      <button
-        type="button"
-        className="toggleLoginSignupButton"
-        onClick={() => setFormToggle(!formToggle)}
-      >
-        {formToggle ? "Sign Up" : "Login"}
-      </button>
+          {errors.email}
+          <div className="password-group">
+            <input
+              id="password"
+              type="password"
+              className={formToggle ? "has-button" : undefined}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {formToggle && (
+              <button
+                className="login-signup-form-btn"
+                type="submit"
+                title="Login"
+                disabled={
+                  formToggle
+                    ? !email ||
+                    !password ||
+                    !email.includes("@") ||
+                    password.length < 6
+                    : !username ||
+                    username.length < 4 ||
+                    !email ||
+                    !password ||
+                    !email.includes("@") ||
+                    password.length < 6 ||
+                    password !== verifyPassword
+                }
+              >
+                <IoIosLogIn />
+              </button>
+            )}
+          </div>
+          {!formToggle && (
+            <div className="password-group">
+              <input
+                id="verifyPassword"
+                type="password"
+                className="has-button"
+                placeholder="Verify Password"
+                value={verifyPassword}
+                onChange={(e) => setVerifyPassword(e.target.value)}
+              />
+              <button
+                className="login-signup-form-btn"
+                type="submit"
+                title="Sign Up"
+                disabled={
+                  formToggle
+                    ? !email ||
+                    !password ||
+                    !email.includes("@") ||
+                    password.length < 6
+                    : !username ||
+                    username.length < 4 ||
+                    !email ||
+                    !password ||
+                    !email.includes("@") ||
+                    password.length < 6 ||
+                    password !== verifyPassword
+                }
+              >
+                <IoIosLogIn />
+              </button>
+            </div>
+          )}
+          {errors.password}
+          <button
+            type="button"
+            className="toggle-login-signup-btn"
+            onClick={() => setFormToggle(!formToggle)}
+          >
+            {formToggle ? "Sign Up" : "Login"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
