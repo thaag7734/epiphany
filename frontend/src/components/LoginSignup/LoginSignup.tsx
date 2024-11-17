@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { type FormEvent, type ReactElement, useEffect, useState } from "react";
 import { login, signup, sessionSlice } from "../../redux/reducers/session";
 import ErrorMessage from "../ErrorMessage";
@@ -9,6 +9,8 @@ import { getBoards } from "../../redux/reducers/boards";
 import "./LoginSignup.css";
 
 export default function LoginSignup() {
+  const user = useAppSelector((state) => state.session.user);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [rootBoardId, setRootBoardId] = useState<number | null>(null);
@@ -53,6 +55,12 @@ export default function LoginSignup() {
 
     navigate(`/boards/${rootBoardId}`);
   }, [rootBoardId, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    navigate(`/boards/${user.root_board_id}`);
+  });
 
   useEffect(() => {
     if (!doDemoLogin) return;

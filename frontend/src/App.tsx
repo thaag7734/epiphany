@@ -119,6 +119,7 @@ function App() {
 
     useEffect(() => {
       if (!isLoaded) return;
+
       if (user) {
         dispatch(notesSlice.actions.clearState());
         dispatch(labelsSlice.actions.clearState());
@@ -140,7 +141,7 @@ function App() {
           }
         });
       }
-    }, [isLoaded, boardId]);
+    }, [isLoaded, user, boardId]);
 
     return isLoaded ? <Outlet /> : null;
   }
