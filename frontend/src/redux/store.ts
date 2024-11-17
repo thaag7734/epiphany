@@ -8,11 +8,12 @@ import {
 } from "./reducers/index";
 import { createLogger } from "redux-logger";
 
-const logger = createLogger();
+const logger = import.meta.env.MODE !== "production" ? createLogger() : null;
 
 export const store = configureStore({
   devTools: true,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    logger ? getDefaultMiddleware().concat(logger) : getDefaultMiddleware(),
   reducer: {
     session: sessionReducer,
     notes: notesReducer,

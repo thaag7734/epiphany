@@ -168,9 +168,9 @@ export default function LoginSignup() {
           {errors.password}
           <div className="toggle-demo-group">
             {formToggle && (
-              <a href="#" onClick={demoLogin}>
+              <button type="button" className="demo-login" onClick={demoLogin}>
                 Login as Demo User
-              </a>
+              </button>
             )}
             <button
               type="button"

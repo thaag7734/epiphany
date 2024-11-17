@@ -109,16 +109,16 @@ function App() {
 
     useEffect(() => {
       if (isLoaded && !user) navigate("/");
-    }, [user]);
+    }, [user, isLoaded, navigate]);
 
     useEffect(() => {
       dispatch(restoreUser()).then(() => {
         setIsLoaded(true);
       });
-    }, [dispatch]);
+    }, []);
 
     useEffect(() => {
-      if (currentBoardId === undefined) return;
+      if (!user || currentBoardId === undefined) return;
 
       dispatch(notesSlice.actions.clearState());
       //dispatch(labelsSlice.actions.clearState());
@@ -134,7 +134,7 @@ function App() {
         dispatch(teamSlice.actions.clearState());
         // navigate(`boards/${currentBoardId}`);
       }
-    }, [currentBoardId, dispatch]);
+    }, [currentBoardId]);
 
     useEffect(() => {
       if (!isLoaded) return;

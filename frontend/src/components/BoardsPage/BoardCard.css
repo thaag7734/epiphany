@@ -5,10 +5,9 @@
 	border: 1px solid #333;
 	border-radius: 12px;
 	padding: 16px;
-	height: 140px;
-	min-width: 300px;
+	height: 175px;
 	/*^ MEDIA QUERY NEEDED !!! */
-	max-width: 300px;
+	width: 400px;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -19,6 +18,10 @@
 		transform: scale(1.05);
 		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 		cursor: pointer;
+	}
+
+	> .board-share-icon {
+		position: absolute;
 	}
 
 	> .board-name {
@@ -59,7 +62,7 @@
 		}
 
 		> .board-labels-list {
-			width: 100%;
+			width: min-content;
 			display: flex;
 			gap: 6px;
 			margin-top: 8px;

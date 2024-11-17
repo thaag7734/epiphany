@@ -5,13 +5,16 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useRef, useState } from "react";
 import { updateTeam } from "../../redux/reducers/teams";
 import type { Team, User } from "../../types/Models";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { boardsSlice } from "../../redux/reducers/boards";
 
 export default function TopNav() {
+  const { boardId } = useParams();
+
   const [awaitingDelConf, setAwaitingDelConf] = useState<boolean>(false);
   const [deleteBtnContent, setDeleteBtnContent] =
     useState<string>("Leave Team");
+
   const deleteBtn = useRef<HTMLDivElement | null>(null);
 
   const currentBoardId = useAppSelector(
@@ -21,6 +24,7 @@ export default function TopNav() {
   const team = useAppSelector((state) =>
     state.team ? state.team.team : undefined,
   );
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -81,7 +85,7 @@ export default function TopNav() {
               Set as home board
             </div>
           )} */}
-        {team && team.owner_id !== user?.id && (
+        {boardId && team && team.owner_id !== user?.id && (
           <div
             className="leave-team"
             onMouseDown={handleDelete}

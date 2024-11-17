@@ -58,9 +58,14 @@ export default function BoardCard({
           onClick={() => handleBoardClick()}
           title={board.name}
         >
-          <div className="board-share-icon">
-            <FaUserGroup />
-          </div>
+          {board.team_id && (
+            <div
+              className="board-share-icon"
+              title="You are sharing this board"
+            >
+              <FaUserGroup />
+            </div>
+          )}
           <div className="board-name">{board.name}</div>
 
           <div className="board-card-actions">

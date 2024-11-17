@@ -55,9 +55,7 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     setTitle(note.title);
     setContent(note.content);
     setPriority(note.priority);
-  }, []);
-
-  useEffect(() => { }, [errors]);
+  }, [note]);
 
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
