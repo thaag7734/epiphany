@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { logout } from "../../../redux/reducers/session";
 import { FaUserCircle } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -13,17 +13,13 @@ import { labelsSlice } from "../../../redux/reducers/labels";
 import { notesSlice } from "../../../redux/reducers/notes";
 import { boardsSlice } from "../../../redux/reducers/boards";
 
-export default function UserDropdown() {
-  const { boardId } = useParams();
+export default function UserDropdown({ boardId }: { boardId: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDepressed, setIsDepressed] = useState<boolean>(false);
 
   const team = useAppSelector((state) => state.team.team);
   const user = useAppSelector((state) => state.session.user);
-  const currentBoardId = useAppSelector(
-    (state) => state.session.currentBoardId,
-  );
-  const board = useAppSelector((state) => state.boards[currentBoardId!]);
+  const board = useAppSelector((state) => state.boards[boardId]);
 
   const { setModalContent } = useModal() as ModalContextType;
   const dispatch = useAppDispatch();
@@ -76,21 +72,21 @@ export default function UserDropdown() {
       >
         <FaUserCircle />
       </button>
-      {isOpen && (
+      {user && isOpen && (
         <ul className="dropdown-menu-user">
           <li>Welcome, {user?.username}</li>
           <li onClick={endSession}>Logout </li>
           <li>
             <NavLink to={"/boards"}>Manage Boards</NavLink>
           </li>
-          {boardId && team && (team as Team).owner_id === user?.id ? (
-            <li onClick={launchTeamsModal}>Manage Team</li>
-          ) : (
-            boardId &&
-            (board as Board)?.owner_id === user?.id! && (
-              <li onClick={launchTeamsModal}>Create Team</li>
-            )
-          )}
+          {boardId &&
+            (team && team.owner_id === user?.id ? (
+              <li onClick={launchTeamsModal}>Manage Team</li>
+            ) : (
+              board?.owner_id === user.id && (
+                <li onClick={launchTeamsModal}>Create Team</li>
+              )
+            ))}
         </ul>
       )}
     </div>
