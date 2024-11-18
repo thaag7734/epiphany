@@ -34,7 +34,7 @@
 }
 
 .note-content {
-	font-size: 14px;
+	font-size: 1rem;
 	font-family: "Sour Gummy", sans-serif;
 	line-height: 1.5;
 	max-height: 60%;
@@ -46,6 +46,15 @@
 	word-break: break-word;
 	overflow: auto;
 	white-space: pre-line;
+
+	&::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: #adaaaa;
+		border-radius: 15px;
+	}
 }
 
 .note-priority-icon {

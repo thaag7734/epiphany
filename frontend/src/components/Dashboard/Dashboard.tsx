@@ -65,17 +65,22 @@ function Dashboard() {
   }, [board, dispatch]);
 
   useEffect(() => {
-    const nav = document.querySelector(".top-nav") as HTMLElement;
+    const resize = () => {
+      const nav = document.querySelector(".top-nav") as HTMLElement;
 
-    if (!nav || !dashHome.current) return;
+      if (!nav || !dashHome.current) return;
 
-    const navHeight = nav.offsetHeight;
-    const vh = Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0,
-    );
+      const navHeight = nav.offsetHeight;
+      const vh = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0,
+      );
 
-    dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
+      dashHome.current.style.height = `${(vh - navHeight).toString()}px`;
+    };
+
+    window.addEventListener("resize", resize);
+    resize();
   }, []);
 
   useEffect(() => {
