@@ -1,0 +1,100 @@
+.board-card {
+	box-sizing: border-box;
+	background-color: #222;
+	color: #fff;
+	border: 1px solid #333;
+	border-radius: 12px;
+	padding: 16px;
+	height: 175px;
+	/*^ MEDIA QUERY NEEDED !!! */
+	width: 100%;
+	max-width: 25vw;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+	&:hover {
+		transform: scale(1.05);
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+		cursor: pointer;
+	}
+
+	> .board-share-icon {
+		position: absolute;
+	}
+
+	> .board-name {
+		font-size: 18px;
+		font-family: "Sour Gummy", sans-serif;
+		font-weight: bold;
+		margin-bottom: 4px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: center;
+	}
+
+	> .board-card-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		height: min-content;
+
+		> .board-delete-icon {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			box-sizing: border-box;
+			padding: 0.5rem;
+			border-radius: 10px;
+			border: 2px solid black;
+			transition: filter 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+			&:hover {
+				color: red;
+			}
+
+			&:active {
+				filter: brightness(70%);
+				box-shadow: 3px 1px 3px 1px black inset;
+			}
+		}
+
+		> .board-labels-list {
+			width: min-content;
+			display: flex;
+			gap: 6px;
+			margin-top: 8px;
+			margin-bottom: 1px;
+			list-style: none;
+			flex-wrap: nowrap;
+			overflow-x: auto;
+			padding: 4px 0;
+
+			&::-webkit-scrollbar {
+				height: 4px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: #adaaaa;
+				border-radius: 15px;
+			}
+
+			> .board-label-pill {
+				font-size: 10px;
+				padding: 4px 8px;
+				border: 1px solid #555;
+				border-radius: 12px;
+				color: white;
+				background-color: transparent;
+				white-space: nowrap;
+			}
+		}
+
+		> .board-delete-icon + .board-labels-list {
+			max-width: 80%;
+		}
+	}
+}

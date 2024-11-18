@@ -1,0 +1,227 @@
+#side-panel {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: -19.5%;
+    flex-direction: column;
+    text-align: center;
+    width: 20vw;
+    height: 100%;
+    transition: 700ms;
+    background-color: #faf1ea;
+    box-shadow: 2px 0px 4px 2px #666;
+    z-index: 9001;
+}
+
+#side-panel-show {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    background-color: #faf1ea;
+    flex-direction: column;
+    height: 100%;
+    width: 20vw;
+    box-shadow: 2px 0px 4px 2px #666;
+    text-align: center;
+    transition: 700ms;
+    z-index: 9001;
+}
+
+#side-panel-content {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.overflowing {
+    overflow-y: scroll;
+}
+
+.overflowing::-webkit-scrollbar {
+    width: 4px;
+}
+
+.overflowing::-webkit-scrollbar-thumb {
+    background-color: #bf7f79;
+    border-radius: 15px;
+}
+
+#logo {
+    aspect-ratio: 19.5/14;
+    width: 16vw;
+    margin: 4% auto;
+}
+
+.labels-box {
+    display: grid;
+    box-sizing: border-box;
+    grid-template-columns: 72% 14% 14%;
+    place-items: center;
+    padding: 0.3rem;
+    margin-top: 1rem;
+    width: 87%;
+    max-width: 87%;
+    height: 250px;
+}
+
+.labels-box::after {
+    content: "";
+    box-shadow: inset 1px 1px 7px black;
+    height: 250px;
+    width: 88%;
+    max-width: 88%;
+    position: absolute;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.new-label {
+    font-size: 1.5rem;
+    border: 1px solid gray;
+    margin: 0.5rem 0rem;
+    padding: 0.4vw 0.4vw;
+    line-height: 1rem;
+    background-color: rgba(75, 75, 75, 0.3);
+    box-shadow: 3px 3px 3px black;
+    border-radius: 4px;
+    width: 70%;
+
+    & * {
+        border: none;
+        outline: none;
+        width: 95%;
+        background-color: transparent;
+        color: #6a91a0;
+        margin: 0;
+        text-align: center;
+        font-weight: bold;
+        font-family: "Sour Gummy", sans-serif;
+        font-size: 1rem;
+    }
+
+    & *:focus {
+        box-shadow: inset 1px 1px 3px 2px black;
+    }
+}
+
+.label {
+    font-family: "Sour Gummy", sans-serif;
+    border: 1px solid #efafa9;
+    box-sizing: border-box;
+    margin: 0.3rem 0rem 0.2rem 0rem;
+    width: 95%;
+    padding: 0.3rem 1rem;
+    background-color: #efafa9;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    color: #79aaa4;
+}
+
+.label:hover {
+    cursor: grab;
+    box-shadow: 1px 1px 4px black;
+    background-color: #bf7f79;
+    color: #8ab1c0;
+
+    & #edit-label {
+        background-color: #bf7f79;
+        color: #8ab1c0;
+    }
+}
+
+.label-span {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 95%;
+}
+
+#edit-label {
+    font-family: "Sour Gummy", sans-serif;
+    width: 95%;
+    border: none;
+    outline: none;
+    box-shadow: inset 1px 1px 5px 1px #5f1f19;
+    padding: 0px;
+    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    background-color: #efafa9;
+    color: #6a91a0;
+}
+
+.label:active {
+    cursor: grabbing;
+}
+
+.filter-btn {
+    background-color: #770000;
+    border-radius: 4px;
+    padding: 0.4vw;
+    box-shadow: 2px 2px 2px black;
+}
+
+.filter-btn:hover {
+    cursor: pointer;
+    background-color: red;
+    font-size: 1.3rem;
+    color: white;
+    box-shadow: none;
+    transform: scale(1.2);
+    transition: 200ms;
+}
+
+.trash-btn {
+    background-color: #770000;
+    border-radius: 4px;
+    padding: 0.4vw;
+    box-shadow: 2px 2px 2px black;
+}
+
+.trash-btn:hover {
+    cursor: pointer;
+    background-color: red;
+    font-size: 1.3rem;
+    color: white;
+    box-shadow: none;
+    transform: scale(1.2);
+    transition: 200ms;
+}
+
+.arrow-box {
+    display: flex;
+    position: sticky;
+    flex-flow: row-reverse;
+    padding: 0.5rem;
+    top: 1rem;
+    left: 0.7vw;
+    font-size: 1.5rem;
+}
+
+.arrow-box-hidden {
+    display: none;
+}
+
+.clicked {
+    box-shadow: inset 2px 2px 2px black;
+    color: white;
+    font-size: 1rem;
+}
+
+.clicked:hover {
+    background-color: #770000;
+    transform: scale(1);
+    transition: 100ms;
+    font-size: 1rem;
+    color: white;
+}
+
+.invisible {
+    visibility: hidden;
+}
