@@ -180,10 +180,7 @@ export const notesSlice = createSlice({
         }
       })
       .addCase(deleteNote.fulfilled, (state: NotesState, action) => {
-        //TODO figure out why this doesn't remove notes from state
-        return Object.fromEntries(
-          Object.entries(state).filter(([k, _]) => k !== action.payload.noteId),
-        );
+        delete state[action.payload.noteId];
       });
     builder
       .addMatcher(
