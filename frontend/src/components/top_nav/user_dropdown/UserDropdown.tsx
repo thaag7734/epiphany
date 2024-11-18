@@ -32,7 +32,7 @@ export default function UserDropdown({ boardId }: { boardId: number }) {
   const thisRef = useRef<HTMLDivElement | null>(null);
   const launchTeamsModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setModalContent(<TeamsModal />);
+    setModalContent(<TeamsModal boardId={boardId} />);
   };
 
   useEffect(() => {

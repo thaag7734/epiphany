@@ -7,8 +7,7 @@ import { FaTrash } from "react-icons/fa";
 import "./TeamsModal.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 
-export default function TeamsModal() {
-  const boardId = useAppSelector((state) => state.session.currentBoardId);
+export default function TeamsModal({ boardId }: { boardId: number }) {
   const team = useAppSelector((state) => state.team?.team);
   const user = useAppSelector((state) => state.session.user);
 

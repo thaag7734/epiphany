@@ -6,7 +6,7 @@ import TeamsModal from "../../TeamsModal/TeamsModal";
 import { useAppSelector } from "../../../redux/hooks";
 import type { Team } from "../../../types/Models";
 
-export default function FileDropdown() {
+export default function FileDropdown({ boardId }: { boardId: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const { setModalContent } = useModal() as ModalContextType;
   const team = useAppSelector((state) => state.team.team);
@@ -21,7 +21,7 @@ export default function FileDropdown() {
 
   const launchTeamsModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setModalContent(<TeamsModal />);
+    setModalContent(<TeamsModal boardId={boardId} />);
   };
 
   useEffect(() => {
