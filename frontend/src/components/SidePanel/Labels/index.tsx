@@ -43,7 +43,7 @@ export default function Labels() {
     const timeout = setTimeout(() => {
       dispatch(deleteLabel(labelId));
       // TODO error handling if deletion fails
-    }, 3000);
+    }, 1500);
 
     addEventListener(
       "mouseup",

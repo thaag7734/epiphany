@@ -38,7 +38,7 @@ export default function BoardCard({
     const timeout = setTimeout(() => {
       dispatch(deleteBoard(boardId));
       // TODO error handling if deletion fails
-    }, 2000);
+    }, 1500);
 
     addEventListener(
       "mouseup",

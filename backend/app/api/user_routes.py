@@ -80,7 +80,7 @@ def create_tutorial_board(user: User) -> Board:
 
 Collaborating with other users is easy with teams! Teams are limited to sharing only one board, but there is no limit to the amount of boards or teams that you can have. When sharing a board with a team, only the owner can do things like delete notes or assign labels, but anyone can edit the notes. You can create a team on a particular board by clicking the 'Create Team' button in the dropdown on that board's page. If you want to stop sharing a board, you can simply delete the team and all content on your board will remain available to you.
 
-If you want to delete a board, you can do so on the 'Manage Boards' page by clicking and holding its delete button for two seconds. You can delete labels the same way in the side panel.""",
+If you want to delete a board, you can do so on the 'Manage Boards' page by clicking and holding its delete button for 1.5 seconds. You can delete labels the same way in the side panel.""",
         priority=1,
     )
     db.session.add(note)
