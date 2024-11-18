@@ -37,7 +37,7 @@ export default function Labels() {
     dispatch(getBoardLabels(Number(boardId))).then(() => {
       setLoaded(true);
     });
-  });
+  }, [dispatch, boardId]);
 
   const handleDelete = (labelId: number) => {
     const timeout = setTimeout(() => {
