@@ -35,7 +35,11 @@ def get_user_boards():
     return {
         "boards": [
             *[board.to_dict() for board in user.boards],
-            *[board.to_dict() for board in (team.board for team in user.teams)],
+            *[
+                board.to_dict()
+                for board in [team.board for team in user.teams]
+                if board is not None
+            ],
         ]
     }, 200
 
