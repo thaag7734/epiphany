@@ -25,7 +25,7 @@ export default function Labels() {
   const labels: LabelsState = useAppSelector((state) => state.labels);
   const isOverflowing = useRef(false);
   const labelsArr = Object.values(labels);
-  const [isFilterClicked, setIsFilterClicked] = useState(0);
+  const [isFilterClicked /*, setIsFilterClicked*/] = useState(0);
   const [trashing, setTrashing] = useState(0);
   const dispatch = useAppDispatch();
   const [loaded, setLoaded] = useState(false);

@@ -8,7 +8,6 @@ import { type ModalContextType, useModal } from "../../Modal/Modal";
 import TeamsModal from "../../TeamsModal/TeamsModal";
 import { NavLink } from "react-router-dom";
 import { teamSlice } from "../../../redux/reducers/teams";
-import type { Board, Team } from "../../../types/Models";
 import { labelsSlice } from "../../../redux/reducers/labels";
 import { notesSlice } from "../../../redux/reducers/notes";
 import { boardsSlice } from "../../../redux/reducers/boards";

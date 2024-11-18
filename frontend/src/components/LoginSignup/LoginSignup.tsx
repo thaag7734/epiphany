@@ -120,7 +120,6 @@ export default function LoginSignup() {
             id="email"
             type="email"
             placeholder="Email"
-            aaaaaaaa
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
