@@ -78,14 +78,15 @@ export default function UserDropdown({ boardId }: { boardId: number }) {
           <li>
             <NavLink to={"/boards"}>Manage Boards</NavLink>
           </li>
-          {boardId &&
-            (team && team.owner_id === user?.id ? (
+          {boardId ? (
+            team && team.owner_id === user?.id ? (
               <li onClick={launchTeamsModal}>Manage Team</li>
             ) : (
               board?.owner_id === user.id && (
                 <li onClick={launchTeamsModal}>Create Team</li>
               )
-            ))}
+            )
+          ) : null}
         </ul>
       )}
     </div>
