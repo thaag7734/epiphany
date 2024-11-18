@@ -8,6 +8,7 @@
 	height: 175px;
 	/*^ MEDIA QUERY NEEDED !!! */
 	width: 100%;
+	max-width: 25vw;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
