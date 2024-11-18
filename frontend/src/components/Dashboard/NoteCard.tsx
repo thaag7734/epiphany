@@ -4,7 +4,11 @@ import { BiSolidCalendarExclamation } from "react-icons/bi";
 import "./NoteCard.css";
 import { type ModalContextType, useModal } from "../Modal/Modal";
 import NoteModal from "../NoteModal/NoteModal";
-import { addLabelToNote, selectNoteById } from "../../redux/reducers/notes";
+import {
+  addLabelToNote,
+  removeLabelFromNote,
+  selectNoteById,
+} from "../../redux/reducers/notes";
 import { selectLabelsByBoardId } from "../../redux/reducers/labels";
 import type { NoteLabelFormData } from "../../types/FormData";
 
@@ -47,6 +51,17 @@ export default function NoteCard({ noteId }: { noteId: number }) {
     (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
   };
 
+  const removeLabel = (e: React.MouseEvent, labelId: number) => {
+    e.stopPropagation();
+
+    dispatch(
+      removeLabelFromNote({
+        noteId,
+        labelId,
+      }),
+    );
+  };
+
   // index for priority icon color
   const priorityColors = ["grey", "green", "yellow", "red"];
 
@@ -78,7 +93,11 @@ export default function NoteCard({ noteId }: { noteId: number }) {
             {labels
               ?.filter((l) => note.labels.includes(l.id))
               .map((label) => (
-                <li key={label.id} className="note-label-pill">
+                <li
+                  key={label.id}
+                  onClick={(e) => removeLabel(e, label.id)}
+                  className="note-label-pill"
+                >
                   {label.name}
                 </li>
               ))}

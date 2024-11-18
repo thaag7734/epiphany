@@ -76,4 +76,10 @@
 	color: white;
 	background-color: transparent;
 	white-space: nowrap;
+	position: relative;
+
+	&:hover {
+		text-decoration: line-through;
+		background-color: #c00;
+	}
 }

@@ -88,38 +88,39 @@ def delete_note(note_id: int):
         db.session.commit()
         return {"message": "Note successfully deleted"}, 200
 
+
 @notes.route("/<int:note_id>/labels", methods=["POST"])
 @login_required
 def add_label_to_note(note_id: int):
-
     note = Note.query.get(note_id)
 
     if not note:
         return {"message": f"Note {note_id} does not exist Sorry"}, 404
-    
+
     if note.board.owner_id != current_user.id:
-        return {"message": "You are not the owner of this note"}, 403 
-    
+        return {"message": "You are not the owner of this note"}, 403
+
     form_data = request.json
 
     if not form_data:
         return {"message": "Missing form data from request."}, 400
-    
+
     label_id = form_data["labelId"]
 
     if label_id is None:
         return {"message": "Label id is required"}, 400
-    
+
     label = Label.query.get(label_id)
 
     if not label:
         return {"message": "Label not found"}, 404
-    
+
     if label.board_id != note.board_id:
-        return {"message": "You can't add a label to a note from a different board"}, 403
+        return {
+            "message": "You can't add a label to a note from a different board"
+        }, 403
 
     try:
-
         note.labels.append(label)
         db.session.commit()
     except Exception:
@@ -127,3 +128,42 @@ def add_label_to_note(note_id: int):
         return {"message": "Internal Server error"}, 500
     else:
         return {"message": "Label added successfully", "note": note.to_dict()}, 200
+
+
+@notes.route("/<int:note_id>/labels", methods=["DELETE"])
+@login_required
+def remove_note_label(note_id: int):
+    note = Note.query.get(note_id)
+
+    if not note:
+        return {"message": f"Note {note_id} does not exist Sorry"}, 404
+
+    if note.board.owner_id != current_user.id:
+        return {"message": "You are not the owner of this note"}, 403
+
+    form_data = request.json
+
+    if not form_data:
+        return {"message": "Missing form data from request."}, 400
+
+    label_id = form_data["labelId"]
+
+    if label_id is None:
+        return {"message": "Label id is required"}, 400
+
+    label = Label.query.get(label_id)
+
+    if not label:
+        return {"message": "Label not found"}, 404
+
+    if len([lbl for lbl in note.labels if lbl.id == label.id]) == 0:
+        return {"message": "Note does not have this label"}, 403
+
+    try:
+        note.labels = [lbl for lbl in note.labels if lbl.id != label.id]
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return {"message": "Internal Server error"}, 500
+    else:
+        return {"message": "Label removed successfully", "note": note.to_dict()}, 200
