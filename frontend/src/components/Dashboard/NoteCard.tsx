@@ -81,7 +81,7 @@ export default function NoteCard({ noteId }: { noteId: number }) {
         >
           <div className="note-title">{note.title}</div>
 
-          <div className="note-content">{note.content}</div>
+          <p className="note-content">{note.content}</p>
 
           <div className="note-priority-icon">
             <BiSolidCalendarExclamation

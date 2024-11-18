@@ -24,12 +24,11 @@
 }
 
 .note-title {
-	font-size: 18px;
+	font-size: 1.5rem;
 	font-family: "Sour Gummy", sans-serif;
 	font-weight: bold;
 	margin-bottom: 4px;
 	white-space: nowrap;
-	overflow: hidden;
 	text-overflow: ellipsis;
 	text-align: center;
 }
@@ -38,10 +37,15 @@
 	font-size: 14px;
 	font-family: "Sour Gummy", sans-serif;
 	line-height: 1.5;
+	max-height: 60%;
 	overflow: hidden;
+	padding: 10px;
+	padding-bottom: 0px;
+	margin-bottom: 20px;
 	text-overflow: ellipsis;
 	word-break: break-word;
-	/* ADDED =====*/
+	overflow: auto;
+	white-space: pre-line;
 }
 
 .note-priority-icon {
