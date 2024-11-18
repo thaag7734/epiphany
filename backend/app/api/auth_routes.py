@@ -1,4 +1,5 @@
 from flask import Blueprint, make_response, request, session
+from app.api.user_routes import create_tutorial_board
 from app.models.models import db
 from app.models.user import User
 from app.models.models import Board
@@ -65,11 +66,12 @@ def sign_up():
         )
         db.session.add(user)
         db.session.commit()
-        new_board = Board(owner_id=user.id)
-        db.session.add(new_board)
+
+        board = create_tutorial_board(user)
+        user.root_board_id = board.id
+        db.session.add(user)
         db.session.commit()
-        user.root_board_id = new_board.id
-        db.session.commit()
+
         login_user(user)
         return user.to_dict()
     return {"errors": form.errors}, 401
