@@ -86,7 +86,7 @@ function Dashboard() {
   const handleNewNoteClick = (e: MouseEvent) => {
     e.stopPropagation();
 
-    setModalContent(<NoteModal />);
+    setModalContent(<NoteModal boardId={board!.id} />);
   };
 
   const handleUpdateBoardName = async () => {

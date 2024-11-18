@@ -8,9 +8,10 @@ import { RiSaveFill } from "react-icons/ri";
 import { FaTrash } from "react-icons/fa";
 import "./NoteModal.css";
 
-function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
-  const boardId = useAppSelector((state) => state.session.currentBoardId);
-
+function NoteModal({
+  boardId,
+  noteId,
+}: { boardId: number; noteId?: number }): ReturnType<FC> {
   const note = noteId ? useAppSelector((state) => state.notes[noteId]) : null;
 
   const { closeModal } = useModal() as ModalContextType;
@@ -64,7 +65,7 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
     const promise = note
       ? dispatch(
         updateNote({
-          board_id: Number(boardId),
+          board_id: note.board_id,
           title,
           content,
           priority,
@@ -73,7 +74,7 @@ function NoteModal({ noteId }: { noteId?: number }): ReturnType<FC> {
       )
       : dispatch(
         createNote({
-          board_id: Number(boardId),
+          board_id: boardId,
           title,
           content,
           priority,
