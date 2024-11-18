@@ -121,7 +121,7 @@ export default function Labels() {
               {labelsArr.map(({ name, id }) => (
                 <>
                   <div
-                    key={id}
+                    key={`label-${id}`}
                     className="label"
                     draggable
                     onDoubleClick={renderLabelEditInput}

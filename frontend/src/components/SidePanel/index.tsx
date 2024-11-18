@@ -12,11 +12,7 @@ export default function SidePanel() {
     <>
       <div id="side-panel" onMouseLeave={setSidePanel}>
         <div id="side-panel-content">
-          <img
-            id="logo"
-            src="/epiphany.svg"
-            alt="An image of the application logo which reads 'Epiphany: Whatever comes to mind'"
-          />
+          <img id="logo" src="/epiphany-notext.svg" alt="Epiphany" />
           <Labels />
         </div>
       </div>
