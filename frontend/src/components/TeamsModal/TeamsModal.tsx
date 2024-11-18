@@ -139,6 +139,11 @@ export default function TeamsModal() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Type a user's e-mail to add to your team!"
           onBlur={addUser}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.currentTarget.blur();
+            }
+          }}
         />
         {error}
       </div>

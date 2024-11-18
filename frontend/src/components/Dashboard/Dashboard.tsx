@@ -112,6 +112,11 @@ function Dashboard() {
             type="text"
             value={boardName}
             onChange={(e) => setBoardName(e.currentTarget.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.currentTarget.blur();
+              }
+            }}
             onBlur={handleUpdateBoardName}
           />
         ) : (
