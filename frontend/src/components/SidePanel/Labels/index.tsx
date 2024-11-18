@@ -117,6 +117,7 @@ export default function Labels() {
                 isOverflowing.current ? "labels-box overflowing" : "labels-box"
               }
             >
+              {/* TODO refactor this to properly use keys */}
               {labelsArr.map(({ name, id }) => (
                 <>
                   <div
@@ -138,16 +139,19 @@ export default function Labels() {
                     </span>
                   </div>
                   <FaFilter
+                    key={`filter-${id}`}
                     className={`filter-btn${isFilterClicked === id ? " clicked" : ""
                       }`}
                     data-id={`${id}`}
-                    onClick={(e) => {
-                      if (e.currentTarget.dataset.id === `${id}`) {
-                        setIsFilterClicked(isFilterClicked === id ? 0 : id);
-                      }
-                    }}
+                    onClick={() => alert("Filtering not yet implemented :(")}
                   />
+                  {/*onClick={(e) => {
+                    if (e.currentTarget.dataset.id === `${id}`) {
+                      setIsFilterClicked(isFilterClicked === id ? 0 : id);
+                    }
+                  }}*/}
                   <FaTrash
+                    key={`trash-${id}`}
                     className={`trash-btn${trashing === id ? " clicked" : ""}`}
                     data-id={`${id}`}
                     onMouseDown={(e) => {
