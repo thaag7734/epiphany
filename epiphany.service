@@ -7,8 +7,9 @@ After=network.target network-online.target nginx.service
 [Service]
 User=epiphany
 Type=simple
-RootDirectory=/home/epiphany/epiphany/backend/
-ExecStart=gunicorn app:app
+WorkingDirectory=/home/epiphany/epiphany/backend/
+ExecStart=/home/epiphany/epiphany/.venv/bin/python -m gunicorn app:app
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
